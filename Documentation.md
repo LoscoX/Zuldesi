@@ -20,7 +20,7 @@
 
 ### GUI Design
 
--
+- Different interface colors from the game
 
 ### Checkpoint Design
 
