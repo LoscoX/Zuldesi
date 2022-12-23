@@ -1,4 +1,4 @@
-<h2> Project roles <h2>
+## Project roles
   - LoscoX as level designer
   - ardu2 as 
   - Davide as 
