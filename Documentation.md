@@ -3,3 +3,25 @@
   - ardu2 as GUI designer
   - Davide as Game designer
   - Gabriel Preite as Checkpoint designer
+
+## Design points
+
+### Level design
+- Horizontal level
+- Infinity level
+- Rouge-like level
+- Market for each X meters on map
+- Checkpoints as Market
+
+### Game Design
+- One touch kill
+- Possibility of life or defense
+- 
+
+### GUI Design
+
+-
+
+### Checkpoint Design
+
+-
