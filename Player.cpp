@@ -17,6 +17,14 @@ Player::Player(WINDOW * win, int y, int x, char c){
 	life = 99;
 	cash = 0;
 	pwup = NULL;
+	dir = 1; //initial direction
+	blt = NULL; //gun magazine
+	ind = 0; //no bullet
+	//jump
+	activejump = false; //start without jump
+	xpern = xLoc; //save medium point for the jump
+	ypern = yLoc; //save medium point for the jump
+	conta = 0;
 };
 
 Player::Player(){
@@ -29,61 +37,155 @@ Player::Player(){
 	life = 99;
 	cash = 0;
 	pwup = NULL;
+	dir = 1;
+	blt = NULL; //gun magazine
+	ind = 0; //no bullet
+	//jump
+	activejump = false;
+	xpern = 0;
+	ypern = 0;
+	conta = 0;
 }
 
 void Player::initialize(){
 	display();
 }
 
-void Player::jump(int segno){ //jump dx,sx
-	int x = xLoc; //save xstart of jump
-	int y = yLoc; //save ystart of jump
-	int xv = x+3*segno; //xvertex of parabola
-	int yv = y - 9; //yvertex of parabola
-	int a = (y-yv)/((x-xv)*(x-xv));
-	for (int i=0;i<7;i++){ //7 = 2*3 + 1
-		mvwaddch(curwin, yLoc, xLoc,' '); //Delete previous character
-		xLoc = x + segno*i;
+void Player::updatepern(){
+	xpern = xLoc;
+	ypern = yLoc;
+}
+
+void Player::jump(){ //jump dx,sx
+	mvwaddch(curwin, yLoc, xLoc,' '); //Delete previous character
+	int xv = xpern + 3*dir; //xvertex of parabola
+	int yv = ypern - 9; //yvertex of parabola
+	int a = (ypern-yv)/((xpern-xv)*(xpern-xv)); //coefficients of degree 2 of parabola
+	if(conta < 2*3 + 1){ //if you want to do the whole jump (2 times of 3 + 1)
+		xLoc = xpern + dir * conta;
+		conta = conta + 1;
 		yLoc = a * (xLoc-xv) * (xLoc-xv) + yv; //parabola equation
-		if(xLoc < 1) xLoc = 1; //reach minimum
-		if(xLoc > xMax-2) xLoc = xMax - 2; //reach maximum
-		display();
-		wrefresh(curwin);
-        napms(40); //delay 40ms --> we can see the jump
+		if(xLoc < 1){
+			xLoc = 1; //reach minimum
+		}
+		if(xLoc > xMax-2){
+			xLoc = xMax - 2; //reach maximum
+		}
 	}
+	else{
+		conta = 0; //ready for the next jump
+		activejump = false; //you reach the ground floor
+	}
+
 }
 
-void Player::mvupright(){  //move up
-	jump(1);
-}
 
-void Player::mvupleft(){ //move down
-	jump(-1);
-}
 void Player::mvleft(){ //move left
+	dir = -1; //update direction
 	mvwaddch(curwin, yLoc, xLoc,' ');
 	xLoc = xLoc - 1;
 	if (xLoc < 1) xLoc = 1;
 }
+
 void Player::mvright(){ //move right
+	dir = 1; //update direction
 	mvwaddch(curwin, yLoc, xLoc,' ');
 	xLoc = xLoc + 1;
 	if (xLoc > xMax-2) xLoc = xMax - 2;
 }
+
 int Player::getmv(){ //move the character by user
 	int choice = wgetch(curwin);
 	switch (choice){
 		case KEY_UP:
-			mvupright();
-			break;
-		case KEY_DOWN:
-			mvupleft();
+			activejump = true; //active jump
+			updatepern();
+			jump();
 			break;
 		case KEY_LEFT:
 			mvleft();
 			break;
 		case KEY_RIGHT:
 			mvright();
+			break;
+		default:
+			break;
+	}
+	return choice;
+}
+
+bullt Player::head_insert(bullt h,int dir){ //add the bullet
+	bullt tmp = new bullet;
+	tmp->xB = xLoc + dir; //bullet starts where is the player
+	tmp->yB = yLoc;
+	tmp->dir = dir; //direction of the bullet
+	tmp->cod = ind; //ID
+	tmp->next = h;
+	return tmp;
+}
+
+bullt Player::tail_remove(bullt h,int e){ //remove the e bullet
+	if (h==NULL) return h;
+	else if(h->next == NULL){ //if there is just one bullet
+		//problem with the memory
+		h = NULL;
+	}
+	else{
+		bullt tmp = h;
+		bool found = false;
+		while(tmp->next!=NULL && !found){
+			if(tmp->next->cod == e){ //bullet in the middle of the list (ok also for the tail)
+				bullt tmp2 = tmp->next;
+				tmp->next = tmp2->next;
+				delete tmp2; //clean memory
+				tmp2 = NULL;
+				found = true;
+			}
+			else tmp = tmp->next;
+		}
+	}
+	return h;
+}
+
+void Player::shoot(bullt blt){ //describes the movement of the bullet
+	if(blt->xB >= 1 && blt->xB <= xMax - 2) mvwaddch(curwin,blt->yB,blt->xB,' ');
+	blt->xB = blt->xB + blt->dir; //update the x of the bullet
+	if(blt->xB < 1 || blt->xB > xMax-2){ //if the bullet reach the walls
+		blt = tail_remove(blt,blt->cod); //remove from the list
+	}
+	else mvwaddch(curwin,blt->yB,blt->xB,'-'); //draw the bullet
+}
+
+int Player::getmvgun(){ //move the character with gun by user
+	int choice = wgetch(curwin);
+	switch (choice){
+		case KEY_UP:
+			activejump = true; //active jump
+			updatepern();
+			jump();
+		break;
+		case KEY_LEFT:
+			mvleft();
+			break;
+		case KEY_RIGHT:
+			mvright();
+			break;
+		case 'h': //activate the gun
+			blt = head_insert(blt,dir); //add the bullet
+			ind = ind + 1;
+			break;
+		default:
+			break;
+	}
+	return choice;
+}
+
+int Player::jumpandshoot(){
+	int choice = wgetch(curwin);
+	switch(choice){
+		case 'h':
+			blt = head_insert(blt,dir); //add the bullet
+			ind = ind + 1;
 			break;
 		default:
 			break;

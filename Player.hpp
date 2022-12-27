@@ -18,6 +18,16 @@ struct powerup{
 	powerup* next;
 };
 
+struct bullet{
+	int xB; //x of the bullet
+	int yB; //y of the bullet
+	int dir; //direction of the bullet
+	int cod; //how to identify one bullet
+	bullet* next;
+
+};
+
+typedef bullet* bullt;
 typedef powerup* powup;
 
 class Player{
@@ -27,24 +37,42 @@ private:
 	WINDOW * curwin;
 	int life; //life
 	powup pwup; //power-up
-	int cash; //moneys
-	void jump(int segno);
-	void mvupright();  //movement
-	void mvupleft();
+	int cash; //money
 	void mvleft();
 	void mvright();
 public:
 	int xLoc,yLoc; //coordinates of the player
+	int dir; //save the direction of the movement
+	bool activejump; //if it is true, you are jumping
+	int xpern,ypern; //pivot for jumping
+	int conta;
+
 	Player();
 	Player(WINDOW * win, int y, int x, char c);
+
 	int getmv(); //movement
+	int getmvgun(); //movement with the gun
+	void updatepern(); //update pivotvariables
+	void jump();
+	int jumpandshoot(); //shoot during the jump
+
+	bullt blt; //list of bullet that you are using
+	int ind; //index for the list of bullet
+	bullt head_insert(bullt h,int dir); //create new bullet and add it in the gun magazine
+	bullt tail_remove(bullt h, int e); //destroy the first bullet and remove from the gun magazine
+	void shoot(bullt h); //handle the dynamic of the bullet
+
 	void display(); //see the player
 	void initialize(); //start the player
+
 	void injury(); //damage
+
 	int getx(); //x coordinate of the player
 	int gety(); //y coordinate of the player
 	int getlife(); //return life of player
+
 	void updatecash(int cash);
+
 	powup addpwup(powup h,int e,char icon); //add powerup
 	powup removepwup(powup h, int e); //remove powerup
 };
