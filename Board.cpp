@@ -19,7 +19,8 @@ void Board::construct(int height,int width){
 	int xMax,yMax;
 	getmaxyx(stdscr,yMax,xMax);
 	board_win = newwin(height,width, (yMax / 2) - (height / 2), (xMax / 2) - (width / 2));
-	wtimeout(board_win,50); //need this command for the movement of ALL characters (number of delay)
+	wtimeout(board_win,10); //need this command for the movement of ALL characters
+	//the second term is the number of milliseconds to block or wait for input.
 	keypad(board_win,true);
 }
 
@@ -29,9 +30,6 @@ void Board::initialize(){
 	refresh();
 }
 
-//void Board::addAt(int y, int x, char ch){
-	//mvwaddch(board_win,y,x,ch);
-//}
 
 char Board::getInput(){
 	return wgetch(board_win);
@@ -40,10 +38,6 @@ char Board::getInput(){
 void Board::addBorder(){
 	box(board_win, 0, 0);
 }
-
-//void Board::add(Drawable drawable){
-	//addAt(drawable.getY(),drawable.getX(),drawable.geticon());
-//}
 
 void Board::clear(){
 	wclear(board_win);

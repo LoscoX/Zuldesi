@@ -13,20 +13,19 @@
 #include <cstdlib>
 
 
-class Enemy{
-private:
-	int xMax,yMax; //coordinates of the box
-	int segno = -1; //change the movement
-	WINDOW * curwin;
+class Enemy0{
 public:
+	int xMax,yMax; //coordinates of the box
+	WINDOW * curwin;
+	int segno = -1; //change the movement
 	int xLoc,yLoc; //coordinates of the enemy
 	int color; //color for the enemy
 	char character; //icon for the enemy
 	int xpern,ypern; //coordinates for the movement of the enemy
 	int cost; //radius of the movement
 	int life; //life
-	Enemy(WINDOW * win, int y, int x, char c,int mv,int col);
-	Enemy();
+	Enemy0(WINDOW * win, int y, int x, char c,int mv,int col);
+	Enemy0();
 	void initialize(); //start enemy
 	void movement(int cost); //movement
 	void display(); //see the enemy
@@ -36,11 +35,39 @@ public:
 	bool death();
 };
 
-/*
-class EnemyBis : public Enemy{
+class Enemy1 : public Enemy0{
 public:
-	EnemyBis(WINDOW * win, int y, int x, char c);
-	EnemyBis();
-	void movement();
+	int conta;
+	int step; //traslation of the vertex of parabola
+	int xv;//xvertex of parabola
+	int yv; //yvertex of parabola
+	int a = (ypern-yv)/((xpern-xv)*(xpern-xv)); //coefficients of degree 2 of parabola
+	Enemy1(WINDOW * win, int y, int x, char c, int mv, int col);
+	Enemy1();
+	void movement(int cost); //modify the movement
 };
-*/
+
+class Enemy2 : public Enemy0{
+public:
+	Enemy2(WINDOW * win, int y, int x, char c, int mv, int col);
+	Enemy2();
+	void movement(int cost); //modify the movement
+};
+
+
+class Enemy3 : public Enemy0{
+public:
+	int conta;
+	int step;
+	Enemy3(WINDOW * win, int y, int x, char c, int mv, int col);
+	Enemy3();
+	void movement(int cost); //modify the movement
+};
+
+class Enemy4 : public Enemy0{
+public:
+	int conta;
+	Enemy4(WINDOW * win, int y, int x, char c, int mv, int col);
+	Enemy4();
+	void movement(int cost); //modify the movement
+};

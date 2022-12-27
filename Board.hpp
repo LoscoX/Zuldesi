@@ -11,7 +11,6 @@
 #include <cstring>
 #include <cmath>
 #include <cstdlib>
-//#include "Drawable.hpp"
 
 class Board{
 public:
@@ -24,7 +23,6 @@ public:
 	void initialize();
 	void addAt(int y,int x,char ch);
 	char getInput();
-	//void add(Drawable drawable);
 protected:
 	void construct(int height, int width);
 };

@@ -49,7 +49,7 @@ void Player::jump(int segno){ //jump dx,sx
 		if(xLoc > xMax-2) xLoc = xMax - 2; //reach maximum
 		display();
 		wrefresh(curwin);
-        napms(40); //delay 40ms
+        napms(40); //delay 40ms --> we can see the jump
 	}
 }
 
@@ -97,7 +97,9 @@ void Player::display(){ //display the character
 
 
 void Player::injury(){ //Injury
-	life = life - 1;
+	xLoc = 1; //back to beginning
+	yLoc = yMax - 2; //back to beginning
+	life = life - 1; // one point
 }
 
 int Player::getx(){
@@ -124,3 +126,25 @@ powup Player::addpwup(powup h,int e,char icon){ //add powerup
 	return tmp;
 }
 
+powup Player::removepwup(powup h,int e){ //remove powerup
+	if(h==NULL) return h;
+	if(h->val == e){ //you find powerup on the head of list
+		powup tmp2 = h;
+		h = h->next;
+		delete tmp2;
+		tmp2 = NULL;
+		return h;
+	}
+	powup tmp = h;
+	while(tmp->next!=NULL){
+		if(tmp->next->val == e){ //you find powerup in the list
+			powup tmp2 = tmp->next;
+			tmp->next = tmp2->next;
+			delete tmp2;
+			tmp2 = NULL;
+			return h;
+		}
+		else tmp = tmp->next; //nothing
+	}
+	return h; //no powerups
+}

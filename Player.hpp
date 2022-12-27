@@ -13,8 +13,8 @@
 #include <cstdlib>
 
 struct powerup{
-	int val;
-	char c;
+	int val; //powerup code
+	char c; //powerup graphic symbol
 	powerup* next;
 };
 
@@ -45,5 +45,6 @@ public:
 	int gety(); //y coordinate of the player
 	int getlife(); //return life of player
 	void updatecash(int cash);
-	powup addpwup(powup h,int e,char icon);
+	powup addpwup(powup h,int e,char icon); //add powerup
+	powup removepwup(powup h, int e); //remove powerup
 };
