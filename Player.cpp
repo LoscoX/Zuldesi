@@ -7,16 +7,17 @@
 
 #include "Player.hpp"
 
-Player::Player(WINDOW * win, int y, int x, char c){
+Player::Player(WINDOW * win, int y, int x){
 	yLoc = y;
 	xLoc = x;
 	curwin = win;
 	getmaxyx(curwin,yMax,xMax);
 	keypad(curwin,true);
-	character = c;
+	character[0] = '@';
+	character[1] = '^';
 	life = 99;
 	cash = 0;
-	pwup = NULL;
+	pwup = NULL;//powerup
 	dir = 1; //initial direction
 	blt = NULL; //gun magazine
 	ind = 0; //no bullet
@@ -25,15 +26,17 @@ Player::Player(WINDOW * win, int y, int x, char c){
 	xpern = xLoc; //save medium point for the jump
 	ypern = yLoc; //save medium point for the jump
 	conta = 0;
+	gun = true; //you start without the gun
 };
 
-Player::Player(){
+Player::Player(){ //default constructor
 	yLoc = 0;
 	xLoc = 0;
 	curwin = newwin(0,0,0,0);
 	getmaxyx(curwin,yMax,xMax);
 	keypad(curwin,true);
-	character = '@';
+	character[0] = '@';
+	character[1] = '^';
 	life = 99;
 	cash = 0;
 	pwup = NULL;
@@ -45,19 +48,21 @@ Player::Player(){
 	xpern = 0;
 	ypern = 0;
 	conta = 0;
+	gun = false;
 }
 
 void Player::initialize(){
 	display();
 }
 
-void Player::updatepern(){
+void Player::updatepivot(){ //update pivot coordinates
 	xpern = xLoc;
 	ypern = yLoc;
 }
 
 void Player::jump(){ //jump dx,sx
 	mvwaddch(curwin, yLoc, xLoc,' '); //Delete previous character
+	mvwaddch(curwin, yLoc-1, xLoc,' '); //Delete previous character
 	int xv = xpern + 3*dir; //xvertex of parabola
 	int yv = ypern - 9; //yvertex of parabola
 	int a = (ypern-yv)/((xpern-xv)*(xpern-xv)); //coefficients of degree 2 of parabola
@@ -83,6 +88,7 @@ void Player::jump(){ //jump dx,sx
 void Player::mvleft(){ //move left
 	dir = -1; //update direction
 	mvwaddch(curwin, yLoc, xLoc,' ');
+	mvwaddch(curwin, yLoc-1, xLoc,' ');
 	xLoc = xLoc - 1;
 	if (xLoc < 1) xLoc = 1;
 }
@@ -90,28 +96,9 @@ void Player::mvleft(){ //move left
 void Player::mvright(){ //move right
 	dir = 1; //update direction
 	mvwaddch(curwin, yLoc, xLoc,' ');
+	mvwaddch(curwin, yLoc-1, xLoc,' ');
 	xLoc = xLoc + 1;
 	if (xLoc > xMax-2) xLoc = xMax - 2;
-}
-
-int Player::getmv(){ //move the character by user
-	int choice = wgetch(curwin);
-	switch (choice){
-		case KEY_UP:
-			activejump = true; //active jump
-			updatepern();
-			jump();
-			break;
-		case KEY_LEFT:
-			mvleft();
-			break;
-		case KEY_RIGHT:
-			mvright();
-			break;
-		default:
-			break;
-	}
-	return choice;
 }
 
 bullt Player::head_insert(bullt h,int dir){ //add the bullet
@@ -119,16 +106,19 @@ bullt Player::head_insert(bullt h,int dir){ //add the bullet
 	tmp->xB = xLoc + dir; //bullet starts where is the player
 	tmp->yB = yLoc;
 	tmp->dir = dir; //direction of the bullet
-	tmp->cod = ind; //ID
+	tmp->cod = ind; //ID --> It's unic
 	tmp->next = h;
 	return tmp;
 }
 
-bullt Player::tail_remove(bullt h,int e){ //remove the e bullet
+bullt Player::obj_remove(bullt h,int e){ //remove the e bullet
 	if (h==NULL) return h;
-	else if(h->next == NULL){ //if there is just one bullet
+	else if(h->cod == e){ //if the bullet is in the head of the list
 		//problem with the memory
-		h = NULL;
+		//bullt tmp = h;
+		h = h->next;  //ok also if h has one element
+		//delete tmp;
+		//tmp = NULL;
 	}
 	else{
 		bullt tmp = h;
@@ -147,21 +137,23 @@ bullt Player::tail_remove(bullt h,int e){ //remove the e bullet
 	return h;
 }
 
-void Player::shoot(bullt blt){ //describes the movement of the bullet
-	if(blt->xB >= 1 && blt->xB <= xMax - 2) mvwaddch(curwin,blt->yB,blt->xB,' ');
-	blt->xB = blt->xB + blt->dir; //update the x of the bullet
-	if(blt->xB < 1 || blt->xB > xMax-2){ //if the bullet reach the walls
-		blt = tail_remove(blt,blt->cod); //remove from the list
+void Player::shoot(bullt blt2){ //describes the movement of the bullet
+	if(blt2->xB >= 1 && blt2->xB <= xMax - 2) mvwaddch(curwin,blt2->yB,blt2->xB,' ');
+	blt2->xB = blt2->xB + blt2->dir; //update the x of the bullet
+	if(blt2->xB < 1 || blt2->xB > xMax-2){ //if the bullet reach the walls
+		int codice = blt2->cod;
+		blt2 = obj_remove(blt2,blt2->cod); //remove from the list
+		blt = obj_remove(blt,codice); //remove from the main list
 	}
-	else mvwaddch(curwin,blt->yB,blt->xB,'-'); //draw the bullet
+	else mvwaddch(curwin,blt2->yB,blt2->xB,'-'); //draw the bullet
 }
 
-int Player::getmvgun(){ //move the character with gun by user
+int Player::getmv(){ //move the character with gun by user
 	int choice = wgetch(curwin);
 	switch (choice){
 		case KEY_UP:
 			activejump = true; //active jump
-			updatepern();
+			updatepivot();
 			jump();
 		break;
 		case KEY_LEFT:
@@ -171,8 +163,10 @@ int Player::getmvgun(){ //move the character with gun by user
 			mvright();
 			break;
 		case 'h': //activate the gun
-			blt = head_insert(blt,dir); //add the bullet
-			ind = ind + 1;
+			if(gun == true){
+				blt = head_insert(blt,dir); //add the bullet
+				ind = ind + 1; //we want different indexes for the different bullets
+			}
 			break;
 		default:
 			break;
@@ -180,7 +174,7 @@ int Player::getmvgun(){ //move the character with gun by user
 	return choice;
 }
 
-int Player::jumpandshoot(){
+int Player::jumpandshoot(){ //during the jump you can just shooting
 	int choice = wgetch(curwin);
 	switch(choice){
 		case 'h':
@@ -194,11 +188,14 @@ int Player::jumpandshoot(){
 }
 
 void Player::display(){ //display the character
-	mvwaddch(curwin,yLoc,xLoc,character);
+	mvwaddch(curwin,yLoc,xLoc,character[0]);
+	mvwaddch(curwin,yLoc-1,xLoc,character[1]);
 }
 
 
 void Player::injury(){ //Injury
+	mvwaddch(curwin,yLoc,xLoc,' ');
+	mvwaddch(curwin, yLoc-1, xLoc,' ');
 	xLoc = 1; //back to beginning
 	yLoc = yMax - 2; //back to beginning
 	life = life - 1; // one point
@@ -216,8 +213,12 @@ int Player::getlife(){
 	return life;
 }
 
-void Player::updatecash(int cash){ //update cash
-	this->cash = this->cash + cash;
+int Player::getcoins(){
+	return cash;
+}
+
+void Player::updatecash(){ //update cash
+	cash = cash + 1;
 }
 
 powup Player::addpwup(powup h,int e,char icon){ //add powerup
@@ -231,20 +232,17 @@ powup Player::addpwup(powup h,int e,char icon){ //add powerup
 powup Player::removepwup(powup h,int e){ //remove powerup
 	if(h==NULL) return h;
 	if(h->val == e){ //you find powerup on the head of list
-		powup tmp2 = h;
 		h = h->next;
-		delete tmp2;
-		tmp2 = NULL;
-		return h;
 	}
 	powup tmp = h;
-	while(tmp->next!=NULL){
+	bool found = false;
+	while(tmp->next!=NULL && !found){
 		if(tmp->next->val == e){ //you find powerup in the list
 			powup tmp2 = tmp->next;
 			tmp->next = tmp2->next;
 			delete tmp2;
 			tmp2 = NULL;
-			return h;
+			found = true;
 		}
 		else tmp = tmp->next; //nothing
 	}

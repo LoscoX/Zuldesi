@@ -33,10 +33,9 @@ typedef powerup* powup;
 class Player{
 private:
 	int xMax,yMax; //coordinates of the box
-	char character; //icon of the player
+	char character[2]; //icon of the player
 	WINDOW * curwin;
 	int life; //life
-	powup pwup; //power-up
 	int cash; //money
 	void mvleft();
 	void mvright();
@@ -46,20 +45,21 @@ public:
 	bool activejump; //if it is true, you are jumping
 	int xpern,ypern; //pivot for jumping
 	int conta;
+	bool gun; //activate gun or not
 
 	Player();
-	Player(WINDOW * win, int y, int x, char c);
+	Player(WINDOW * win, int y, int x);
 
 	int getmv(); //movement
-	int getmvgun(); //movement with the gun
-	void updatepern(); //update pivotvariables
+
+	void updatepivot(); //update pivotvariables
 	void jump();
 	int jumpandshoot(); //shoot during the jump
 
 	bullt blt; //list of bullet that you are using
 	int ind; //index for the list of bullet
 	bullt head_insert(bullt h,int dir); //create new bullet and add it in the gun magazine
-	bullt tail_remove(bullt h, int e); //destroy the first bullet and remove from the gun magazine
+	bullt obj_remove(bullt h, int e); //destroy the first bullet and remove from the gun magazine
 	void shoot(bullt h); //handle the dynamic of the bullet
 
 	void display(); //see the player
@@ -70,8 +70,11 @@ public:
 	int getx(); //x coordinate of the player
 	int gety(); //y coordinate of the player
 	int getlife(); //return life of player
+	int getcoins(); //return coins of player
 
-	void updatecash(int cash);
+	void updatecash(); //update your wallet
+
+	powup pwup; //power-up
 
 	powup addpwup(powup h,int e,char icon); //add powerup
 	powup removepwup(powup h, int e); //remove powerup

@@ -26,6 +26,7 @@ int main(int argc, char ** argv) {
 	noecho();
 
 	Game game(25,110);
+	curs_set(0); //delete the cursor
 
 	while(!game.isOver()){
 		game.updateState();

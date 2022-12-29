@@ -17,7 +17,7 @@ class Enemy0{
 public:
 	int xMax,yMax; //coordinates of the box
 	WINDOW * curwin;
-	int segno = -1; //change the movement
+	int segno; //change the movement
 	int xLoc,yLoc; //coordinates of the enemy
 	int color; //color for the enemy
 	char character; //icon for the enemy
@@ -32,14 +32,14 @@ public:
 	int getx(); //x coordinate of the enemy
 	int gety(); //y coordinate of the enemy
 	void injury();
-	bool death();
+	int getlife();
 };
 
 class Enemy1 : public Enemy0{
 public:
-	int conta;
+	int conta; //time for the jump
 	int step; //traslation of the vertex of parabola
-	int xv;//xvertex of parabola
+	int xv; //xvertex of parabola
 	int yv; //yvertex of parabola
 	int a = (ypern-yv)/((xpern-xv)*(xpern-xv)); //coefficients of degree 2 of parabola
 	Enemy1(WINDOW * win, int y, int x, char c, int mv, int col);
@@ -57,7 +57,7 @@ public:
 
 class Enemy3 : public Enemy0{
 public:
-	int conta;
+	int conta; //time for the jump
 	int step;
 	Enemy3(WINDOW * win, int y, int x, char c, int mv, int col);
 	Enemy3();

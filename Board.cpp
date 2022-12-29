@@ -7,7 +7,7 @@
 
 #include "Board.hpp"
 
-Board::Board(){
+Board::Board(){ //default construct
 	construct(0,0);
 }
 
