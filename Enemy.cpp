@@ -10,13 +10,16 @@
 
 /*List of enemies
 No gun type
-0- sin movement (life = 5). There is a costant (mv) which determines the radius of the oscillation
-1- fixed jump (life = 7). There is a constant (mv) which determines the height of the jump
-2- fixed lift (life = 7). There is a constant (mv) which determines the max height for the lifting
-3- No fixed jump (life = 2). There is a constant (mv) which determines the height of the jump but the jump is dinamic
-4- random movement (life = 3). Random movement in a constant neighborhood (mv)
-5- smart movement (life = 2). It follows the player
-Gun type
+	0- sin movement (life = 5). There is a costant (mv) which determines the radius of the oscillation
+	1- fixed jump (life = 7). There is a constant (mv) which determines the height of the jump
+	2- fixed lift (life = 7). There is a constant (mv) which determines the max height for the lifting
+	3- No fixed jump (life = 2). There is a constant (mv) which determines the height of the jump but the jump is dinamic
+	4- random movement (life = 3). Random movement in a constant neighborhood (mv)
+	5- smart movement (life = 2). It follows the player when it is sufficiently near to the enemy
+Gun type (If you touch them, nothing happens)
+	6- It's the enemy type0 but with gun
+	7- It's the enemy type5 but with gun
+	8- Enemy can't move but he can shoot, when the player reaches a specific place
 */
 
 //Enemy type 0
@@ -82,7 +85,7 @@ void Enemy0::movement(){
 	}
 }
 
-int Enemy0::getx(){
+int Enemy0::getx(){ //Take x
 	return xLoc;
 }
 
@@ -115,8 +118,8 @@ Enemy1::Enemy1() : Enemy0(){ //default constructor
 	color = 2;
 	conta = 0;
 	step = 0;
-	xv = 0; //xvertex of parabola
-	yv = 0; //yvertex of parabola
+	xv = 1; //xvertex of parabola
+	yv = 1; //yvertex of parabola
 	a = 1; //coefficients of degree 2 of parabola
 }
 
@@ -239,4 +242,125 @@ Enemy5::Enemy5() : Enemy0(){
 void Enemy5::movement(int direction){
 	mvwaddch(curwin, yLoc, xLoc,' '); //Delete previous character
 	xLoc = xLoc + direction; //direction = 1-->dx   direction = -1-->sx
+}
+
+//Enemy type 6
+
+Enemy6::Enemy6(WINDOW * win, int y, int x, char c,int mv, int col) : Enemy0(win,y,x,c,mv,col){
+	life = 5;
+	bullet = Bullet(curwin); //initialize the bullet
+	ind = 0; //no bullet
+	conta = 0; //no shots
+	gun = '-'; //gun
+}
+
+Enemy6::Enemy6() : Enemy0(){
+	character = '0';
+	life = 5;
+	bullet = Bullet(curwin); //initialize the bullet
+	ind = 0; //no bullet
+	conta = 0; //no shots
+	gun = '-';
+}
+
+void Enemy6::display(){
+	wattron(curwin,COLOR_PAIR(Enemy6::color)); //color
+	mvwaddch(curwin,yLoc,xLoc,character);
+	if(segno == 1) mvwaddch(curwin,yLoc,xLoc+1,gun); //create the gun, dx when enemy goes to dx
+	else mvwaddch(curwin,yLoc,xLoc-1,gun); //create the gun, sx when enemy goes to sx
+	wattroff(curwin,COLOR_PAIR(Enemy6::color));
+}
+
+void Enemy6::movement(){
+	conta++; //increment time for the shot
+	mvwaddch(curwin, yLoc, xLoc, ' '); //Delete previous character
+	if(segno == 1) mvwaddch(curwin,yLoc,xLoc+1,' '); //delete the gun, dx when enemy goes to dx
+	else mvwaddch(curwin,yLoc,xLoc-1,' '); //delete the gun, sx when enemy goes to sx
+	xLoc = xLoc + segno; //implement the movement
+	if(xLoc > xMax - 3){ //reach the max (Pay attention,there is the gun)
+		xLoc = xMax - 3;
+		segno = segno * (-1); //change the direction of the movement
+	}
+	else if(xLoc < 2){ //reach the minimum (Pay attention,there is the gun)
+		xLoc = 2;
+		segno = segno * (-1);
+	}
+	else if(xLoc > xpern + cost){ //reach the max of radius
+		xLoc = xpern + cost;
+		segno = segno * (-1);
+	}
+	else if(xLoc < xpern - cost){ //reach the min of radius
+		xLoc = xpern - cost;
+		segno = segno * (-1);
+	}
+	if(conta==10){ //every 10 seconds, the enemy fires
+		bullet.blt = bullet.head_insert(bullet.blt,segno,xLoc,yLoc,ind); //add the bullet
+		ind = ind + 1; //we want different indexes for the different bullets
+		conta = 0;
+	}
+}
+
+//Enemy type7
+
+Enemy7::Enemy7(WINDOW * win, int y, int x, char c,int mv, int col) : Enemy6(win,y,x,c,mv,col){
+	life = 5;
+	bullet = Bullet(curwin); //initialize the bullet
+	ind = 0; //no bullet
+	conta = 0; //no shots
+	gun = '-'; //gun
+}
+
+Enemy7::Enemy7() : Enemy6(){
+	character = '5'; //It's the enemy type5 but with the gun
+	life = 5;
+	bullet = Bullet(curwin); //initialize the bullet
+	ind = 0; //no bullet
+	conta = 0; //no shots
+	gun = '-';
+}
+
+void Enemy7::movement(int direction){
+	conta++; //increment time for the shot
+	mvwaddch(curwin, yLoc, xLoc,' '); //Delete previous character
+	if(segno == 1) mvwaddch(curwin,yLoc,xLoc+1,' '); //delete the gun, dx when enemy goes to dx
+	else mvwaddch(curwin,yLoc,xLoc-1,' '); //delete the gun, sx when enemy goes to sx
+	segno = direction; //update direction of enemy
+	xLoc = xLoc + segno; //direction = 1-->dx   direction = -1-->sx
+	if(conta==10){ //every 10 seconds, the enemy fires
+		bullet.blt = bullet.head_insert(bullet.blt,segno,xLoc,yLoc,ind); //add the bullet
+		ind = ind + 1; //we want different indexes for the different bullets
+		conta = 0;
+	}
+}
+
+//Enemy type8
+
+Enemy8::Enemy8(WINDOW * win, int y, int x, char c,int mv, int col) : Enemy6(win,y,x,c,mv,col){
+	life = 5;
+	bullet = Bullet(curwin); //initialize the bullet
+	ind = 0; //no bullet
+	conta = 0; //no shots
+	gun = '-'; //gun
+}
+
+Enemy8::Enemy8() : Enemy6(){
+	character = '7';
+	life = 5;
+	bullet = Bullet(curwin); //initialize the bullet
+	ind = 0; //no bullet
+	conta = 0; //no shots
+	gun = '-';
+}
+
+void Enemy8::movement(int direction){
+	conta++; //increment time for the shot
+	mvwaddch(curwin, yLoc, xLoc,' '); //Delete previous character
+	if(segno == 1) mvwaddch(curwin,yLoc,xLoc+1,' '); //delete the gun, dx when enemy goes to dx
+	else mvwaddch(curwin,yLoc,xLoc-1,' '); //delete the gun, sx when enemy goes to sx
+	segno = direction; //update direction of enemy
+	if(conta==5){ //every 5 seconds, the enemy fires
+		bullet.blt = bullet.head_insert(bullet.blt,segno,xLoc,yLoc,ind); //add the bullet
+		ind = ind + 1; //we want different indexes for the different bullets
+		conta = 0;
+	}
 }

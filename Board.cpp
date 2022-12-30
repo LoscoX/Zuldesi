@@ -47,3 +47,12 @@ void Board::refresh(){
 	wrefresh(board_win);
 }
 
+void Board::initializeWall(int pivot,int h){ //pivot = central point of the platform
+	for(int i=0;i<len;i++){
+		plat.graph[i] = '_';
+		plat.xpos[i] = pivot + i;
+		plat.ypos[i] = h;
+		mvwaddch(board_win,plat.ypos[i],plat.xpos[i],plat.graph[i]);
+	}
+}
+
