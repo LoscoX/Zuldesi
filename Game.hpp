@@ -11,6 +11,7 @@
 #include <cstring>
 #include <cmath>
 #include <cstdlib>
+#include <typeinfo>
 #include "Board.hpp"
 #include "Enemy.hpp"
 
@@ -60,6 +61,13 @@ struct listenemy8{ //list of enemies type8
 	listenemy8* next;
 };
 
+struct lista{
+	int val;
+	Enemy0 enemy;
+	lista* next;
+};
+
+typedef lista* plista;
 
 struct money{
 	int val; //ID
@@ -119,6 +127,8 @@ public:
 	listenm7 head_insert_enemy7(listenm7 h,Enemy7 e, int val); //add one enemy type7
 	listenm8 head_insert_enemy8(listenm8 h,Enemy8 e, int val); //add one enemy type8
 
+	plista head_insert(plista h,Enemy0 e, int val);
+
 	listenm0 obj_remove_enemy0(listenm0 h,int cod,bool head); //delete one enemy type0 (head == true, clean memory when delete an element in the head, otherwise not)
 	listenm1 obj_remove_enemy1(listenm1 h,int cod,bool head); //delete one enemy type1 (head == true, clean memory when delete an element in the head, otherwise not)
 	listenm2 obj_remove_enemy2(listenm2 h,int cod,bool head); //delete one enemy type2 (head == true, clean memory when delete an element in the head, otherwise not)
@@ -150,6 +160,8 @@ protected:
 	listenm6 enemies6; //list of enemies type 6
 	listenm7 enemies7; //list of enemies type 7
 	listenm8 enemies8; //list of enemies type 8
+
+	plista enemies;
 
 	mony coins;
 	bool game_over;

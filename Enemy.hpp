@@ -26,6 +26,8 @@ public:
 	int life; //life
 	Enemy0(WINDOW * win, int y, int x, char c,int mv,int col);
 	Enemy0();
+	//virtual void movement();
+	//virtual ~Enemy0();-
 	void initialize(); //start enemy
 	void movement(); //movement
 	void display(); //see the enemy

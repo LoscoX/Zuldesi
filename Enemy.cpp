@@ -54,6 +54,8 @@ Enemy0::Enemy0(){ //default constructor
 	segno = 0;
 }
 
+//Enemy0::~Enemy0(){};
+
 void Enemy0::initialize(){
 	display();
 }

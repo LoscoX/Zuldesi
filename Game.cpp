@@ -42,6 +42,12 @@ Game::Game(int height,int width){
 	enemies7 = NULL; //initialize the list
 	enemies8 = NULL; //initialize the list
 
+	enemies = NULL;
+	Enemy1 e = Enemy1(win,height-2,(1 + rand()%(width-2)),'1',9,2); //create one enemy
+	Enemy2 e1 = Enemy2(win,height-2,(1 + rand()%(width-2)),'2',9,3); //create one enemy
+	enemies = Game::head_insert(enemies,e,0);
+	enemies = Game::head_insert(enemies,e1,0);
+
 	coins = NULL; //initialize coins
 
 	nc = rand()%10; //number of coins
@@ -51,7 +57,7 @@ Game::Game(int height,int width){
 	}
 	Game::initializeCoins(); //initialize coins
 
-	int k = 4; //max number of enemies
+	int k = 1; //max number of enemies
 
 	n0 = rand()%k; //number of enemies of type 0
 	for(int i=0;i<n0;i++){
@@ -59,7 +65,7 @@ Game::Game(int height,int width){
 		enemies0 = Game::head_insert_enemy0(enemies0,e,i); //add the enemy into the list
 	}
 
-	n1 = rand()%k; //number of enemies of type 1
+	n1 = 3; //number of enemies of type 1
 	for(int i=0;i<n1;i++){
 		Enemy1 e = Enemy1(win,height-2,(1 + rand()%(width-2)),'1',9,2); //create one enemy
 		enemies1 = Game::head_insert_enemy1(enemies1,e,i); //add the enemy into the list
@@ -169,6 +175,12 @@ void Game::initializeEnemies(){ //initialize enemies
 		tmp8->enemy.initialize();
 		tmp8 = tmp8->next;
 	}
+
+	plista tpp = enemies;
+	while(tpp!=NULL){
+		tpp->enemy.initialize();
+		tpp = tpp->next;
+	}
 }
 
 void Game::updateState(){
@@ -267,6 +279,13 @@ listenm8 Game::head_insert_enemy8(listenm8 h,Enemy8 e, int val){ //add one enemy
 	return tmp;
 }
 
+plista Game::head_insert(plista h,Enemy0 e,int val){
+	plista tmp = new lista;
+	tmp->val = val;
+	tmp->enemy = e;
+	tmp->next = h;
+	return tmp;
+}
 
 listenm0 Game::obj_remove_enemy0(listenm0 h,int cod,bool head){ //remove the enemy type0 with this cod
 	if (h==NULL) return h;
@@ -575,7 +594,7 @@ void Game::shooting(){
 
 	while(tmp!=NULL){ //you have to move all the bullets
 		if(player.bullet.shoot(tmp,player.bullet.blt) == true){ //move the bullet if it exists
-			codice = tmp->cod;
+			codice = tmp->cod; //save the code of the bullet
 			tmp = player.bullet.obj_remove(tmp,codice,false); //remove from the list (don't clean the memory)
 			player.bullet.blt = player.bullet.obj_remove(player.bullet.blt,codice,true); //remove from the main list (clean the memory);
 		}
@@ -850,7 +869,6 @@ void Game::enemymovement(){	//Enemies movement
 		Game::interaction(tmp->enemy); //check the interaction between one enemy and the player
 		tmp = tmp->next; //go to the next enemy
 	}
-
 	listenm1 tmp1 = enemies1; //type1
 	while(tmp1!=NULL){
 		tmp1->enemy.movement(); //move one enemy
@@ -923,6 +941,16 @@ void Game::enemymovement(){	//Enemies movement
 		tmp8->enemy.display(); //see one enemy
 		//no damage when player touches enemies type8
 		tmp8 = tmp8->next; //go to the next enemy
+	}
+	//int i = 0;
+	plista tpp = enemies;
+	while(tpp!=NULL){
+		tpp->enemy.movement();
+		//std::string s = typeid(tpp->enemy).name();
+		//mvwprintw(board.board_win,0,30+i,s.c_str());
+		tpp->enemy.display();
+		tpp = tpp->next;
+		//i = i+30;
 	}
 }
 
