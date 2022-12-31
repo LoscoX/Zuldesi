@@ -12,7 +12,7 @@ class Market{
 
     public:
         Market(){
-            cout<<"constr\n";
+            
         }
 
         void addPowerup(Powerup p){
@@ -33,8 +33,3 @@ class Market{
         }
 
 };
-
-int main(){
-    Market m;
-    return 0;
-}
