@@ -32,8 +32,8 @@ public:
 	void initialize();
 	void addAt(int y,int x,char ch);
 	char getInput();
-	void initializeWall(int pivot,int h);
-	platform plat; //platform
+	void initializeWall(int pivot,int h,int ind);
+	platform plat[3]; //platform
 protected:
 	void construct(int height, int width);
 };

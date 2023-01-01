@@ -20,6 +20,7 @@ Gun type (If you touch them, nothing happens)
 	6- It's the enemy type0 but with gun
 	7- It's the enemy type5 but with gun
 	8- Enemy can't move but he can shoot, when the player reaches a specific place
+	9- Is's the enemy type2 but with two guns
 */
 
 //Enemy type 0
@@ -258,6 +259,7 @@ Enemy6::Enemy6(WINDOW * win, int y, int x, char c,int mv, int col) : Enemy0(win,
 
 Enemy6::Enemy6() : Enemy0(){
 	character = '0';
+	color = 1;
 	life = 5;
 	bullet = Bullet(curwin); //initialize the bullet
 	ind = 0; //no bullet
@@ -365,4 +367,54 @@ void Enemy8::movement(int direction){
 		ind = ind + 1; //we want different indexes for the different bullets
 		conta = 0;
 	}
+}
+
+//Enemy type9
+
+Enemy9::Enemy9(WINDOW * win, int y, int x, char c,int mv, int col) : Enemy6(win,y,x,c,mv,col){
+	life = 5;
+	bullet = Bullet(curwin); //initialize the bullet
+	ind = 0; //no bullet
+	conta = 0; //no shots
+	gun = '-'; //gun
+}
+
+Enemy9::Enemy9() : Enemy6(){
+	character = '2'; //It's the enemy type2 but with two guns
+	life = 5;
+	bullet = Bullet(curwin); //initialize the bullet
+	ind = 0; //no bullet
+	conta = 0; //no shots
+	gun = '-';
+}
+
+void Enemy9::movement(){
+	conta++; //increment time for the shot
+	mvwaddch(curwin, yLoc, xLoc,' '); //Delete previous character
+	mvwaddch(curwin, yLoc, xLoc+1,' '); //Delete the first gun
+	mvwaddch(curwin, yLoc, xLoc-1,' '); //Delete the second gun
+	yLoc = yLoc + segno;
+	if(yLoc < yMax - 2 - cost){ //lifting depends from cost
+		yLoc = yMax - 2 - cost;
+		segno = segno * (-1); //change the direction of the lifting
+	}
+	else if(yLoc > yMax - 2){
+		yLoc = yMax - 2;
+		segno = segno * (-1); //change the direction of the lifting
+	}
+	if(conta==5){ //every 5 seconds, the enemy fires two bullets in opposite directions
+		bullet.blt = bullet.head_insert(bullet.blt,segno,xLoc,yLoc,ind); //add the bullet
+		ind = ind + 1; //we want different indexes for the different bullets
+		bullet.blt = bullet.head_insert(bullet.blt,-segno,xLoc,yLoc,ind); //add the bullet
+		ind = ind + 1;
+		conta = 0;
+	}
+}
+
+void Enemy9::display(){
+	wattron(curwin,COLOR_PAIR(Enemy6::color)); //color
+	mvwaddch(curwin,yLoc,xLoc,character);
+	mvwaddch(curwin,yLoc,xLoc+1,gun); //create the dx gun
+	mvwaddch(curwin,yLoc,xLoc-1,gun); //create the sx gun
+	wattroff(curwin,COLOR_PAIR(Enemy6::color));
 }

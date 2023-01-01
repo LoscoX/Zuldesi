@@ -17,7 +17,6 @@ Player::Player(WINDOW * win, int y, int x){
 	character[1] = '^';
 	life = 99;
 	cash = 0;
-	pwup = NULL;//powerup
 	dir = 1; //initial direction
 	bullet = Bullet(curwin); //initialize the bullet
 	ind = 0; //no bullet
@@ -26,7 +25,14 @@ Player::Player(WINDOW * win, int y, int x){
 	xpern = xLoc; //save medium point for the jump
 	ypern = yLoc; //save medium point for the jump
 	conta = 0;
-	gun = true; //you start without the gun
+	//powerup
+	strcpy(typeofgun,"none"); //no gun when you start
+	shield = false; //no shield when you start
+	shield_life = 0;
+	teleportation = false; //you cannot teleport when you start
+	time_life_armor = 0; //life of the armor (0 becasuse you don't have the armor when you start)
+	active_armor = false; //no armor when you start
+	have_armor = false; //no armor when you start
 };
 
 Player::Player(){ //default constructor
@@ -39,7 +45,6 @@ Player::Player(){ //default constructor
 	character[1] = '^';
 	life = 99;
 	cash = 0;
-	pwup = NULL;
 	dir = 1;
 	bullet = Bullet(curwin); //initialize the bullet
 	ind = 0; //no bullet
@@ -48,7 +53,13 @@ Player::Player(){ //default constructor
 	xpern = 0;
 	ypern = 0;
 	conta = 0;
-	gun = false;
+	strcpy(typeofgun,"none"); //no gun when you start
+	shield = false; //no shield when you start
+	shield_life = 0;
+	teleportation = false; //you cannot teleport when you start
+	time_life_armor = 0; //life of the armor (0 becasuse you don't have the armor when you start)
+	active_armor = false; //no armor when you start
+	have_armor = false; //no armor when you start
 }
 
 void Player::initialize(){
@@ -110,9 +121,19 @@ bool Player::godown(){
 	return arrive;
 }
 
-
+void Player::teleport(){
+	mvwaddch(curwin, yLoc, xLoc,' ');
+	mvwaddch(curwin, yLoc-1, xLoc,' ');
+	yLoc = yMax - 2; //ground floor
+	xLoc = xLoc + 30;
+	if(xLoc > xMax-2) xLoc = xMax - 2; //you reach the wall
+}
 
 int Player::getmv(){ //move the character with gun by user
+	if(active_armor){ //check if you have actived your armor (when you do a movement, you lose one life of your armor)
+		if(time_life_armor>0)time_life_armor--; //if you have the armor actived, you have to decrement the time life of armor
+		else active_armor = false; //Your armor finishes its life
+	}
 	int choice = wgetch(curwin);
 	switch (choice){
 		case KEY_UP:
@@ -127,9 +148,36 @@ int Player::getmv(){ //move the character with gun by user
 			mvright();
 			break;
 		case 'h': //activate the gun
-			if(gun == true){
+			if(strcmp(typeofgun,"pistol") == 0){ //you shoot one bullet
 				bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc,yLoc,ind); //add the bullet
 				ind = ind + 1; //we want different indexes for the different bullets
+			}
+			else if(strcmp(typeofgun,"rifle") == 0){ //you shoot two bullets
+				for(int i=0;i<2;i++){
+					bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc+i*dir,yLoc,ind); //add the bullet
+					ind = ind + 1; //we want different indexes for the different bullets
+				}
+			}
+			else if(strcmp(typeofgun,"machinegun") == 0){ //you shoot three bullets
+				for(int i=0;i<3;i++){
+					bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc+i*dir,yLoc,ind); //add the bullet
+					ind = ind + 1; //we want different indexes for the different bullets
+				}
+			}
+			else if(strcmp(typeofgun,"doublegun") == 0){//you shoot two bullets in opposite directions
+				bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc,yLoc,ind); //add the bullet
+				ind = ind + 1; //we want different indexes for the different bullets
+				bullet.blt = bullet.head_insert(bullet.blt,-dir,xLoc,yLoc,ind); //add the bullet
+				ind = ind + 1;
+			}
+			break;
+		case 't': //activate the teleport
+			if(teleportation) Player::teleport();
+			break;
+		case 'a': //activate the armor (time_life of armor starts)
+			if(have_armor){
+				have_armor = false; //no armor anymore
+				active_armor = true;
 			}
 			break;
 		default:
@@ -158,11 +206,17 @@ void Player::display(){ //display the character
 
 
 void Player::injury(){ //Injury
-	mvwaddch(curwin,yLoc,xLoc,' ');
-	mvwaddch(curwin, yLoc-1, xLoc,' ');
-	xLoc = 1; //back to beginning
-	yLoc = yMax - 2; //back to beginning
-	life = life - 1; // one point
+	if(!shield && !active_armor){ //check if the player has the shield and the armor
+		mvwaddch(curwin,yLoc,xLoc,' ');
+		mvwaddch(curwin, yLoc-1, xLoc,' ');
+		xLoc = 1; //back to beginning
+		yLoc = yMax - 2; //back to beginning
+		life = life - 1; // one point
+	}
+	else if(shield){ //check if the player has the shield
+		if(shield_life == 0) shield = false; //no shield anymore
+		else shield_life = shield_life - 1;
+	}
 }
 
 int Player::getx(){
@@ -183,32 +237,4 @@ int Player::getcoins(){
 
 void Player::updatecash(){ //update cash
 	cash = cash + 1;
-}
-
-powup Player::addpwup(powup h,int e,char icon){ //add powerup
-	powup tmp = new powerup;
-	tmp->val = e;
-	tmp->c = icon;
-	tmp->next = h;
-	return tmp;
-}
-
-powup Player::removepwup(powup h,int e){ //remove powerup
-	if(h==NULL) return h;
-	if(h->val == e){ //you find powerup on the head of list
-		h = h->next;
-	}
-	powup tmp = h;
-	bool found = false;
-	while(tmp->next!=NULL && !found){
-		if(tmp->next->val == e){ //you find powerup in the list
-			powup tmp2 = tmp->next;
-			tmp->next = tmp2->next;
-			delete tmp2;
-			tmp2 = NULL;
-			found = true;
-		}
-		else tmp = tmp->next; //nothing
-	}
-	return h; //no powerups
 }

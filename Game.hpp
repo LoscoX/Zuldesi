@@ -60,14 +60,11 @@ struct listenemy8{ //list of enemies type8
 	Enemy8 enemy; //enemy
 	listenemy8* next;
 };
-
-struct lista{
-	int val;
-	Enemy0 enemy;
-	lista* next;
+struct listenemy9{ //list of enemies type8
+	int val; //ID
+	Enemy9 enemy; //enemy
+	listenemy9* next;
 };
-
-typedef lista* plista;
 
 struct money{
 	int val; //ID
@@ -86,13 +83,14 @@ typedef listenemy5* listenm5;
 typedef listenemy6* listenm6;
 typedef listenemy7* listenm7;
 typedef listenemy8* listenm8;
+typedef listenemy9* listenm9;
 
 typedef money* mony;
 
 
 class Game{
 public:
-	int n0,n1,n2,n3,n4,n5,n6,n7,n8; //number of enemies
+	int n0,n1,n2,n3,n4,n5,n6,n7,n8,n9; //number of enemies
 	int nc; //number of coins
 	Game(int height,int width);
 	void updateState(); //Main game
@@ -126,8 +124,7 @@ public:
 	listenm6 head_insert_enemy6(listenm6 h,Enemy6 e, int val); //add one enemy type6
 	listenm7 head_insert_enemy7(listenm7 h,Enemy7 e, int val); //add one enemy type7
 	listenm8 head_insert_enemy8(listenm8 h,Enemy8 e, int val); //add one enemy type8
-
-	plista head_insert(plista h,Enemy0 e, int val);
+	listenm9 head_insert_enemy9(listenm9 h,Enemy9 e, int val); //add one enemy type9
 
 	listenm0 obj_remove_enemy0(listenm0 h,int cod,bool head); //delete one enemy type0 (head == true, clean memory when delete an element in the head, otherwise not)
 	listenm1 obj_remove_enemy1(listenm1 h,int cod,bool head); //delete one enemy type1 (head == true, clean memory when delete an element in the head, otherwise not)
@@ -138,6 +135,7 @@ public:
 	listenm6 obj_remove_enemy6(listenm6 h,int cod,bool head); //delete one enemy type6 (head == true, clean memory when delete an element in the head, otherwise not)
 	listenm7 obj_remove_enemy7(listenm7 h,int cod,bool head); //delete one enemy type7 (head == true, clean memory when delete an element in the head, otherwise not)
 	listenm8 obj_remove_enemy8(listenm8 h,int cod,bool head); //delete one enemy type8 (head == true, clean memory when delete an element in the head, otherwise not)
+	listenm9 obj_remove_enemy9(listenm9 h,int cod,bool head); //delete one enemy type9 (head == true, clean memory when delete an element in the head, otherwise not)
 
 	void initializeCoins(); //spawn of coins
 	void updateCoins(); //check if one coin has to be removed
@@ -160,8 +158,7 @@ protected:
 	listenm6 enemies6; //list of enemies type 6
 	listenm7 enemies7; //list of enemies type 7
 	listenm8 enemies8; //list of enemies type 8
-
-	plista enemies;
+	listenm9 enemies9; //list of enemies type 8
 
 	mony coins;
 	bool game_over;

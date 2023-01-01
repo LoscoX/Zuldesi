@@ -27,7 +27,7 @@ public:
 	Enemy0(WINDOW * win, int y, int x, char c,int mv,int col);
 	Enemy0();
 	//virtual void movement();
-	//virtual ~Enemy0();-
+	//virtual ~Enemy0();
 	void initialize(); //start enemy
 	void movement(); //movement
 	void display(); //see the enemy
@@ -105,4 +105,12 @@ public:
 	Enemy8(WINDOW * win, int y, int x, char c, int mv, int col);
 	Enemy8();
 	void movement(int direction); //modify the movement
+};
+
+class Enemy9 : public Enemy6{
+public:
+	Enemy9(WINDOW * win, int y, int x, char c, int mv, int col);
+	Enemy9();
+	void movement(); //modify the movement
+	void display(); //modify display for the gun
 };
