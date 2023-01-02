@@ -6,7 +6,6 @@
  */
 
 #include "Player.hpp"
-#include <cstddef>
 
 Player::Player(WINDOW * win, int y, int x){
 	yLoc = y;
@@ -26,23 +25,17 @@ Player::Player(WINDOW * win, int y, int x){
 	xpern = xLoc; //save medium point for the jump
 	ypern = yLoc; //save medium point for the jump
 	conta = 0;
+	down_arrive = true; //you are not falling
 	//powerup
-	/*strcpy(typeofgun,"none"); //no gun when you start
-	shield = false; //no shield when you start
-	shield_life = 0;
-	teleportation = false; //you cannot teleport when you start
-	time_life_armor = 0; //life of the armor (0 becasuse you don't have the armor when you start)
-	ACTIVE_ARMOR = false; //no armor when you start
-	have_armor = false; //no armor when you start*/
-	gun = Powerup("None", "No gun", 1, 0, 0);
-	shield = Powerup("Shield", "A shield that blocks damage one time", 0, 1, 1);
+	gun = Powerup("None", "No gun", 1, 0, 0); //no gun when you start
+	shield = Powerup("Shield", "A shield that blocks damage one time", 0, 1, 1); //no shield when you start
 	hp = Powerup("HP", "Get back on your feet one more time", life, 1, 1);
-	armor = Powerup("Armor", "Become invincible for a limited time", 0, 1, 1);
-	teleportation = Powerup("Teleport", "Teleport a short distance", 0, 1, 1);
-	ARMOR_DURATION[0] = 1000; ARMOR_DURATION[1] = 5000; ARMOR_DURATION[2] = 10000;
-	TELEPORT_DISTANCE[0] = 10; TELEPORT_DISTANCE[1] = 20; TELEPORT_DISTANCE[2] = 30;
-	ACTIVE_ARMOR = false;
-	ARMOR_ACTIVE_DURATION = 0;
+	armor = Powerup("Armor", "Become invincible for a limited time", 0, 1, 1); //no armor when you start
+	teleportation = Powerup("Teleport", "Teleport a short distance", 0, 1, 1); //you cannot teleport when you start
+	ARMOR_DURATION[0] = 50; ARMOR_DURATION[1] = 100; ARMOR_DURATION[2] = 500; //different type of Armor duration
+	TELEPORT_DISTANCE[0] = 20; TELEPORT_DISTANCE[1] = 30; TELEPORT_DISTANCE[2] = 40; //different teleport distance
+	ACTIVE_ARMOR = false; //no Armor when you start
+	ARMOR_ACTIVE_DURATION = 0; //no armor when you start
 };
 
 Player::Player(){ //default constructor
@@ -63,22 +56,17 @@ Player::Player(){ //default constructor
 	xpern = 0;
 	ypern = 0;
 	conta = 0;
-	/*strcpy(typeofgun,"none"); //no gun when you start
-	shield = false; //no shield when you start
-	shield_life = 0;
-	teleportation = false; //you cannot teleport when you start
-	time_life_armor = 0; //life of the armor (0 becasuse you don't have the armor when you start)
-	ACTIVE_ARMOR = false; //no armor when you start
-	have_armor = false; //no armor when you start*/
-	gun = Powerup("None", "No gun", 1, 0, 0);
-	shield = Powerup("Shield", "A shield that blocks damage one time", 0, 1, 1);
+	down_arrive = true; //you are not falling
+	//powerup
+	gun = Powerup("None", "No gun", 1, 0, 0); //no gun when you start
+	shield = Powerup("Shield", "A shield that blocks damage one time", 0, 1, 1); //no shield when you start
 	hp = Powerup("HP", "Get back on your feet one more time", life, 1, 1);
-	armor = Powerup("Armor", "Become invincible for a limited time", 0, 1, 1);
-	teleportation = Powerup("Teleport", "Teleport a short distance", 0, 1, 1);
-	ARMOR_DURATION[0] = 1000; ARMOR_DURATION[1] = 5000; ARMOR_DURATION[2] = 10000;
-	TELEPORT_DISTANCE[0] = 10; TELEPORT_DISTANCE[1] = 20; TELEPORT_DISTANCE[2] = 30;
-	ACTIVE_ARMOR = false;
-	ARMOR_ACTIVE_DURATION = 0;
+	armor = Powerup("Armor", "Become invincible for a limited time", 0, 1, 1); //no armor when you start
+	teleportation = Powerup("Teleport", "Teleport a short distance", 0, 1, 1); //you cannot teleport when you start
+	ARMOR_DURATION[0] = 50; ARMOR_DURATION[1] = 100; ARMOR_DURATION[2] = 500; //different type of Armor duration
+	TELEPORT_DISTANCE[0] = 20; TELEPORT_DISTANCE[1] = 30; TELEPORT_DISTANCE[2] = 40; //different teleport distance
+	ACTIVE_ARMOR = false; //no Armor when you start
+	ARMOR_ACTIVE_DURATION = 0; //no armor when you start
 }
 
 void Player::initialize(){
@@ -90,7 +78,7 @@ void Player::updatepivot(){ //update pivot coordinates
 	ypern = yLoc;
 }
 
-void Player::jump(){ //jump dx,sx
+void Player::jump(){ //jump dx,sx     (0,5,8,9,8,5,0) //values of parabola
 	mvwaddch(curwin, yLoc, xLoc,' '); //Delete previous character
 	mvwaddch(curwin, yLoc-1, xLoc,' '); //Delete previous character
 	int xv = xpern + 3*dir; //xvertex of parabola
@@ -128,28 +116,30 @@ void Player::mvright(){ //move right
 	if (xLoc > xMax-2) xLoc = xMax - 2;
 }
 
-bool Player::godown(){
+void Player::godown(){ //go down
 	mvwaddch(curwin, yLoc, xLoc,' ');
 	mvwaddch(curwin, yLoc-1, xLoc,' ');
-	bool arrive = false;
-	if(yLoc<yMax-2) yLoc = yLoc + 1;
+	if(yLoc<yMax-2){
+		yLoc = yLoc + 1; //you are falling
+		down_arrive = false; //you are up
+	}
+
 	else{
 		yLoc = yMax-2;
-		arrive = true;
+		down_arrive = true; //reach the ground floor
 	}
-	return arrive;
 }
 
 void Player::teleport(){
 	mvwaddch(curwin, yLoc, xLoc,' ');
 	mvwaddch(curwin, yLoc-1, xLoc,' ');
 	yLoc = yMax - 2; //ground floor
-	xLoc = xLoc + TELEPORT_DISTANCE[teleportation.getQnt()];
+	xLoc = xLoc + TELEPORT_DISTANCE[teleportation.getQnt()-1]; //teleport the character
 	if(xLoc > xMax-2) xLoc = xMax - 2; //you reach the wall
 }
 
 int Player::getmv(){ //move the character with gun by user
-	if(ACTIVE_ARMOR){ //check if you have actived your armor (when you do a movement, you lose one life of your armor)
+	if(ACTIVE_ARMOR){ //check if you have actived your armor
 		if(ARMOR_ACTIVE_DURATION>0)ARMOR_ACTIVE_DURATION--; //if you have the armor actived, you have to decrement the time life of armor
 		else ACTIVE_ARMOR = false; //Your armor finishes its life
 	}
@@ -191,12 +181,15 @@ int Player::getmv(){ //move the character with gun by user
 			}
 			break;
 		case 't': //activate the teleport
-			if(teleportation.getQnt()>0) Player::teleport();
+			if(teleportation.getQnt()>0){
+				Player::teleport(); //check if you have the teleportation powerup
+				teleportation.setQnt(teleportation.getQnt()-1); //delete one teleport which you have
+			}
 			break;
 		case 'a': //activate the armor (time_life of armor starts)
-			if(armor.getQnt()>0){
-				ARMOR_ACTIVE_DURATION = ARMOR_DURATION[armor.getQnt()];
-				armor.setQnt(0); //no armor anymore
+			if(armor.getQnt()>0){ //you have at least on piece of armor
+				ARMOR_ACTIVE_DURATION = ARMOR_DURATION[armor.getQnt()-1]; //thanks to the quantity you get the armor duration. For example if you have two pieces of armor, you have 5000 time duration
+				armor.setQnt(0); //no armor anymore (you lose all piecies)
 				ACTIVE_ARMOR = true;
 			}
 			break;
@@ -240,8 +233,16 @@ int Player::jumpandshoot(){ //during the jump you can just shooting
 }
 
 void Player::display(){ //display the character
-	mvwaddch(curwin,yLoc,xLoc,character[0]);
-	mvwaddch(curwin,yLoc-1,xLoc,character[1]);
+	if(life>1){
+		mvwaddch(curwin,yLoc,xLoc,character[0]);
+		mvwaddch(curwin,yLoc-1,xLoc,character[1]);
+	}
+	else{ //if you have one life, you become red
+		wattron(curwin,COLOR_PAIR(1)); //color
+		mvwaddch(curwin,yLoc,xLoc,character[0]);
+		mvwaddch(curwin,yLoc-1,xLoc,character[1]);
+		wattroff(curwin,COLOR_PAIR(1));
+	}
 }
 
 
@@ -253,9 +254,10 @@ void Player::injury(){ //Injury
 		yLoc = yMax - 2; //back to beginning
 		life = life - 1; // one point
 	}
-	else if(shield.getQnt() > 0 && !ACTIVE_ARMOR){ //check if the player has the shield
-		shield.setQnt(shield.getQnt()-1);
+	else if(shield.getQnt() > 0 && !ACTIVE_ARMOR){ //check if the player has the shield but not the armor
+		shield.setQnt(shield.getQnt()-1); //you lose one piece of shield
 	}
+	//if you have the armor, you are invicible
 }
 
 int Player::getx(){
@@ -274,6 +276,21 @@ int Player::getcoins(){
 	return cash;
 }
 
-void Player::updatecash(){ //update cash
-	cash = cash + 1;
+int Player::getdir(){
+	return dir;
 }
+
+void Player::updatecash(int money){ //update cash
+	cash = cash + money;
+}
+
+void Player::updateLife(){ //update life
+	life = hp.qnt;
+}
+
+void Player::updateCoordinates(int x,int y){ //update coordinates
+	xLoc = xLoc+x;
+	yLoc = yLoc+y;
+}
+
+

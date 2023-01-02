@@ -12,9 +12,15 @@
 #include <cmath>
 #include <cstdlib>
 
-const int len = 9;
+const int len = 7;
 
 struct platform{ //structure for a platform
+	char graph[len];
+	int xpos[len];
+	int ypos[len];
+};
+
+struct wall{ //structure for a wall
 	char graph[len];
 	int xpos[len];
 	int ypos[len];
@@ -32,8 +38,10 @@ public:
 	void initialize();
 	void addAt(int y,int x,char ch);
 	char getInput();
-	void initializeWall(int pivot,int h,int ind);
-	platform plat[3]; //platform
+	void initializeWall(int x,int y,int ind);
+	void initializePlatform(int pivot,int h,int ind);
+	platform plat[3]; //platforms
+	wall wal[3]; //walls
 protected:
 	void construct(int height, int width);
 };

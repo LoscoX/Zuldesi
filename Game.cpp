@@ -19,18 +19,19 @@ Game::Game(int height,int width){
 	init_pair(6,COLOR_CYAN,COLOR_BLACK); //color enemy type 5/7
 	init_pair(7,COLOR_WHITE,COLOR_BLACK); //color enemy type 8
 
-	difficulty = 0;
+	difficulty = 0; //diffcult = 0 when you start the game
 
-    guns[0] = Powerup("Pistol", "Pistol", 1, 1, 1);
-	guns[1] = Powerup("Rifle", "Rifle", 1, 1, 1);
-	guns[2] = Powerup("Machinegun", "Machinegun", 1, 1, 1);
-	guns[3] = Powerup("Doublegun", "Doublegun", 1, 1, 1);
+	//Initialize Powerups (quantity of the guns is fixed to 1-->you can have just one gun)
+    guns[0] = Powerup("Pistol", "you shoot one bullet", 1, 1, 1);
+	guns[1] = Powerup("Rifle", "you shoot two bullets", 1, 1, 1);
+	guns[2] = Powerup("Machinegun", "you shoot three bullets", 1, 1, 1);
+	guns[3] = Powerup("Doublegun", "you shoot two bullets, one dx direction and one sx direction", 1, 1, 1);
 
-    bonus[0] = Powerup("HP", "Get back on your feet one more time", 0, 1, 1);
-	bonus[1] = Powerup("Shield", "A shield that blocks damage one time", 0, 1, 1);
+    bonus[0] = Powerup("HP", "Additional life", 1, 1, 1); //quantity corresponds to the number of lives which you have bought
+	bonus[1] = Powerup("Shield", "A shield that blocks damage one time", 1, 1, 1);//quantity corresponds to the number of protection you have (max 2)
 
-	active[0] = Powerup("Armor", "Become invincible for a limited time", 0, 1, 1);
-	active[1] = Powerup("Teleport", "Teleport a short distance", 0, 1, 1);
+	active[0] = Powerup("Armor", "Become invincible for a limited time", 1, 1, 1); //quantity corresponds to the number of protection you have (max 3)
+	active[1] = Powerup("Teleport", "Teleport a short distance", 1, 1, 1); //quantity correspons to the number of possibility of teleportation you have
 
 	board = Board(height,width); //create the board
 	board.initialize(); //initialize the board
@@ -39,9 +40,13 @@ Game::Game(int height,int width){
 	player = Player(win,height-2,1); //create the player
 	player.initialize(); //initialize the player
 
-	//board.initializeWall(50,17,0); //create the wall
-	//board.initializeWall(60,13,1); //create the wall
-	//board.initializeWall(70,10,2); //create the wall
+	//board.initializePlatform(50,17,0); //create the first platform
+	//board.initializePlatform(60,13,1); //create the second platform
+	//board.initializePlatform(70,10,2); //create the third platform
+
+	board.initializeWall(40,height-2,0);
+	board.initializeWall(60,height-2,1);
+	board.initializeWall(80,height-2,2);
 
 	time = 0;
 
@@ -65,7 +70,7 @@ Game::Game(int height,int width){
 	}
 	Game::initializeCoins(); //initialize coins
 
-	int k = 2; //max number of enemies
+	int k = 1; //max number of enemies
 
 	n0 = rand()%k; //number of enemies of type 0
 	for(int i=0;i<n0;i++){
@@ -129,42 +134,20 @@ Game::Game(int height,int width){
 
 	//onplatform = false; //initialize the platform bool variable
 
-	//Powerup
+	//Game::market(); //starts market
 
-	//weapons
-	//strcpy(player.typeofgun,"pistol");
-	//strcpy(player.typeofgun,"rifle");
-	//strcpy(player.typeofgun,"machinegun");
-	//strcpy(player.typeofgun,"doublegun");
+	//try powerups
+	//player.gun.name = guns[0].getName();
+	player.gun.name = guns[1].getName();
+	//player.gun.name = guns[2].getName();
+	//player.gun.name = guns[3].getName();
 
-	//add life
-	//int life = 1;
-	//int life = 3;
-	//int life = 5;
-	//player.life = player.life + life;
+	//player.shield.qnt = player.shield.qnt + bonus[1].getQnt();
+	player.hp.qnt = player.hp.qnt + bonus[0].getQnt();
+	player.updateLife();
 
-	//shield first power
-	//player.shield = true;
-	//player.shield_life = 1;
-	//shield second power
-	//player.shield = true;
-	//player.shield_life = 3;
-	//shield third power
-	//player.shield = true;
-	//player.shield_life = 5;
-
-	//armor first power
-	//player.have_armor = true;
-	//player.time_life_armor = 1000; //time
-	//armor second power
-	//player.have_armor = true;
-	//player.time_life_armor = 5000; //time
-	//armor third power
-	//player.have_armor = true;
-	//player.time_life_armor = 10000; //time
-
-	//teleportation
-	//player.teleportation = true;
+	//player.armor.qnt = player.armor.qnt + active[0].getQnt();
+	player.teleportation.qnt = player.teleportation.qnt + active[1].getQnt();
 
 	//initialize the enemies
 	Game::initializeEnemies();
@@ -173,12 +156,15 @@ Game::Game(int height,int width){
 }
 
 void Game::market(){
+	//Generate randomally 3 powerups
 	int a = rand()%NUM_GUNS;
 	int b = rand()%NUM_BONUS;
 	int c = rand()%NUM_ACTIVE;
 	Powerup pu_market[3] = {guns[a], bonus[b], active[c]};
 	//call graphic lib to load market level passing the 3 powerups selected for sale
+	Game::drawPowerUp(pu_market);
 
+	//Game::updatePowerup(Powerup pwp);
 
 	//once we exit the market level
 	//update difficulty based on powerups
@@ -190,6 +176,16 @@ void Game::market(){
 	difficulty = diff;
 
 	//call map generation function
+}
+
+//void Game::updatePowerup(Powerup pwp){
+
+//}
+
+void Game::drawPowerUp(Powerup pwp[]){ //Draw powerups which are spawned
+	mvwprintw(board.board_win,20,28,pwp[0].getName().c_str());
+	mvwprintw(board.board_win,20,52,pwp[1].getName().c_str());
+	mvwprintw(board.board_win,20,80,pwp[2].getName().c_str());
 }
 
 void Game::initializeEnemies(){ //initialize enemies
@@ -684,6 +680,8 @@ void Game::displaylife(){ //display life
 void Game::displaycoins(){ //display coins
 	mvwprintw(board.board_win,0,103,"Money: ");
 	mvwprintw(board.board_win,0,109,"%d",player.getcoins());
+	mvwprintw(board.board_win,0,56,"%d",player.activejump);
+	mvwprintw(board.board_win,0,80,"%d",player.down_arrive);
 }
 
 void Game::shooting(){
@@ -1020,12 +1018,13 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 void Game::playermovement(){
 	//if you are jumping you cannot move
 	//bool arrive = true;
-	//if(arrive){ //check if you are not going down
+	/*if(arrive){ //check if you are not going down
 		if(!player.activejump){ //you are not jumping
-			//int choice = player.getmv(); //save the movement
-			player.getmv();
-			//bool down = Game::interactionPlatform(choice); //interaction with the walls
+			int choice = player.getmv(); //save the movement
+			//player.getmv();
+			//bool down = Game::interactionPlatform(choice); //interaction with the platforms
 			//if (down == true) arrive = player.godown();
+			Game::interactionWall(choice); //interaction with the walls
 		}
 		else{
 			player.jump();
@@ -1035,6 +1034,32 @@ void Game::playermovement(){
 		}
 	//}
 	//else player.godown(); //go down
+	//see player
+	player.display();
+	 */
+	//if you are jumping you cannot move
+	bool down;
+	if(player.down_arrive){ //check if you are not going down
+		if(!player.activejump){ //you are not jumping
+			int choice = player.getmv(); //save the movement
+			down = Game::interactionWall(choice); //interaction with the walls
+		}
+		else{
+			player.jump();
+			down = Game::interactionWall(KEY_UP); //you are jumping
+		}
+		//check if you have had a collision
+		if(!down && player.activejump){
+			player.display(); //show the jump
+			player.jumpandshoot(); //if you want shoot you have to press h
+		}
+		else if(player.activejump){
+			player.display(); //see the player
+			player.activejump = false; //stop jumping
+			player.godown(); //If there has been collisions, you have to go down
+		}
+	}
+	else player.godown(); //go down
 	//see player
 	player.display();
 }
@@ -1152,7 +1177,7 @@ void Game::updateCoins(){
 	int codice; //save cod
 	while(tmp!=NULL){
 		if(player.getx() == tmp->x && player.gety() == tmp->y){ //if the player and the coin are in the same place, you have to remove it and delete from the list
-			player.updatecash(); //update wallet
+			player.updatecash(1); //update wallet
 			codice = tmp->val;
 			tmp = Game::removeCoins(tmp,codice); //remove coin from the list
 			coins = Game::removeCoins(coins,codice); //remove coin from the main list
@@ -1234,5 +1259,42 @@ bool Game::interactionPlatform(int choice){
 	}
 	return down;
 }
-
 */
+
+bool Game::interactionWall(int choice){
+	int j = 0;
+	int i;
+	bool found_wall = false;
+	bool down = false;
+	while(j<3 && !found_wall){ //all walls!
+		i = 0;
+		while(i<len && !found_wall){ //check the position of the player with respect all pieces of the wall
+				switch(choice){
+					case KEY_RIGHT: //when player went to dx
+						if(player.getx() == board.wal[j].xpos[0] && player.gety() == board.wal[j].ypos[i]){
+							found_wall = true; //collision
+							player.updateCoordinates(-1,0); //come back from where you went
+						}
+						break;
+					case KEY_LEFT: //when player went to sx
+						if(player.getx() == board.wal[j].xpos[0] && player.gety() == board.wal[j].ypos[i]){
+							found_wall = true; //collision
+							player.updateCoordinates(1,0); //come back from where you went
+						}
+					case KEY_UP: //when player jumped
+						if(player.getx() == board.wal[j].xpos[0] && player.gety() == board.wal[j].ypos[i]){ //range of collision between a jump of player and the sx (or dx) part of wall (remember the dynamic of jump!)
+							found_wall = true; //collision
+							player.updateCoordinates(-player.getdir(),0); //come back from where you went
+							down = true; //you have to go down
+						}
+						break;
+					default:
+
+						break;
+				}
+			i++; //change piece of wall
+		}
+		j++; //change wall
+	}
+	return down;
+}
