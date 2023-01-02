@@ -2,7 +2,7 @@
 // Created by LoscoX on 28/12/2022.
 //
 
-#include <ncurses>
+#include <ncurses.h>
 #include <cstdio>
 using namespace std;
 
