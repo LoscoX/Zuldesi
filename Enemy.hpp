@@ -11,7 +11,7 @@
 #include <cstring>
 #include <cmath>
 #include <cstdlib>
-
+#include "Player.hpp" //take information about bullets and player
 
 class Enemy0{
 public:
@@ -26,6 +26,8 @@ public:
 	int life; //life
 	Enemy0(WINDOW * win, int y, int x, char c,int mv,int col);
 	Enemy0();
+	//virtual void movement();
+	//virtual ~Enemy0();
 	void initialize(); //start enemy
 	void movement(); //movement
 	void display(); //see the enemy
@@ -41,7 +43,7 @@ public:
 	int step; //traslation of the vertex of parabola
 	int xv; //xvertex of parabola
 	int yv; //yvertex of parabola
-	int a = (ypern-yv)/((xpern-xv)*(xpern-xv)); //coefficients of degree 2 of parabola
+	int a; //coefficients of degree 2 of parabola
 	Enemy1(WINDOW * win, int y, int x, char c, int mv, int col);
 	Enemy1();
 	void movement(); //modify the movement
@@ -77,4 +79,38 @@ public:
 	Enemy5(WINDOW * win, int y, int x, char c, int mv, int col);
 	Enemy5();
 	void movement(int direction); //modify the movement
+};
+
+class Enemy6 : public Enemy0{
+public:
+	int conta; //time for one shot
+	char gun; //character for the gun
+	Enemy6(WINDOW * win, int y, int x, char c, int mv, int col);
+	Enemy6();
+	void movement(); //modify the movement
+	void display(); //modify display for the gun
+	Bullet bullet; //list of bullet that you are using
+	int ind; //index for the list of bullet
+};
+
+class Enemy7 : public Enemy6{
+public:
+	Enemy7(WINDOW * win, int y, int x, char c, int mv, int col);
+	Enemy7();
+	void movement(int direction); //modify the movement
+};
+
+class Enemy8 : public Enemy6{
+public:
+	Enemy8(WINDOW * win, int y, int x, char c, int mv, int col);
+	Enemy8();
+	void movement(int direction); //modify the movement
+};
+
+class Enemy9 : public Enemy6{
+public:
+	Enemy9(WINDOW * win, int y, int x, char c, int mv, int col);
+	Enemy9();
+	void movement(); //modify the movement
+	void display(); //modify display for the gun
 };

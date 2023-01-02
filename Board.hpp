@@ -12,6 +12,15 @@
 #include <cmath>
 #include <cstdlib>
 
+const int len = 9;
+
+struct platform{ //structure for a platform
+	char graph[len];
+	int xpos[len];
+	int ypos[len];
+};
+
+
 class Board{
 public:
 	WINDOW *board_win;
@@ -23,6 +32,8 @@ public:
 	void initialize();
 	void addAt(int y,int x,char ch);
 	char getInput();
+	void initializeWall(int pivot,int h,int ind);
+	platform plat[3]; //platform
 protected:
 	void construct(int height, int width);
 };

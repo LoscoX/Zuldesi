@@ -11,28 +11,10 @@
 #include <cstring>
 #include <cmath>
 #include <cstdlib>
-
-struct powerup{
-	int val; //powerup code
-	char c; //powerup graphic symbol
-	powerup* next;
-};
-
-struct bullet{
-	int xB; //x of the bullet
-	int yB; //y of the bullet
-	int dir; //direction of the bullet
-	int cod; //how to identify one bullet
-	bullet* next;
-
-};
-
-typedef bullet* bullt;
-typedef powerup* powup;
+#include "Bullet.hpp"
 
 class Player{
 private:
-	int xMax,yMax; //coordinates of the box
 	char character[2]; //icon of the player
 	WINDOW * curwin;
 	int life; //life
@@ -45,7 +27,15 @@ public:
 	bool activejump; //if it is true, you are jumping
 	int xpern,ypern; //pivot for jumping
 	int conta;
-	bool gun; //activate gun or not
+	int xMax,yMax; //coordinates of the box
+	//powerup
+	char typeofgun[20]; //type of gun (it depends from you powerup)
+	bool shield; //shield
+	int shield_life; //shield resistance
+	bool teleportation; //you can or cannot teleport
+	int time_life_armor; //time duration of armor
+	bool active_armor; //you active or not armor
+	bool have_armor; //you have or have not armor
 
 	Player();
 	Player(WINDOW * win, int y, int x);
@@ -55,12 +45,11 @@ public:
 	void updatepivot(); //update pivotvariables
 	void jump();
 	int jumpandshoot(); //shoot during the jump
+	bool godown(); //fall from one platform
+	void teleport();
 
-	bullt blt; //list of bullet that you are using
+	Bullet bullet; //gun magazine
 	int ind; //index for the list of bullet
-	bullt head_insert(bullt h,int dir); //create new bullet and add it in the gun magazine
-	bullt obj_remove(bullt h, int e); //destroy the first bullet and remove from the gun magazine
-	void shoot(bullt h); //handle the dynamic of the bullet
 
 	void display(); //see the player
 	void initialize(); //start the player
@@ -73,9 +62,4 @@ public:
 	int getcoins(); //return coins of player
 
 	void updatecash(); //update your wallet
-
-	powup pwup; //power-up
-
-	powup addpwup(powup h,int e,char icon); //add powerup
-	powup removepwup(powup h, int e); //remove powerup
 };

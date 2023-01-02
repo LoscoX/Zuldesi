@@ -10,12 +10,13 @@
 Game::Game(int height,int width){
 
 	start_color();
-	init_pair(1,COLOR_RED, COLOR_BLACK); //color enemy type 0
+	init_pair(1,COLOR_RED, COLOR_BLACK); //color enemy type 0/6
 	init_pair(2,COLOR_BLUE, COLOR_BLACK); //color enemy type 1
 	init_pair(3,COLOR_YELLOW,COLOR_BLACK); //color enemy type 2
 	init_pair(4,COLOR_GREEN,COLOR_BLACK); //color enemy type 3
 	init_pair(5,COLOR_MAGENTA,COLOR_BLACK); //color enemy type 4
-	init_pair(6,COLOR_CYAN,COLOR_BLACK); //color enemy type 5
+	init_pair(6,COLOR_CYAN,COLOR_BLACK); //color enemy type 5/7
+	init_pair(7,COLOR_WHITE,COLOR_BLACK); //color enemy type 8
 
 
 	board = Board(height,width); //create the board
@@ -25,6 +26,10 @@ Game::Game(int height,int width){
 	player = Player(win,height-2,1); //create the player
 	player.initialize(); //initialize the player
 
+	//board.initializeWall(50,17,0); //create the wall
+	//board.initializeWall(60,13,1); //create the wall
+	//board.initializeWall(70,10,2); //create the wall
+
 	time = 0;
 
 	enemies0 = NULL; //initialize the list
@@ -33,6 +38,10 @@ Game::Game(int height,int width){
 	enemies3 = NULL; //initialize the list
 	enemies4 = NULL; //initialize the list
 	enemies5 = NULL; //initialize the list
+	enemies6 = NULL; //initialize the list
+	enemies7 = NULL; //initialize the list
+	enemies8 = NULL; //initialize the list
+	enemies9 = NULL; //initialize the list
 
 	coins = NULL; //initialize coins
 
@@ -81,6 +90,69 @@ Game::Game(int height,int width){
 		enemies5 = Game::head_insert_enemy5(enemies5,e,i); //add the enemy into the list
 	}
 
+	n6 = rand()%k; //number of enemies of type 6
+	for(int i=0;i<n6;i++){
+		Enemy6 e = Enemy6(win,height-2,(2 + rand()%(width-3)),'0',7,1); //create one enemy
+		enemies6 = Game::head_insert_enemy6(enemies6,e,i); //add the enemy into the list
+	}
+
+	n7 = rand()%k; //number of enemies of type 7
+	for(int i=0;i<n7;i++){
+		Enemy7 e = Enemy7(win,height-2,(2 + rand()%(width-3)),'5',7,6); //create one enemy
+		enemies7 = Game::head_insert_enemy7(enemies7,e,i); //add the enemy into the list
+	}
+
+	n8 = rand()%k; //number of enemies of type 8
+	for(int i=0;i<n8;i++){
+		Enemy8 e = Enemy8(win,height-2,(2 + rand()%(width-3)),'8',7,7); //create one enemy
+		enemies8 = Game::head_insert_enemy8(enemies8,e,i); //add the enemy into the list
+	}
+
+	n9 = rand()%k; //number of enemies of type 9
+	for(int i=0;i<n9;i++){
+		Enemy9 e = Enemy9(win,height-2,(2 + rand()%(width-3)),'2',7,3); //create one enemy
+		enemies9 = Game::head_insert_enemy9(enemies9,e,i); //add the enemy into the list
+	}
+
+	//onplatform = false; //initialize the platform bool variable
+
+	//Powerup
+
+	//weapons
+	//strcpy(player.typeofgun,"pistol");
+	//strcpy(player.typeofgun,"rifle");
+	//strcpy(player.typeofgun,"machinegun");
+	//strcpy(player.typeofgun,"doublegun");
+
+	//add life
+	//int life = 1;
+	//int life = 3;
+	//int life = 5;
+	//player.life = player.life + life;
+
+	//shield first power
+	//player.shield = true;
+	//player.shield_life = 1;
+	//shield second power
+	//player.shield = true;
+	//player.shield_life = 3;
+	//shield third power
+	//player.shield = true;
+	//player.shield_life = 5;
+
+	//armor first power
+	//player.have_armor = true;
+	//player.time_life_armor = 1000; //time
+	//armor second power
+	//player.have_armor = true;
+	//player.time_life_armor = 5000; //time
+	//armor third power
+	//player.have_armor = true;
+	//player.time_life_armor = 10000; //time
+
+	//teleportation
+	//player.teleportation = true;
+
 	//initialize the enemies
 	Game::initializeEnemies();
 
@@ -122,6 +194,30 @@ void Game::initializeEnemies(){ //initialize enemies
 	while(tmp5!=NULL){
 		tmp5->enemy.initialize();
 		tmp5 = tmp5->next;
+	}
+
+	listenm6 tmp6 = enemies6; //enemies is global!!
+	while(tmp6!=NULL){
+		tmp6->enemy.initialize();
+		tmp6 = tmp6->next;
+	}
+
+	listenm7 tmp7 = enemies7; //enemies is global!!
+	while(tmp7!=NULL){
+		tmp7->enemy.initialize();
+		tmp7 = tmp7->next;
+	}
+
+	listenm8 tmp8 = enemies8; //enemies is global!!
+	while(tmp8!=NULL){
+		tmp8->enemy.initialize();
+		tmp8 = tmp8->next;
+	}
+
+	listenm9 tmp9 = enemies9; //enemies is global!!
+	while(tmp9!=NULL){
+		tmp9->enemy.initialize();
+		tmp9 = tmp9->next;
 	}
 }
 
@@ -197,11 +293,48 @@ listenm5 Game::head_insert_enemy5(listenm5 h,Enemy5 e, int val){ //add one enemy
 	return tmp;
 }
 
-listenm0 Game::obj_remove_enemy0(listenm0 h,int cod){ //remove the enemy type0 with this cod
+listenm6 Game::head_insert_enemy6(listenm6 h,Enemy6 e, int val){ //add one enemy type6 to the list
+	listenm6 tmp = new listenemy6;
+	tmp->val = val;
+	tmp->enemy = e;
+	tmp->next = h;
+	return tmp;
+}
+
+listenm7 Game::head_insert_enemy7(listenm7 h,Enemy7 e, int val){ //add one enemy type7 to the list
+	listenm7 tmp = new listenemy7;
+	tmp->val = val;
+	tmp->enemy = e;
+	tmp->next = h;
+	return tmp;
+}
+
+listenm8 Game::head_insert_enemy8(listenm8 h,Enemy8 e, int val){ //add one enemy type8 to the list
+	listenm8 tmp = new listenemy8;
+	tmp->val = val;
+	tmp->enemy = e;
+	tmp->next = h;
+	return tmp;
+}
+
+listenm9 Game::head_insert_enemy9(listenm9 h,Enemy9 e, int val){ //add one enemy type9 to the list
+	listenm9 tmp = new listenemy9;
+	tmp->val = val;
+	tmp->enemy = e;
+	tmp->next = h;
+	return tmp;
+}
+
+listenm0 Game::obj_remove_enemy0(listenm0 h,int cod,bool head){ //remove the enemy type0 with this cod
 	if (h==NULL) return h;
 	else if(h->val == cod){ //if the enemy is in the top of the list
-		//problem with the memory
-		h = h->next;
+		if(head == true){ //we need because we have a problem if we delete the list and use again the element pointed by the list
+			listenm0 tmp = h;
+			h = h->next;  //ok also if h has one element
+			delete tmp;
+			tmp = NULL;
+		}
+		else h = h->next;
 	}
 	else{
 		listenm0 tmp = h;
@@ -220,11 +353,16 @@ listenm0 Game::obj_remove_enemy0(listenm0 h,int cod){ //remove the enemy type0 w
 	return h;
 }
 
-listenm1 Game::obj_remove_enemy1(listenm1 h,int cod){ //remove the enemy type1 with this cod
+listenm1 Game::obj_remove_enemy1(listenm1 h,int cod,bool head){ //remove the enemy type1 with this cod
 	if (h==NULL) return h;
 	else if(h->val == cod){ //if the enemy is in the top of the list
-		//problem with the memory
-		h = h->next;
+		if(head == true){ //we need because we have a problem if we delete the list and use again the element pointed by the list
+			listenm1 tmp = h;
+			h = h->next;  //ok also if h has one element
+			delete tmp;
+			tmp = NULL;
+		}
+		else h = h->next;
 	}
 	else{
 		listenm1 tmp = h;
@@ -243,11 +381,16 @@ listenm1 Game::obj_remove_enemy1(listenm1 h,int cod){ //remove the enemy type1 w
 	return h;
 }
 
-listenm2 Game::obj_remove_enemy2(listenm2 h,int cod){ //remove the enemy type2 with this cod
+listenm2 Game::obj_remove_enemy2(listenm2 h,int cod,bool head){ //remove the enemy type2 with this cod
 	if (h==NULL) return h;
 	else if(h->val == cod){ //if the enemy is in the top of the list
-		//problem with the memory
-		h = h->next;
+		if(head == true){ //we need because we have a problem if we delete the list and use again the element pointed by the list
+			listenm2 tmp = h;
+			h = h->next;  //ok also if h has one element
+			delete tmp;
+			tmp = NULL;
+		}
+		else h = h->next;
 	}
 	else{
 		listenm2 tmp = h;
@@ -266,11 +409,16 @@ listenm2 Game::obj_remove_enemy2(listenm2 h,int cod){ //remove the enemy type2 w
 	return h;
 }
 
-listenm3 Game::obj_remove_enemy3(listenm3 h,int cod){ //remove the enemy type3 with this cod
+listenm3 Game::obj_remove_enemy3(listenm3 h,int cod,bool head){ //remove the enemy type3 with this cod
 	if (h==NULL) return h;
 	else if(h->val == cod){ //if the enemy is in the top of the list
-		//problem with the memory
-		h = h->next;
+		if(head == true){ //we need because we have a problem if we delete the list and use again the element pointed by the list
+			listenm3 tmp = h;
+			h = h->next;  //ok also if h has one element
+			delete tmp;
+			tmp = NULL;
+		}
+		else h = h->next;
 	}
 	else{
 		listenm3 tmp = h;
@@ -289,11 +437,16 @@ listenm3 Game::obj_remove_enemy3(listenm3 h,int cod){ //remove the enemy type3 w
 	return h;
 }
 
-listenm4 Game::obj_remove_enemy4(listenm4 h,int cod){ //remove the enemy type 4 with this cod
+listenm4 Game::obj_remove_enemy4(listenm4 h,int cod,bool head){ //remove the enemy type4 with this cod
 	if (h==NULL) return h;
 	else if(h->val == cod){ //if the enemy is in the top of the list
-		//problem with the memory
-		h = h->next;
+		if(head == true){ //we need because we have a problem if we delete the list and use again the element pointed by the list
+			listenm4 tmp = h;
+			h = h->next;  //ok also if h has one element
+			delete tmp;
+			tmp = NULL;
+		}
+		else h = h->next;
 	}
 	else{
 		listenm4 tmp = h;
@@ -312,11 +465,16 @@ listenm4 Game::obj_remove_enemy4(listenm4 h,int cod){ //remove the enemy type 4 
 	return h;
 }
 
-listenm5 Game::obj_remove_enemy5(listenm5 h,int cod){ //remove the enemy type5 with this cod
+listenm5 Game::obj_remove_enemy5(listenm5 h,int cod,bool head){ //remove the enemy type5 with this cod
 	if (h==NULL) return h;
 	else if(h->val == cod){ //if the enemy is in the top of the list
-		//problem with the memory
-		h = h->next;
+		if(head == true){ //we need because we have a problem if we delete the list and use again the element pointed by the list
+			listenm5 tmp = h;
+			h = h->next;  //ok also if h has one element
+			delete tmp;
+			tmp = NULL;
+		}
+		else h = h->next;
 	}
 	else{
 		listenm5 tmp = h;
@@ -335,11 +493,143 @@ listenm5 Game::obj_remove_enemy5(listenm5 h,int cod){ //remove the enemy type5 w
 	return h;
 }
 
+listenm6 Game::obj_remove_enemy6(listenm6 h,int cod,bool head){ //remove the enemy type6 with this cod
+	if (h==NULL) return h;
+	else if(h->val == cod){ //if the enemy is in the top of the list
+		if(head == true){ //we need because we have a problem if we delete the list and use again the element pointed by the list
+			listenm6 tmp = h;
+			h = h->next;  //ok also if h has one element
+			delete tmp;
+			tmp = NULL;
+		}
+		else h = h->next;
+	}
+	else{
+		listenm6 tmp = h;
+		bool found = false;
+		while(tmp->next!=NULL && !found){
+			if(tmp->next->val == cod){ //enemy in the middle of the list (ok also for the tail)
+				listenm6 tmp2 = tmp->next;
+				tmp->next = tmp2->next;
+				delete tmp2; //clean memory
+				tmp2 = NULL;
+				found = true;
+			}
+			else tmp = tmp->next;
+		}
+	}
+	return h;
+}
+
+listenm7 Game::obj_remove_enemy7(listenm7 h,int cod,bool head){ //remove the enemy type7 with this cod
+	if (h==NULL) return h;
+	else if(h->val == cod){ //if the enemy is in the top of the list
+		if(head == true){ //we need because we have a problem if we delete the list and use again the element pointed by the list
+			listenm7 tmp = h;
+			h = h->next;  //ok also if h has one element
+			delete tmp;
+			tmp = NULL;
+		}
+		else h = h->next;
+	}
+	else{
+		listenm7 tmp = h;
+		bool found = false;
+		while(tmp->next!=NULL && !found){
+			if(tmp->next->val == cod){ //enemy in the middle of the list (ok also for the tail)
+				listenm7 tmp2 = tmp->next;
+				tmp->next = tmp2->next;
+				delete tmp2; //clean memory
+				tmp2 = NULL;
+				found = true;
+			}
+			else tmp = tmp->next;
+		}
+	}
+	return h;
+}
+
+listenm8 Game::obj_remove_enemy8(listenm8 h,int cod,bool head){ //remove the enemy type7 with this cod
+	if (h==NULL) return h;
+	else if(h->val == cod){ //if the enemy is in the top of the list
+		if(head == true){ //we need because we have a problem if we delete the list and use again the element pointed by the list
+			listenm8 tmp = h;
+			h = h->next;  //ok also if h has one element
+			delete tmp;
+			tmp = NULL;
+		}
+		else h = h->next;
+	}
+	else{
+		listenm8 tmp = h;
+		bool found = false;
+		while(tmp->next!=NULL && !found){
+			if(tmp->next->val == cod){ //enemy in the middle of the list (ok also for the tail)
+				listenm8 tmp2 = tmp->next;
+				tmp->next = tmp2->next;
+				delete tmp2; //clean memory
+				tmp2 = NULL;
+				found = true;
+			}
+			else tmp = tmp->next;
+		}
+	}
+	return h;
+}
+
+listenm9 Game::obj_remove_enemy9(listenm9 h,int cod,bool head){ //remove the enemy type7 with this cod
+	if (h==NULL) return h;
+	else if(h->val == cod){ //if the enemy is in the top of the list
+		if(head == true){ //we need because we have a problem if we delete the list and use again the element pointed by the list
+			listenm9 tmp = h;
+			h = h->next;  //ok also if h has one element
+			delete tmp;
+			tmp = NULL;
+		}
+		else h = h->next;
+	}
+	else{
+		listenm9 tmp = h;
+		bool found = false;
+		while(tmp->next!=NULL && !found){
+			if(tmp->next->val == cod){ //enemy in the middle of the list (ok also for the tail)
+				listenm9 tmp2 = tmp->next;
+				tmp->next = tmp2->next;
+				delete tmp2; //clean memory
+				tmp2 = NULL;
+				found = true;
+			}
+			else tmp = tmp->next;
+		}
+	}
+	return h;
+}
+
 void Game::interaction(Enemy0 e){ //interaction between enemies and player
 	if(abs(player.getx() - e.getx()) <=1 && abs(player.gety() - e.gety())<=1) player.injury(); //if you are in a neighborhood of the enemy, you lose one life
 }
 
-int Game::directionSmartEnemy(Enemy5 e){ //handle the direction of the smart enemy
+bool Game::interactionBullet(bullt tmp){ //interaction between bullet shot by enemies and player
+	if(abs(player.getx() - tmp->xB) <=1 && abs(player.gety() - tmp->yB)<=1){
+		player.injury(); //if you are in a neighborhood of the bullet, you lose one life
+		return true;
+	}
+	else return false;
+}
+
+int Game::directionSmartEnemy5(Enemy5 e){ //handle the direction of the smart enemy
+	if(player.getx() - e.getx() > 0) return 1; //positive direction
+	else if(player.getx() - e.getx() < 0) return -1; //negative direction
+	else return 0;
+}
+
+int Game::directionSmartEnemy7(Enemy7 e){ //handle the direction of the smart enemy
+	if(player.getx() - e.getx() > 0) return 1; //positive direction
+	else if(player.getx() - e.getx() < 0) return -1; //negative direction
+	else return 0;
+}
+
+int Game::directionSmartEnemy8(Enemy8 e){ //handle the direction of the smart enemy
 	if(player.getx() - e.getx() > 0) return 1; //positive direction
 	else if(player.getx() - e.getx() < 0) return -1; //negative direction
 	else return 0;
@@ -364,17 +654,108 @@ void Game::displaycoins(){ //display coins
 }
 
 void Game::shooting(){
-	bullt tmp = player.blt;
+	//gun player
+	bullt tmp = player.bullet.blt;
 	int codice;
-	while(tmp!=NULL){ //you have to move all the bullets
-		player.shoot(tmp); //move the bullet if it exists
-		if(Game::enemydeath(tmp) == true){
-			mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
-			codice = tmp->cod; //save the code of the bullet
-			tmp = player.obj_remove(tmp, codice); //delete the bullet
-			player.blt = player.obj_remove(player.blt, codice); //delete the bullet from the main list
+	if(time%2==0){ //slow down also the speed of bullets
+		while(tmp!=NULL){ //you have to move all the bullets
+			if(player.bullet.shoot(tmp,player.bullet.blt) == true){ //move the bullet if it exists
+				codice = tmp->cod; //save the code of the bullet
+				tmp = player.bullet.obj_remove(tmp,codice,false); //remove from the list (don't clean the memory)
+				player.bullet.blt = player.bullet.obj_remove(player.bullet.blt,codice,true); //remove from the main list (clean the memory);
+			}
+			else if(Game::enemydeath(tmp) == true){
+				mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
+				codice = tmp->cod; //save the code of the bullet
+				tmp = player.bullet.obj_remove(tmp,codice,false); //delete the bullet (not clean the memory)
+				player.bullet.blt = player.bullet.obj_remove(player.bullet.blt,codice,true); //delete the bullet from the main list (clean the memory)
+			}
+			else tmp = tmp->next;
 		}
-		else tmp = tmp->next;
+
+		//gun enemy type6
+		listenm6 cont = enemies6;
+		while(cont!=NULL){ //There are more enemies type6 than one
+			tmp = cont->enemy.bullet.blt;
+			while(tmp!=NULL){ //you have to move all the bullets
+				if(cont->enemy.bullet.shoot(tmp,cont->enemy.bullet.blt) == true){ //move the bullet if it exists and check if reaches the wall
+					codice = tmp->cod; //save the code of the bullet
+					tmp = cont->enemy.bullet.obj_remove(tmp,codice,false); //remove from the list (don't clean the memory)
+					cont->enemy.bullet.blt = cont->enemy.bullet.obj_remove(cont->enemy.bullet.blt,codice,true); //remove from the main list (clean the memory);
+				}
+				else if(Game::interactionBullet(tmp) == true){
+					mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
+					codice = tmp->cod; //save the code of the bullet
+					tmp = cont->enemy.bullet.obj_remove(tmp,codice,false); //delete the bullet (not clean the memory)
+					cont->enemy.bullet.blt = cont->enemy.bullet.obj_remove(cont->enemy.bullet.blt,codice,true); //delete the bullet from the main list (clean the memory)
+				}
+				else tmp = tmp->next;
+			}
+			cont = cont->next; //change enemy
+		}
+
+		//gun enemy type7
+		listenm7 cont2 = enemies7;
+		while(cont2!=NULL){ //There are more enemies type7 than one
+			tmp = cont2->enemy.bullet.blt;
+			while(tmp!=NULL){ //you have to move all the bullets
+				if(cont2->enemy.bullet.shoot(tmp,cont2->enemy.bullet.blt)==true){ //move the bullet if it exists and check if it reaches the wall
+					codice = tmp->cod; //save the code of the bullet
+					tmp = cont2->enemy.bullet.obj_remove(tmp,codice,false); //remove from the list (don't clean the memory)
+					cont2->enemy.bullet.blt = cont2->enemy.bullet.obj_remove(cont2->enemy.bullet.blt,codice,true); //remove from the main list (clean the memory);
+				}
+				else if(Game::interactionBullet(tmp) == true){
+					mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
+					codice = tmp->cod; //save the code of the bullet
+					tmp = cont2->enemy.bullet.obj_remove(tmp,codice,false); //delete the bullet (not clean the memory)
+					cont2->enemy.bullet.blt = cont2->enemy.bullet.obj_remove(cont2->enemy.bullet.blt,codice,true); //delete the bullet from the main list (clean the memory)
+				}
+				else tmp = tmp->next;
+			}
+			cont2 = cont2->next; //change enemy
+		}
+
+		//gun enemy type8
+		listenm8 cont3 = enemies8;
+		while(cont3!=NULL){ //There are more enemies type8 than one
+			tmp = cont3->enemy.bullet.blt;
+			while(tmp!=NULL){ //you have to move all the bullets
+				if(cont3->enemy.bullet.shoot(tmp,cont3->enemy.bullet.blt) == true){ //move the bullet if it exists and check if it reaches the wall
+					codice = tmp->cod; //save the code of the bullet
+					tmp = cont3->enemy.bullet.obj_remove(tmp,codice,false); //remove from the list (don't clean the memory)
+					cont3->enemy.bullet.blt = cont3->enemy.bullet.obj_remove(cont3->enemy.bullet.blt,codice,true); //remove from the main list (clean the memory);
+				}
+				else if(Game::interactionBullet(tmp) == true){
+					mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
+					codice = tmp->cod; //save the code of the bullet
+					tmp = cont3->enemy.bullet.obj_remove(tmp,codice,false); //delete the bullet (not clean the memory)
+					cont3->enemy.bullet.blt = cont3->enemy.bullet.obj_remove(cont3->enemy.bullet.blt,codice,true); //delete the bullet from the main list (clean the memory)
+				}
+				else tmp = tmp->next;
+			}
+			cont3 = cont3->next; //change enemy
+		}
+
+		//gun enemy type9
+		listenm9 cont4 = enemies9;
+		while(cont4!=NULL){ //There are more enemies type9 than one
+			tmp = cont4->enemy.bullet.blt;
+			while(tmp!=NULL){ //you have to move all the bullets
+				if(cont4->enemy.bullet.shoot(tmp,cont4->enemy.bullet.blt) == true){ //move the bullet if it exists and check if it reaches the wall
+					codice = tmp->cod; //save the code of the bullet
+					tmp = cont4->enemy.bullet.obj_remove(tmp,codice,false); //remove from the list (don't clean the memory)
+					cont4->enemy.bullet.blt = cont4->enemy.bullet.obj_remove(cont4->enemy.bullet.blt,codice,true); //remove from the main list (clean the memory);
+				}
+				else if(Game::interactionBullet(tmp) == true){
+					mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
+					codice = tmp->cod; //save the code of the bullet
+					tmp = cont4->enemy.bullet.obj_remove(tmp,codice,false); //delete the bullet (not clean the memory)
+					cont4->enemy.bullet.blt = cont4->enemy.bullet.obj_remove(cont4->enemy.bullet.blt,codice,true); //delete the bullet from the main list (clean the memory)
+				}
+				else tmp = tmp->next;
+			}
+			cont4 = cont4->next; //change enemy
+		}
 	}
 }
 
@@ -390,8 +771,8 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 			if(tmp0->enemy.getlife() <= 0){ //Enemy life = 0
 				mvwaddch(board.board_win,tmp0->enemy.gety(),tmp0->enemy.getx(),' '); //delete graphically the enemy
 				codice = tmp0->val; //save the code of the enemy
-				tmp0 = Game::obj_remove_enemy0(tmp0, codice); //if it is died, you have to remove from the list
-				enemies0 = Game::obj_remove_enemy0(enemies0, codice); //if it is died, you have to remove from the main list
+				tmp0 = Game::obj_remove_enemy0(tmp0, codice,false); //if it is died, you have to remove from the list
+				enemies0 = Game::obj_remove_enemy0(enemies0, codice,true); //if it is died, you have to remove from the main list
 			}
 			else tmp0 = tmp0->next;
 		}
@@ -407,8 +788,8 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 			if(tmp1->enemy.getlife() <= 0){ //Enemy life = 0
 				mvwaddch(board.board_win,tmp1->enemy.gety(),tmp1->enemy.getx(),' '); //delete graphically the enemy
 				codice = tmp1->val; //save the code of the enemy
-				tmp1 = Game::obj_remove_enemy1(tmp1, codice); //if it is died, you have to remove from the list
-				enemies1 = Game::obj_remove_enemy1(enemies1, codice); //if it is died, you have to remove from the main list
+				tmp1 = Game::obj_remove_enemy1(tmp1, codice,false); //if it is died, you have to remove from the list
+				enemies1 = Game::obj_remove_enemy1(enemies1, codice,true); //if it is died, you have to remove from the main list
 			}
 			else tmp1 = tmp1->next;
 		}
@@ -424,8 +805,8 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 			if(tmp2->enemy.getlife() <= 0){ //Enemy life = 0
 				mvwaddch(board.board_win,tmp2->enemy.gety(),tmp2->enemy.getx(),' '); //delete graphically the enemy
 				codice = tmp2->val; //save the code of the enemy
-				tmp2 = Game::obj_remove_enemy2(tmp2, codice); //if it is died, you have to remove from the list
-				enemies2 = Game::obj_remove_enemy2(enemies2, codice); //if it is died, you have to remove from the main list
+				tmp2 = Game::obj_remove_enemy2(tmp2, codice,false); //if it is died, you have to remove from the list
+				enemies2 = Game::obj_remove_enemy2(enemies2, codice,true); //if it is died, you have to remove from the main list
 			}
 			else tmp2 = tmp2->next;
 		}
@@ -441,8 +822,8 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 			if(tmp3->enemy.getlife() <= 0){ //Enemy life = 0
 				mvwaddch(board.board_win,tmp3->enemy.gety(),tmp3->enemy.getx(),' '); //delete graphically the enemy
 				codice = tmp3->val; //save the code of the enemy
-				tmp3 = Game::obj_remove_enemy3(tmp3, codice); //if it is died, you have to remove from the list
-				enemies3 = Game::obj_remove_enemy3(enemies3, codice); //if it is died, you have to remove from the main list
+				tmp3 = Game::obj_remove_enemy3(tmp3, codice,false); //if it is died, you have to remove from the list
+				enemies3 = Game::obj_remove_enemy3(enemies3, codice,true); //if it is died, you have to remove from the main list
 			}
 			else tmp3 = tmp3->next;
 		}
@@ -458,8 +839,8 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 			if(tmp4->enemy.getlife() <= 0){ //Enemy life = 0
 				mvwaddch(board.board_win,tmp4->enemy.gety(),tmp4->enemy.getx(),' '); //delete graphically the enemy
 				codice = tmp4->val; //save the code of the enemy
-				tmp4 = Game::obj_remove_enemy4(tmp4, codice); //if it is died, you have to remove from the list
-				enemies4 = Game::obj_remove_enemy4(enemies4, codice); //if it is died, you have to remove from the main list
+				tmp4 = Game::obj_remove_enemy4(tmp4, codice,false); //if it is died, you have to remove from the list
+				enemies4 = Game::obj_remove_enemy4(enemies4, codice,true); //if it is died, you have to remove from the main list
 			}
 			else tmp4 = tmp4->next;
 		}
@@ -475,24 +856,152 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 			if(tmp5->enemy.getlife() <= 0){ //Enemy life = 0
 				mvwaddch(board.board_win,tmp5->enemy.gety(),tmp5->enemy.getx(),' '); //delete graphically the enemy
 				codice = tmp5->val; //save the code of the enemy
-				tmp5 = Game::obj_remove_enemy5(tmp5, codice); //if it is died, you have to remove from the list
-				enemies5 = Game::obj_remove_enemy5(enemies5, codice); //if it is died, you have to remove from the main list
+				tmp5 = Game::obj_remove_enemy5(tmp5, codice,false); //if it is died, you have to remove from the list
+				enemies5 = Game::obj_remove_enemy5(enemies5, codice,true); //if it is died, you have to remove from the main list
 			}
 			else tmp5 = tmp5->next;
 		}
 		else tmp5 = tmp5->next;
 	}
+
+	bullt temp; //we need it to raise all remaining bullets
+	//check enemy6
+	listenm6 tmp6 = enemies6;
+	while(tmp6!=NULL && !found){
+		if(abs(tmp->xB - tmp6->enemy.getx())<=1 && abs(tmp->yB - tmp6->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
+			tmp6->enemy.injury(); //injury for the enemy
+			found = true; //you have removed this bullet, so you can stop the cycle
+			if(tmp6->enemy.getlife() <= 0){ //Enemy life = 0
+				mvwaddch(board.board_win,tmp6->enemy.gety(),tmp6->enemy.getx(),' '); //delete graphically the enemy
+				//delete graphically the gun
+				if(tmp6->enemy.segno==1)mvwaddch(board.board_win,tmp6->enemy.gety(),tmp6->enemy.getx()+1,' ');
+				else mvwaddch(board.board_win,tmp6->enemy.gety(),tmp6->enemy.getx()-1,' ');
+				//delete all remaining bullets
+				temp = tmp6->enemy.bullet.blt;
+				while(temp!=NULL){
+					mvwaddch(board.board_win,temp->yB,temp->xB,' '); //delete graphically the bullet
+					codice = temp->cod; //save the code of the bullet
+					tmp = tmp6->enemy.bullet.obj_remove(temp,codice,false); //delete the bullet (not clean the memory)
+					tmp6->enemy.bullet.blt = tmp6->enemy.bullet.obj_remove(tmp6->enemy.bullet.blt,codice,true); //delete the bullet from the main list (clean the memory)
+					temp = temp->next;
+				}
+				codice = tmp6->val; //save the code of the enemy
+				tmp6 = Game::obj_remove_enemy6(tmp6, codice,false); //if it is died, you have to remove from the list
+				enemies6 = Game::obj_remove_enemy6(enemies6, codice,true); //if it is died, you have to remove from the main list
+			}
+			else tmp6 = tmp6->next;
+		}
+		else tmp6 = tmp6->next;
+	}
+
+	//check enemy7
+	listenm7 tmp7 = enemies7;
+	while(tmp7!=NULL && !found){
+		if(abs(tmp->xB - tmp7->enemy.getx())<=1 && abs(tmp->yB - tmp7->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
+			tmp7->enemy.injury(); //injury for the enemy
+			found = true; //you have removed this bullet, so you can stop the cycle
+			if(tmp7->enemy.getlife() <= 0){ //Enemy life = 0
+				mvwaddch(board.board_win,tmp7->enemy.gety(),tmp7->enemy.getx(),' '); //delete graphically the enemy
+				//delete graphically the gun
+				if(tmp7->enemy.segno==1)mvwaddch(board.board_win,tmp7->enemy.gety(),tmp7->enemy.getx()+1,' ');
+				else mvwaddch(board.board_win,tmp7->enemy.gety(),tmp7->enemy.getx()-1,' ');
+				//delete all remaining bullets
+				temp = tmp7->enemy.bullet.blt;
+				while(temp!=NULL){
+					mvwaddch(board.board_win,temp->yB,temp->xB,' '); //delete graphically the bullet
+					codice = temp->cod; //save the code of the bullet
+					tmp = tmp7->enemy.bullet.obj_remove(temp,codice,false); //delete the bullet (not clean the memory)
+					tmp7->enemy.bullet.blt = tmp7->enemy.bullet.obj_remove(tmp7->enemy.bullet.blt,codice,true); //delete the bullet from the main list (clean the memory)
+					temp = temp->next;
+				}
+				codice = tmp7->val; //save the code of the enemy
+				tmp7 = Game::obj_remove_enemy7(tmp7, codice,false); //if it is died, you have to remove from the list
+				enemies7 = Game::obj_remove_enemy7(enemies7, codice,true); //if it is died, you have to remove from the main list
+			}
+			else tmp7 = tmp7->next;
+		}
+		else tmp7 = tmp7->next;
+	}
+
+	//check enemy8
+	listenm8 tmp8 = enemies8;
+	while(tmp8!=NULL && !found){
+		if(abs(tmp->xB - tmp8->enemy.getx())<=1 && abs(tmp->yB - tmp8->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
+			tmp8->enemy.injury(); //injury for the enemy
+			found = true; //you have removed this bullet, so you can stop the cycle
+			if(tmp8->enemy.getlife() <= 0){ //Enemy life = 0
+				mvwaddch(board.board_win,tmp8->enemy.gety(),tmp8->enemy.getx(),' '); //delete graphically the enemy
+				//delete graphically the gun
+				if(tmp8->enemy.segno==1)mvwaddch(board.board_win,tmp8->enemy.gety(),tmp8->enemy.getx()+1,' ');
+				else mvwaddch(board.board_win,tmp8->enemy.gety(),tmp8->enemy.getx()-1,' ');
+				//delete all remaining bullets
+				temp = tmp8->enemy.bullet.blt;
+				while(temp!=NULL){
+					mvwaddch(board.board_win,temp->yB,temp->xB,' '); //delete graphically the bullet
+					codice = temp->cod; //save the code of the bullet
+					tmp = tmp8->enemy.bullet.obj_remove(temp,codice,false); //delete the bullet (not clean the memory)
+					tmp8->enemy.bullet.blt = tmp8->enemy.bullet.obj_remove(tmp8->enemy.bullet.blt,codice,true); //delete the bullet from the main list (clean the memory)
+					temp = temp->next;
+				}
+				codice = tmp8->val; //save the code of the enemy
+				tmp8 = Game::obj_remove_enemy8(tmp8, codice,false); //if it is died, you have to remove from the list
+				enemies8 = Game::obj_remove_enemy8(enemies8, codice,true); //if it is died, you have to remove from the main list
+			}
+			else tmp8 = tmp8->next;
+		}
+		else tmp8 = tmp8->next;
+	}
+
+	//check enemy9
+	listenm9 tmp9 = enemies9;
+	while(tmp9!=NULL && !found){
+		if(abs(tmp->xB - tmp9->enemy.getx())<=1 && abs(tmp->yB - tmp9->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
+			tmp9->enemy.injury(); //injury for the enemy
+			found = true; //you have removed this bullet, so you can stop the cycle
+			if(tmp9->enemy.getlife() <= 0){ //Enemy life = 0
+				mvwaddch(board.board_win,tmp9->enemy.gety(),tmp9->enemy.getx(),' '); //delete graphically the enemy
+				//delete graphically the two guns
+				mvwaddch(board.board_win,tmp9->enemy.gety(),tmp9->enemy.getx()+1,' ');
+				mvwaddch(board.board_win,tmp9->enemy.gety(),tmp9->enemy.getx()-1,' ');
+				//delete all remaining bullets
+				temp = tmp9->enemy.bullet.blt;
+				while(temp!=NULL){
+					mvwaddch(board.board_win,temp->yB,temp->xB,' '); //delete graphically the bullet
+					codice = temp->cod; //save the code of the bullet
+					tmp = tmp9->enemy.bullet.obj_remove(temp,codice,false); //delete the bullet (not clean the memory)
+					tmp9->enemy.bullet.blt = tmp9->enemy.bullet.obj_remove(tmp9->enemy.bullet.blt,codice,true); //delete the bullet from the main list (clean the memory)
+					temp = temp->next;
+				}
+				codice = tmp9->val; //save the code of the enemy
+				tmp9 = Game::obj_remove_enemy9(tmp9, codice,false); //if it is died, you have to remove from the list
+				enemies9 = Game::obj_remove_enemy9(enemies9, codice,true); //if it is died, you have to remove from the main list
+			}
+			else tmp9 = tmp9->next;
+		}
+		else tmp9 = tmp9->next;
+	}
+
 	return found;
 }
 
 void Game::playermovement(){
 	//if you are jumping you cannot move
-	if(!player.activejump) player.getmv();
-	else{
-		player.jump();
-		player.display(); //show the jump
-		player.jumpandshoot(); //if you want shoot you have to press h
-	}
+	//bool arrive = true;
+	//if(arrive){ //check if you are not going down
+		if(!player.activejump){ //you are not jumping
+			//int choice = player.getmv(); //save the movement
+			player.getmv();
+			//bool down = Game::interactionPlatform(choice); //interaction with the walls
+			//if (down == true) arrive = player.godown();
+		}
+		else{
+			player.jump();
+			//Game::interactionPlatform(KEY_UP); //you are jumping
+			player.display(); //show the jump
+			player.jumpandshoot(); //if you want shoot you have to press h
+		}
+	//}
+	//else player.godown(); //go down
 	//see player
 	player.display();
 }
@@ -505,7 +1014,6 @@ void Game::enemymovement(){	//Enemies movement
 		Game::interaction(tmp->enemy); //check the interaction between one enemy and the player
 		tmp = tmp->next; //go to the next enemy
 	}
-
 	listenm1 tmp1 = enemies1; //type1
 	while(tmp1!=NULL){
 		tmp1->enemy.movement(); //move one enemy
@@ -539,13 +1047,53 @@ void Game::enemymovement(){	//Enemies movement
 	}
 
 	int dir;
-	listenm5 tmp5 = enemies5;
+	listenm5 tmp5 = enemies5; //type5
 	while(tmp5!=NULL){
-		dir = Game::directionSmartEnemy(tmp5->enemy);
-		tmp5->enemy.movement(dir); //move one enemy
+		dir = Game::directionSmartEnemy5(tmp5->enemy);
+		if((abs(player.getx() - tmp5->enemy.getx()) <= 20) && (player.gety() == tmp5->enemy.gety())){ //player is sufficiently near to enemy type5
+			tmp5->enemy.movement(dir); //move one enemy
+		}
 		tmp5->enemy.display(); //see one enemy
 		Game::interaction(tmp5->enemy); //check the interaction between one enemy and the player
 		tmp5 = tmp5->next; //go to the next enemy
+	}
+
+	listenm6 tmp6 = enemies6;  //type6
+	while(tmp6!=NULL){
+		tmp6->enemy.movement(); //move one enemy
+		tmp6->enemy.display(); //see one enemy
+		//no damage when player touches enemies type6
+		tmp6 = tmp6->next; //go to the next enemy
+	}
+
+	listenm7 tmp7 = enemies7;  //type7
+	while(tmp7!=NULL){
+		dir = Game::directionSmartEnemy7(tmp7->enemy);
+		if((abs(player.getx() - tmp7->enemy.getx()) <= 20) && (player.gety() == tmp7->enemy.gety())){ //player is sufficiently near to enemy type7
+			tmp7->enemy.movement(dir); //move one enemy
+		}
+		tmp7->enemy.display(); //see one enemy
+		//no damage when player touches enemies type7
+		tmp7 = tmp7->next; //go to the next enemy
+	}
+
+	listenm8 tmp8 = enemies8;  //type8
+	while(tmp8!=NULL){
+		dir = Game::directionSmartEnemy8(tmp8->enemy);
+		if((abs(player.getx() - tmp8->enemy.getx()) <= 10) && (player.gety() == tmp8->enemy.gety())){ //player is sufficiently near to enemy type8
+			tmp8->enemy.movement(dir); //move one enemy
+		}
+		tmp8->enemy.display(); //see one enemy
+		//no damage when player touches enemies type8
+		tmp8 = tmp8->next; //go to the next enemy
+	}
+
+	listenm9 tmp9 = enemies9;  //type9
+	while(tmp9!=NULL){
+		tmp9->enemy.movement(); //move one enemy
+		tmp9->enemy.display(); //see one enemy
+		//no damage when player touches enemies type9
+		tmp9 = tmp9->next; //go to the next enemy
 	}
 }
 
@@ -605,5 +1153,53 @@ mony Game::removeCoins(mony h,int cod){ //remove the coin with this cod
 	}
 	return h;
 }
+/*
+bool Game::interactionPlatform(int choice){
+	bool down = false; //you are not falling
+	if (onplatform == false){ //you are not on the platform
+		for(int i=0;i<3;i++){
+			switch(choice){
+				case KEY_UP: //you are jumping
+					if(player.getx() >= board.plat[i].xpos[0] && player.getx() <= board.plat[i].xpos[len-1] && player.gety() == board.plat[i].ypos[0]){ //you reach the platform with a jump
+						player.activejump = false; //stop tu jump
+						onplatform = true; //now you are on platform
+					}
+					else if (player.getx() >= board.plat[i].xpos[0] && player.getx() <= board.plat[i].xpos[len-1] && (player.gety() - board.plat[i].ypos[0])<=3){ //you are under the platform and you can't reach it
+						mvwaddch(board.board_win,player.gety()-1,player.getx(),'_');
+						player.activejump = false; //stop to jump
+						onplatform = true; //you simulate that you are on platform
+					}
+					break;
+				default:
+					break;
+			}
+		}
+	}
+	else{
+		for(int i=0;i<3;i++){
+			if((player.getx() < board.plat[i].xpos[0] || player.getx() > board.plat[i].xpos[len-1])){ //you reach the end of the platform
+				if(player.gety() == player.yMax-2) onplatform = false; //you reach the ground floor
+				down = true; //you are going down
+			}
+			else if(player.gety() == board.plat[i].ypos[0]){ //you are on the platform
+				switch(choice){
+					case KEY_UP:
+						break;
+					case KEY_RIGHT:
+						mvwaddch(board.board_win,player.gety(),player.getx()-1,'_'); //rewrite the character
+						break;
+					case KEY_LEFT:
+						mvwaddch(board.board_win,player.gety(),player.getx()+1,'_'); //rewrite the character
+						break;
+				}
+			}
+			else{ //this is for the jump under the platform
+				if(player.gety() == player.yMax-2) onplatform = false; //you reach the ground floor
+				down = true;
+			}
+		}
+	}
+	return down;
+}
 
-
+*/
