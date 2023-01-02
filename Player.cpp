@@ -6,6 +6,7 @@
  */
 
 #include "Player.hpp"
+#include <cstddef>
 
 Player::Player(WINDOW * win, int y, int x){
 	yLoc = y;
@@ -15,7 +16,7 @@ Player::Player(WINDOW * win, int y, int x){
 	keypad(curwin,true);
 	character[0] = '@';
 	character[1] = '^';
-	life = 99;
+	life = 3;
 	cash = 0;
 	dir = 1; //initial direction
 	bullet = Bullet(curwin); //initialize the bullet
@@ -26,13 +27,22 @@ Player::Player(WINDOW * win, int y, int x){
 	ypern = yLoc; //save medium point for the jump
 	conta = 0;
 	//powerup
-	strcpy(typeofgun,"none"); //no gun when you start
+	/*strcpy(typeofgun,"none"); //no gun when you start
 	shield = false; //no shield when you start
 	shield_life = 0;
 	teleportation = false; //you cannot teleport when you start
 	time_life_armor = 0; //life of the armor (0 becasuse you don't have the armor when you start)
-	active_armor = false; //no armor when you start
-	have_armor = false; //no armor when you start
+	ACTIVE_ARMOR = false; //no armor when you start
+	have_armor = false; //no armor when you start*/
+	gun = Powerup("None", "No gun", 1, 0, 0);
+	shield = Powerup("Shield", "A shield that blocks damage one time", 0, 1, 1);
+	hp = Powerup("HP", "Get back on your feet one more time", life, 1, 1);
+	armor = Powerup("Armor", "Become invincible for a limited time", 0, 1, 1);
+	teleportation = Powerup("Teleport", "Teleport a short distance", 0, 1, 1);
+	ARMOR_DURATION[0] = 1000; ARMOR_DURATION[1] = 5000; ARMOR_DURATION[2] = 10000;
+	TELEPORT_DISTANCE[0] = 10; TELEPORT_DISTANCE[1] = 20; TELEPORT_DISTANCE[2] = 30;
+	ACTIVE_ARMOR = false;
+	ARMOR_ACTIVE_DURATION = 0;
 };
 
 Player::Player(){ //default constructor
@@ -53,13 +63,22 @@ Player::Player(){ //default constructor
 	xpern = 0;
 	ypern = 0;
 	conta = 0;
-	strcpy(typeofgun,"none"); //no gun when you start
+	/*strcpy(typeofgun,"none"); //no gun when you start
 	shield = false; //no shield when you start
 	shield_life = 0;
 	teleportation = false; //you cannot teleport when you start
 	time_life_armor = 0; //life of the armor (0 becasuse you don't have the armor when you start)
-	active_armor = false; //no armor when you start
-	have_armor = false; //no armor when you start
+	ACTIVE_ARMOR = false; //no armor when you start
+	have_armor = false; //no armor when you start*/
+	gun = Powerup("None", "No gun", 1, 0, 0);
+	shield = Powerup("Shield", "A shield that blocks damage one time", 0, 1, 1);
+	hp = Powerup("HP", "Get back on your feet one more time", life, 1, 1);
+	armor = Powerup("Armor", "Become invincible for a limited time", 0, 1, 1);
+	teleportation = Powerup("Teleport", "Teleport a short distance", 0, 1, 1);
+	ARMOR_DURATION[0] = 1000; ARMOR_DURATION[1] = 5000; ARMOR_DURATION[2] = 10000;
+	TELEPORT_DISTANCE[0] = 10; TELEPORT_DISTANCE[1] = 20; TELEPORT_DISTANCE[2] = 30;
+	ACTIVE_ARMOR = false;
+	ARMOR_ACTIVE_DURATION = 0;
 }
 
 void Player::initialize(){
@@ -125,14 +144,14 @@ void Player::teleport(){
 	mvwaddch(curwin, yLoc, xLoc,' ');
 	mvwaddch(curwin, yLoc-1, xLoc,' ');
 	yLoc = yMax - 2; //ground floor
-	xLoc = xLoc + 30;
+	xLoc = xLoc + TELEPORT_DISTANCE[teleportation.getQnt()];
 	if(xLoc > xMax-2) xLoc = xMax - 2; //you reach the wall
 }
 
 int Player::getmv(){ //move the character with gun by user
-	if(active_armor){ //check if you have actived your armor (when you do a movement, you lose one life of your armor)
-		if(time_life_armor>0)time_life_armor--; //if you have the armor actived, you have to decrement the time life of armor
-		else active_armor = false; //Your armor finishes its life
+	if(ACTIVE_ARMOR){ //check if you have actived your armor (when you do a movement, you lose one life of your armor)
+		if(ARMOR_ACTIVE_DURATION>0)ARMOR_ACTIVE_DURATION--; //if you have the armor actived, you have to decrement the time life of armor
+		else ACTIVE_ARMOR = false; //Your armor finishes its life
 	}
 	int choice = wgetch(curwin);
 	switch (choice){
@@ -148,23 +167,23 @@ int Player::getmv(){ //move the character with gun by user
 			mvright();
 			break;
 		case 'h': //activate the gun
-			if(strcmp(typeofgun,"pistol") == 0){ //you shoot one bullet
+			if(strcmp(gun.getName().c_str(),"pistol") == 0){ //you shoot one bullet
 				bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc,yLoc,ind); //add the bullet
 				ind = ind + 1; //we want different indexes for the different bullets
 			}
-			else if(strcmp(typeofgun,"rifle") == 0){ //you shoot two bullets
+			else if(strcmp(gun.getName().c_str(),"rifle") == 0){ //you shoot two bullets
 				for(int i=0;i<2;i++){
 					bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc+i*dir,yLoc,ind); //add the bullet
 					ind = ind + 1; //we want different indexes for the different bullets
 				}
 			}
-			else if(strcmp(typeofgun,"machinegun") == 0){ //you shoot three bullets
+			else if(strcmp(gun.getName().c_str(),"machinegun") == 0){ //you shoot three bullets
 				for(int i=0;i<3;i++){
 					bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc+i*dir,yLoc,ind); //add the bullet
 					ind = ind + 1; //we want different indexes for the different bullets
 				}
 			}
-			else if(strcmp(typeofgun,"doublegun") == 0){//you shoot two bullets in opposite directions
+			else if(strcmp(gun.getName().c_str(), "doublegun") == 0){//you shoot two bullets in opposite directions
 				bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc,yLoc,ind); //add the bullet
 				ind = ind + 1; //we want different indexes for the different bullets
 				bullet.blt = bullet.head_insert(bullet.blt,-dir,xLoc,yLoc,ind); //add the bullet
@@ -172,12 +191,13 @@ int Player::getmv(){ //move the character with gun by user
 			}
 			break;
 		case 't': //activate the teleport
-			if(teleportation) Player::teleport();
+			if(teleportation.getQnt()>0) Player::teleport();
 			break;
 		case 'a': //activate the armor (time_life of armor starts)
-			if(have_armor){
-				have_armor = false; //no armor anymore
-				active_armor = true;
+			if(armor.getQnt()>0){
+				ARMOR_ACTIVE_DURATION = ARMOR_DURATION[armor.getQnt()];
+				armor.setQnt(0); //no armor anymore
+				ACTIVE_ARMOR = true;
 			}
 			break;
 		default:
@@ -189,9 +209,29 @@ int Player::getmv(){ //move the character with gun by user
 int Player::jumpandshoot(){ //during the jump you can just shooting
 	int choice = wgetch(curwin);
 	switch(choice){
-		case 'h':
-			bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc,yLoc,ind); //add the bullet
-			ind = ind + 1;
+		case 'h': //activate the gun
+			if(strcmp(gun.getName().c_str(),"pistol") == 0){ //you shoot one bullet
+				bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc,yLoc,ind); //add the bullet
+				ind = ind + 1; //we want different indexes for the different bullets
+			}
+			else if(strcmp(gun.getName().c_str(),"rifle") == 0){ //you shoot two bullets
+				for(int i=0;i<2;i++){
+					bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc+i*dir,yLoc,ind); //add the bullet
+					ind = ind + 1; //we want different indexes for the different bullets
+				}
+			}
+			else if(strcmp(gun.getName().c_str(),"machinegun") == 0){ //you shoot three bullets
+				for(int i=0;i<3;i++){
+					bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc+i*dir,yLoc,ind); //add the bullet
+					ind = ind + 1; //we want different indexes for the different bullets
+				}
+			}
+			else if(strcmp(gun.getName().c_str(), "doublegun") == 0){//you shoot two bullets in opposite directions
+				bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc,yLoc,ind); //add the bullet
+				ind = ind + 1; //we want different indexes for the different bullets
+				bullet.blt = bullet.head_insert(bullet.blt,-dir,xLoc,yLoc,ind); //add the bullet
+				ind = ind + 1;
+			}
 			break;
 		default:
 			break;
@@ -206,16 +246,15 @@ void Player::display(){ //display the character
 
 
 void Player::injury(){ //Injury
-	if(!shield && !active_armor){ //check if the player has the shield and the armor
+	if(shield.getQnt() == 0 && !ACTIVE_ARMOR){ //check if the player has the shield and the armor
 		mvwaddch(curwin,yLoc,xLoc,' ');
 		mvwaddch(curwin, yLoc-1, xLoc,' ');
 		xLoc = 1; //back to beginning
 		yLoc = yMax - 2; //back to beginning
 		life = life - 1; // one point
 	}
-	else if(shield){ //check if the player has the shield
-		if(shield_life == 0) shield = false; //no shield anymore
-		else shield_life = shield_life - 1;
+	else if(shield.getQnt() > 0 && !ACTIVE_ARMOR){ //check if the player has the shield
+		shield.setQnt(shield.getQnt()-1);
 	}
 }
 
