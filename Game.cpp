@@ -6,6 +6,7 @@
  */
 
 #include "Game.hpp"
+#include <cstdlib>
 
 Game::Game(int height,int width){
 
@@ -18,6 +19,18 @@ Game::Game(int height,int width){
 	init_pair(6,COLOR_CYAN,COLOR_BLACK); //color enemy type 5/7
 	init_pair(7,COLOR_WHITE,COLOR_BLACK); //color enemy type 8
 
+	difficulty = 0;
+
+    guns[0] = Powerup("Pistol", "Pistol", 1, 1, 1);
+	guns[1] = Powerup("Rifle", "Rifle", 1, 1, 1);
+	guns[2] = Powerup("Machinegun", "Machinegun", 1, 1, 1);
+	guns[3] = Powerup("Doublegun", "Doublegun", 1, 1, 1);
+
+    bonus[0] = Powerup("HP", "Get back on your feet one more time", 0, 1, 1);
+	bonus[1] = Powerup("Shield", "A shield that blocks damage one time", 0, 1, 1);
+
+	active[0] = Powerup("Armor", "Become invincible for a limited time", 0, 1, 1);
+	active[1] = Powerup("Teleport", "Teleport a short distance", 0, 1, 1);
 
 	board = Board(height,width); //create the board
 	board.initialize(); //initialize the board
@@ -157,6 +170,26 @@ Game::Game(int height,int width){
 	Game::initializeEnemies();
 
 	game_over = false;
+}
+
+void Game::market(){
+	int a = rand()%NUM_GUNS;
+	int b = rand()%NUM_BONUS;
+	int c = rand()%NUM_ACTIVE;
+	Powerup pu_market[3] = {guns[a], bonus[b], active[c]};
+	//call graphic lib to load market level passing the 3 powerups selected for sale
+
+
+	//once we exit the market level
+	//update difficulty based on powerups
+	int diff = player.gun.getDifficulty();
+	diff += player.hp.getQnt() * player.hp.getDifficulty();
+	diff += player.shield.getQnt() * player.shield.getDifficulty();
+	diff += player.armor.getQnt() * player.armor.getDifficulty();
+	diff += player.teleportation.getQnt() * player.teleportation.getDifficulty();
+	difficulty = diff;
+
+	//call map generation function
 }
 
 void Game::initializeEnemies(){ //initialize enemies

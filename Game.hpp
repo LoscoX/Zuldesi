@@ -87,12 +87,20 @@ typedef listenemy9* listenm9;
 
 typedef money* mony;
 
+const int NUM_GUNS = 4;
+const int NUM_BONUS = 2;
+const int NUM_ACTIVE = 2;
 
 class Game{
 public:
 	int n0,n1,n2,n3,n4,n5,n6,n7,n8,n9; //number of enemies
 	int nc; //number of coins
+	int difficulty;
+	Powerup guns[NUM_GUNS];
+	Powerup bonus[NUM_BONUS];
+	Powerup active[NUM_ACTIVE];
 	Game(int height,int width);
+	void market();
 	void updateState(); //Main game
 	void redraw(); //
 	bool isOver(); //Game is over
