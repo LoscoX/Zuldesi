@@ -12,6 +12,7 @@
 #include <cmath>
 #include <cstdlib>
 #include "Bullet.hpp"
+#include "Powerup.hpp"
 
 class Player{
 private:
@@ -29,13 +30,22 @@ public:
 	int conta;
 	int xMax,yMax; //coordinates of the box
 	//powerup
-	char typeofgun[20]; //type of gun (it depends from you powerup)
+	/*char typeofgun[20]; //type of gun (it depends from you powerup)
 	bool shield; //shield
 	int shield_life; //shield resistance
 	bool teleportation; //you can or cannot teleport
 	int time_life_armor; //time duration of armor
-	bool active_armor; //you active or not armor
-	bool have_armor; //you have or have not armor
+	bool ACTIVE_ARMOR; //you active or not armor
+	bool have_armor; //you have or have not armor*/
+	Powerup gun;
+	Powerup shield;
+	Powerup hp;
+	Powerup armor;
+	Powerup teleportation;
+	int ARMOR_DURATION[3];
+	int TELEPORT_DISTANCE[3];
+	bool ACTIVE_ARMOR;
+	int ARMOR_ACTIVE_DURATION;
 
 	Player();
 	Player(WINDOW * win, int y, int x);
