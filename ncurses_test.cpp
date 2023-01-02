@@ -3,9 +3,8 @@
 //
 
 #include <ncursesw/ncurses.h>
-using namespace std;
 
-int main (int argc, char ** argv)
+int main ()
 {
     // initializes the screen
     // sets up memory and clears the screen
