@@ -51,7 +51,7 @@ build cmake_object_order_depends_target_Zuldesi: phony || CMakeFiles/Zuldesi.dir
 
 build CMakeFiles/Zuldesi.dir/ncurses_test.cpp.obj: CXX_COMPILER__Zuldesi_Debug C$:/git_repositories/Zuldesi/ncurses_test.cpp || cmake_object_order_depends_target_Zuldesi
   DEP_FILE = CMakeFiles\Zuldesi.dir\ncurses_test.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always
+  FLAGS = -g -fdiagnostics-color=always -std=gnu++17
   OBJECT_DIR = CMakeFiles\Zuldesi.dir
   OBJECT_FILE_DIR = CMakeFiles\Zuldesi.dir
 
@@ -65,7 +65,7 @@ build CMakeFiles/Zuldesi.dir/ncurses_test.cpp.obj: CXX_COMPILER__Zuldesi_Debug C
 
 build Zuldesi.exe: CXX_EXECUTABLE_LINKER__Zuldesi_Debug CMakeFiles/Zuldesi.dir/ncurses_test.cpp.obj | C$:/MinGW/lib/libncurses.dll.a
   FLAGS = -g
-  LINK_LIBRARIES = -lncurses  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  LINK_LIBRARIES = C:/MinGW/lib/libncurses.dll.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\Zuldesi.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
@@ -110,11 +110,6 @@ build Zuldesi: phony Zuldesi.exe
 # Folder: C:/git_repositories/Zuldesi/cmake-build-debug
 
 build all: phony Zuldesi.exe
-
-# =============================================================================
-# Unknown Build Time Dependencies.
-# Tell Ninja that they may appear as side effects of build rules
-# otherwise ordered by order-only dependencies.
 
 # =============================================================================
 # Built-in targets

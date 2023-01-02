@@ -11,16 +11,10 @@ int main (int argc, char ** argv)
     // sets up memory and clears the screen
     initscr();
 
-    int x, y;
-    x = y= 10;
-
-    // moves the cursor to the specified location
-    move(y, x);
-
     // prints a string(const char *) to a window
     printw("Hello world!");
 
-    // refresber tbe screen to match what's in memory
+    // refresber the screen to match what's in memory
     refresh();
 
     // what's for user input, returns in value of that key
@@ -29,9 +23,6 @@ int main (int argc, char ** argv)
     printw("%d", c);
 
     getch();
-
-    // clears the screen
-    clear();
 
     endwin();
     // deallocates memory and ends ncurses
