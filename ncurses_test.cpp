@@ -2,8 +2,7 @@
 // Created by LoscoX on 28/12/2022.
 //
 
-#include <ncurses.h>
-#include <cstdio>
+#include <ncursesw/ncurses.h>
 using namespace std;
 
 int main (int argc, char ** argv)
