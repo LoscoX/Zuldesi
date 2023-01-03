@@ -3,29 +3,35 @@
 //
 
 #include <ncursesw/ncurses.h>
+#include "map_class.h"
+
+using namespace  std;
 
 int main ()
 {
 
     initscr();
 
-    int x,y;
-    x=y=0;
+   int height, width, start_y, start_x;
+    height = 10;
+    width = 20;
+    start_y = start_x = 10;
 
-    move(y,x);
-
-    printw("Hello world!");
-
-
+    WINDOW * win = newwin(height, width, start_y, start_x);
     refresh();
+
+    start_color();
+    init_pair(5, COLOR_GREEN, COLOR_MAGENTA);
+    box(win, 5, 58);
+    attron(COLOR_PAIR(5));
+    printw( "This Is SPARTA!");
+    attroff(COLOR_PAIR(5));
+    wrefresh(win);
+
 
     int c = getch();
 
-    printw("%d", c);
-
-    clear();
-    getch();
-
     endwin();
+
     return 0;
 }
