@@ -4,4 +4,6 @@
 
 #include "map_class.h"
 
-class map
+class map{
+
+};
