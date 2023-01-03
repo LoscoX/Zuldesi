@@ -11,7 +11,7 @@
 - Infinity level
 - Rouge-lite level
 - Market level for each X meters on map
-- Market level in ontehr screen
+- Market level in an other screen
 - Player must enters in the market level each time it appears
 - Cam dependency by player movement
 
