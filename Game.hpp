@@ -87,28 +87,34 @@ typedef listenemy9* listenm9;
 
 typedef money* mony;
 
-const int NUM_GUNS = 4;
-const int NUM_BONUS = 2;
-const int NUM_ACTIVE = 2;
+const int NUM_GUNS = 4; //max number of powerup type gun
+const int NUM_BONUS = 2; //max number of powerup type bonus
+const int NUM_ACTIVE = 2; //max number of powerup type activable
 
 class Game{
 public:
 	int n0,n1,n2,n3,n4,n5,n6,n7,n8,n9; //number of enemies
 	int nc; //number of coins
-	int difficulty;
-	Powerup guns[NUM_GUNS];
-	Powerup bonus[NUM_BONUS];
-	Powerup active[NUM_ACTIVE];
+	int difficulty; //difficulty of the level. It depends on the number of powerup you have. It handles the generation of the map
+	//powerup
+	Powerup guns[NUM_GUNS]; //guns powerup
+	Powerup bonus[NUM_BONUS]; //bouns powerup
+	Powerup active[NUM_ACTIVE]; //activable powerup
 	Game(int height,int width);
-	void market();
+
 	void updateState(); //Main game
 	void redraw(); //
 	bool isOver(); //Game is over
+	void drawPowerUp(Powerup pwp[]);
+
+	void updatePowerup();
+	void market(); //activate the market
 
 	void interaction(Enemy0 e); //Game interaction between Enemy without gun and Player
 	bool interactionBullet(bullt tmp); //Game interaction between Enemy with gun and Player
-	//bool interactionPlatform(int choice); //Game interaction between player and enemies with walls
+	//bool interactionPlatform(int choice); //Game interaction between player and enemies with platforms
 	//bool onplatform; //it is = a true if you are on a platform
+	bool interactionWall(int choice); //Game interaction between player and enemies with walls
 
 	int directionSmartEnemy5(Enemy5 e); //Handle the direction of the enemy based on the position of the player
 	int directionSmartEnemy7(Enemy7 e); //Handle the direction of the enemy based on the position of the player

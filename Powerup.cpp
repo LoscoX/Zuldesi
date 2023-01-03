@@ -1,19 +1,13 @@
 #include "Powerup.hpp"
-#include <cstring>
-#include <list>
-#include <iostream>
-#include <iterator>
-
-using namespace std;
 
 Powerup::Powerup(){}
 
 Powerup::Powerup(string name, string description, int qnt, int price, int difficulty){
-    this->name = name;
-    this->description = description;
-    this->qnt = qnt;
-    this->price = price;
-    this->difficulty = difficulty;
+    this->name = name;  //name
+    this->description = description; //description
+    this->qnt = qnt; //quantity
+    this->price = price; //price
+    this->difficulty = difficulty; //difficulty
 }
 
 string Powerup::getName(){

@@ -20,32 +20,26 @@ private:
 	WINDOW * curwin;
 	int life; //life
 	int cash; //money
+	int xLoc,yLoc; //coordinates of the player
+	int xMax,yMax; //coordinates of the box
+	int dir; //save the direction of the movement
 	void mvleft();
 	void mvright();
 public:
-	int xLoc,yLoc; //coordinates of the player
-	int dir; //save the direction of the movement
 	bool activejump; //if it is true, you are jumping
 	int xpern,ypern; //pivot for jumping
 	int conta;
-	int xMax,yMax; //coordinates of the box
+	bool down_arrive; //if the player has finished its fall
 	//powerup
-	/*char typeofgun[20]; //type of gun (it depends from you powerup)
-	bool shield; //shield
-	int shield_life; //shield resistance
-	bool teleportation; //you can or cannot teleport
-	int time_life_armor; //time duration of armor
+	Powerup gun; //type of gun
+	Powerup shield; //shield
+	Powerup hp; //life
+	Powerup armor; //armor
+	Powerup teleportation; //teleport
+	int ARMOR_DURATION[3]; //duration of the armor
+	int TELEPORT_DISTANCE[3]; //distance of teleport
 	bool ACTIVE_ARMOR; //you active or not armor
-	bool have_armor; //you have or have not armor*/
-	Powerup gun;
-	Powerup shield;
-	Powerup hp;
-	Powerup armor;
-	Powerup teleportation;
-	int ARMOR_DURATION[3];
-	int TELEPORT_DISTANCE[3];
-	bool ACTIVE_ARMOR;
-	int ARMOR_ACTIVE_DURATION;
+	int ARMOR_ACTIVE_DURATION; //time duration of actived armor
 
 	Player();
 	Player(WINDOW * win, int y, int x);
@@ -55,7 +49,7 @@ public:
 	void updatepivot(); //update pivotvariables
 	void jump();
 	int jumpandshoot(); //shoot during the jump
-	bool godown(); //fall from one platform
+	void godown(); //fall from one platform
 	void teleport();
 
 	Bullet bullet; //gun magazine
@@ -70,6 +64,9 @@ public:
 	int gety(); //y coordinate of the player
 	int getlife(); //return life of player
 	int getcoins(); //return coins of player
+	int getdir(); //return dir of player
 
-	void updatecash(); //update your wallet
+	void updatecash(int money); //update your wallet
+	void updateLife(); //Update life if you finish a level
+	void updateCoordinates(int x,int y); //Update your x and y when you went in a not-possible place
 };
