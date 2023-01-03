@@ -107,14 +107,15 @@ public:
 	bool isOver(); //Game is over
 	void drawPowerUp(Powerup pwp[]);
 
+	void Structure();
+
 	void updatePowerup();
 	void market(); //activate the market
 
 	void interaction(Enemy0 e); //Game interaction between Enemy without gun and Player
 	bool interactionBullet(bullt tmp); //Game interaction between Enemy with gun and Player
-	//bool interactionPlatform(int choice); //Game interaction between player and enemies with platforms
-	//bool onplatform; //it is = a true if you are on a platform
-	bool interactionWall(int choice); //Game interaction between player and enemies with walls
+	void PlayercanMove(int choice); ////Game interaction between player and enemies with structure map
+	void PlayerDown(); //player goes down
 
 	int directionSmartEnemy5(Enemy5 e); //Handle the direction of the enemy based on the position of the player
 	int directionSmartEnemy7(Enemy7 e); //Handle the direction of the enemy based on the position of the player
@@ -126,6 +127,7 @@ public:
 	void enemymovement(); //enemies movement
 	void playermovement(); //player movement
 	int time; //time of the game
+	int ind_plat; //index for platforms
 
 	mony head_insert_coin(mony h,int val,int x,int y);
 

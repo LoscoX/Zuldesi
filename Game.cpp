@@ -40,15 +40,10 @@ Game::Game(int height,int width){
 	player = Player(win,height-2,1); //create the player
 	player.initialize(); //initialize the player
 
-	//board.initializePlatform(50,17,0); //create the first platform
-	//board.initializePlatform(60,13,1); //create the second platform
-	//board.initializePlatform(70,10,2); //create the third platform
-
-	board.initializeWall(40,height-2,0);
-	board.initializeWall(60,height-2,1);
-	board.initializeWall(80,height-2,2);
+	Game::Structure(); //ceate the structure
 
 	time = 0;
+	ind_plat = 0;
 
 	enemies0 = NULL; //initialize the list
 	enemies1 = NULL; //initialize the list
@@ -131,8 +126,6 @@ Game::Game(int height,int width){
 		Enemy9 e = Enemy9(win,height-2,(2 + rand()%(width-3)),'2',7,3); //create one enemy
 		enemies9 = Game::head_insert_enemy9(enemies9,e,i); //add the enemy into the list
 	}
-
-	//onplatform = false; //initialize the platform bool variable
 
 	//Game::market(); //starts market
 
@@ -268,8 +261,10 @@ void Game::updateState(){
 
 	//enemy movement
 	if(time%5 == 0) Game::enemymovement(); //you want to slow down enemies
-
 	time++;
+
+	//update structure
+	Game::Structure();
 
 	if(player.getlife() == 0) game_over = true; //Player death
 }
@@ -672,16 +667,28 @@ bool Game::isOver(){
 	return game_over;
 }
 
-void Game::displaylife(){ //display life
+void Game::displaylife(){ //display life and bullets
 	mvwprintw(board.board_win,0,0,"Life: ");
 	mvwprintw(board.board_win,0,5,"%d",player.getlife());
+	mvwprintw(board.board_win,0,50,"%d",player.getnumblt());
 }
 
 void Game::displaycoins(){ //display coins
 	mvwprintw(board.board_win,0,103,"Money: ");
 	mvwprintw(board.board_win,0,109,"%d",player.getcoins());
-	mvwprintw(board.board_win,0,56,"%d",player.activejump);
-	mvwprintw(board.board_win,0,80,"%d",player.down_arrive);
+}
+
+void Game::Structure(){
+	board.initializePlatform(10,board.height-7,0); //platform
+	board.initializePlatform(17,board.height-5,1); //platform
+	board.initializePlatform(25,board.height-8,2); //platform
+	board.initializePlatform(29,board.height-9,3); //platform
+	board.initializePlatform(35,board.height-13,4); //platform
+	board.initializeWall(4,board.height-4,0); //wall
+	board.initializeWall(100,board.height-5,1); //wall
+	board.initializeWall(60,board.height-6,2); //wall
+	board.initializeWall(70,board.height-5,3); //wall
+	board.initializeWall(80,board.height-7,4); //wall
 }
 
 void Game::shooting(){
@@ -1016,53 +1023,78 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 }
 
 void Game::playermovement(){
-	//if you are jumping you cannot move
-	//bool arrive = true;
-	/*if(arrive){ //check if you are not going down
-		if(!player.activejump){ //you are not jumping
-			int choice = player.getmv(); //save the movement
-			//player.getmv();
-			//bool down = Game::interactionPlatform(choice); //interaction with the platforms
-			//if (down == true) arrive = player.godown();
-			Game::interactionWall(choice); //interaction with the walls
-		}
-		else{
-			player.jump();
-			//Game::interactionPlatform(KEY_UP); //you are jumping
-			player.display(); //show the jump
-			player.jumpandshoot(); //if you want shoot you have to press h
-		}
-	//}
-	//else player.godown(); //go down
-	//see player
-	player.display();
-	 */
-	//if you are jumping you cannot move
-	bool down;
+	int choice;
 	if(player.down_arrive){ //check if you are not going down
 		if(!player.activejump){ //you are not jumping
-			int choice = player.getmv(); //save the movement
-			down = Game::interactionWall(choice); //interaction with the walls
+			choice = player.getmv(); //save the movement
+			Game::PlayercanMove(choice); //check if you can move
 		}
 		else{
 			player.jump();
-			down = Game::interactionWall(KEY_UP); //you are jumping
+			Game::PlayercanMove(KEY_UP); //check if you can move (you are jumping)
+			player.display();
+			player.airshoot(); //if you want shoot you have to press h
 		}
-		//check if you have had a collision
-		if(!down && player.activejump){
-			player.display(); //show the jump
-			player.jumpandshoot(); //if you want shoot you have to press h
-		}
-		else if(player.activejump){
-			player.display(); //see the player
-			player.activejump = false; //stop jumping
-			player.godown(); //If there has been collisions, you have to go down
-		}
-	}
-	else player.godown(); //go down
 	//see player
+	}
 	player.display();
 }
+
+void Game::PlayerDown(){
+	player.godown(); //go down
+	player.display(); //see the player
+	player.airshoot(); //you can shoot
+}
+
+void Game::PlayercanMove(int choice){
+	//bool down;
+	switch(choice){
+	case KEY_LEFT: //you went to sx
+		if(board.IsThereStructure(player.getx(),player.gety())){ //check it there has been collision
+			player.updateCoordinates(1,0); //you have to go where you went
+		}
+		else{
+			while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
+				Game::PlayerDown(); //go down
+			}
+		}
+		break;
+	case KEY_RIGHT: //you went to dx
+		if(board.IsThereStructure(player.getx(),player.gety())){ //check it there has been collision
+			player.updateCoordinates(-1,0); //you have to go where you went
+		}
+		else{
+			while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
+				Game::PlayerDown(); //go down
+			}
+		}
+		break;
+	case KEY_UP: //you went up
+		if(board.IsThereStructure(player.getx(),player.gety())){ //check if reach one piece of one structure
+			player.updateCoordinates(-player.getdir(),-1); //you have to go where you went(it depends on the direction)
+			player.SetJump(); //for the next jump
+			while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
+				Game::PlayerDown(); //go down
+			}
+		}
+		else if(board.IsThereStructure(player.getx(),player.gety()-1) || board.IsThereStructure(player.getx(),player.gety()+1)){ //check if you have something under your feet or over you head
+			player.SetJump(); //for the next jump
+			while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
+				Game::PlayerDown(); //go down
+			}
+		}
+		else if(player.activejump == false){
+			while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
+				Game::PlayerDown(); //go down
+			}
+		}
+		break;
+	default:
+		break;
+	}
+}
+
+
 
 void Game::enemymovement(){	//Enemies movement
 	listenm0 tmp = enemies0; //type0
@@ -1210,91 +1242,4 @@ mony Game::removeCoins(mony h,int cod){ //remove the coin with this cod
 		}
 	}
 	return h;
-}
-/*
-bool Game::interactionPlatform(int choice){
-	bool down = false; //you are not falling
-	if (onplatform == false){ //you are not on the platform
-		for(int i=0;i<3;i++){
-			switch(choice){
-				case KEY_UP: //you are jumping
-					if(player.getx() >= board.plat[i].xpos[0] && player.getx() <= board.plat[i].xpos[len-1] && player.gety() == board.plat[i].ypos[0]){ //you reach the platform with a jump
-						player.activejump = false; //stop tu jump
-						onplatform = true; //now you are on platform
-					}
-					else if (player.getx() >= board.plat[i].xpos[0] && player.getx() <= board.plat[i].xpos[len-1] && (player.gety() - board.plat[i].ypos[0])<=3){ //you are under the platform and you can't reach it
-						mvwaddch(board.board_win,player.gety()-1,player.getx(),'_');
-						player.activejump = false; //stop to jump
-						onplatform = true; //you simulate that you are on platform
-					}
-					break;
-				default:
-					break;
-			}
-		}
-	}
-	else{
-		for(int i=0;i<3;i++){
-			if((player.getx() < board.plat[i].xpos[0] || player.getx() > board.plat[i].xpos[len-1])){ //you reach the end of the platform
-				if(player.gety() == player.yMax-2) onplatform = false; //you reach the ground floor
-				down = true; //you are going down
-			}
-			else if(player.gety() == board.plat[i].ypos[0]){ //you are on the platform
-				switch(choice){
-					case KEY_UP:
-						break;
-					case KEY_RIGHT:
-						mvwaddch(board.board_win,player.gety(),player.getx()-1,'_'); //rewrite the character
-						break;
-					case KEY_LEFT:
-						mvwaddch(board.board_win,player.gety(),player.getx()+1,'_'); //rewrite the character
-						break;
-				}
-			}
-			else{ //this is for the jump under the platform
-				if(player.gety() == player.yMax-2) onplatform = false; //you reach the ground floor
-				down = true;
-			}
-		}
-	}
-	return down;
-}
-*/
-
-bool Game::interactionWall(int choice){
-	int j = 0;
-	int i;
-	bool found_wall = false;
-	bool down = false;
-	while(j<3 && !found_wall){ //all walls!
-		i = 0;
-		while(i<len && !found_wall){ //check the position of the player with respect all pieces of the wall
-				switch(choice){
-					case KEY_RIGHT: //when player went to dx
-						if(player.getx() == board.wal[j].xpos[0] && player.gety() == board.wal[j].ypos[i]){
-							found_wall = true; //collision
-							player.updateCoordinates(-1,0); //come back from where you went
-						}
-						break;
-					case KEY_LEFT: //when player went to sx
-						if(player.getx() == board.wal[j].xpos[0] && player.gety() == board.wal[j].ypos[i]){
-							found_wall = true; //collision
-							player.updateCoordinates(1,0); //come back from where you went
-						}
-					case KEY_UP: //when player jumped
-						if(player.getx() == board.wal[j].xpos[0] && player.gety() == board.wal[j].ypos[i]){ //range of collision between a jump of player and the sx (or dx) part of wall (remember the dynamic of jump!)
-							found_wall = true; //collision
-							player.updateCoordinates(-player.getdir(),0); //come back from where you went
-							down = true; //you have to go down
-						}
-						break;
-					default:
-
-						break;
-				}
-			i++; //change piece of wall
-		}
-		j++; //change wall
-	}
-	return down;
 }

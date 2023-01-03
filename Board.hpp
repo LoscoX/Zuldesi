@@ -12,7 +12,7 @@
 #include <cmath>
 #include <cstdlib>
 
-const int len = 7;
+const int len = 7; //length of one structure
 
 struct platform{ //structure for a platform
 	char graph[len];
@@ -26,6 +26,7 @@ struct wall{ //structure for a wall
 	int ypos[len];
 };
 
+const int num_ogg = 5; //number of one type of objects
 
 class Board{
 public:
@@ -38,10 +39,12 @@ public:
 	void initialize();
 	void addAt(int y,int x,char ch);
 	char getInput();
-	void initializeWall(int x,int y,int ind);
-	void initializePlatform(int pivot,int h,int ind);
-	platform plat[3]; //platforms
-	wall wal[3]; //walls
+	void initializeWall(int x,int y,int ind); //build the walls
+	void initializePlatform(int pivot,int h,int ind); //build the structures
+	platform plat[num_ogg]; //platforms
+	wall wal[num_ogg]; //walls
+	bool IsThereStructure(int x,int y); //check if one character collides with a structure
+	int height,width; //height and width of the board
 protected:
 	void construct(int height, int width);
 };
