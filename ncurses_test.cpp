@@ -6,25 +6,26 @@
 
 int main ()
 {
-    // initializes the screen
-    // sets up memory and clears the screen
+
     initscr();
 
-    // prints a string(const char *) to a window
+    int x,y;
+    x=y=0;
+
+    move(y,x);
+
     printw("Hello world!");
 
-    // refresber the screen to match what's in memory
+
     refresh();
 
-    // what's for user input, returns in value of that key
     int c = getch();
 
     printw("%d", c);
 
+    clear();
     getch();
 
     endwin();
-    // deallocates memory and ends ncurses
-
     return 0;
 }
