@@ -9,9 +9,11 @@
 ### Level design
 - Horizontal level
 - Infinity level
-- Rouge-like level
-- Market for each X meters on map
-- Checkpoints as Market
+- Rouge-lite level
+- Market level for each X meters on map
+- Market level in ontehr screen
+- Player must enters in the market level each time it appears
+- Cam dependency by player movement
 
 ### Game Design
 - One touch kill
