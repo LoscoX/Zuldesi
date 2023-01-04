@@ -84,7 +84,7 @@ Game::Game(int height,int width){
 		enemies2 = Game::head_insert_enemy2(enemies2,e,i); //add the enemy into the list
 	}
 
-	n3 = 3; //number of enemies of type 3
+	n3 = rand()%k; //number of enemies of type 3
 	for(int i=0;i<n3;i++){
 		Enemy3 e = Enemy3(win,(1 + rand()%(height-2)),(1 + rand()%(width-2)),'3',9,4); //create one enemy
 		enemies3 = Game::head_insert_enemy3(enemies3,e,i); //add the enemy into the list
@@ -259,7 +259,7 @@ void Game::updateState(){
 	Game::shooting();
 
 	//enemy movement
-	if(time%5 == 0) Game::enemymovement(); //you want to slow down enemies
+	if(time%10 == 0) Game::enemymovement(); //you want to slow down enemies
 	time++;
 
 	//update structure
@@ -1044,19 +1044,17 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 
 void Game::playermovement(){
 	int choice;
-	if(player.down_arrive){ //check if you are not going down
-		if(!player.activejump){ //you are not jumping
-			choice = player.getmv(); //save the movement
-			Game::PlayerCanMove(choice); //check if you can move
-		}
-		else{
-			player.jump();
-			Game::PlayerCanMove(KEY_UP); //check if you can move (you are jumping)
-			player.display();
-			player.airshoot(); //if you want shoot you have to press h
-		}
-	//see player
+	if(!player.activejump){ //you are not jumping
+		choice = player.getmv(); //save the movement
+		Game::PlayerCanMove(choice); //check if you can move
 	}
+	else{
+		player.jump();
+		Game::PlayerCanMove(KEY_UP); //check if you can move (you are jumping)
+		player.display();
+		player.airshoot(); //if you want shoot you have to press h
+	}
+	//see player
 	player.display();
 }
 
@@ -1221,6 +1219,12 @@ void Game::Enemy7CanMove(listenm7 h){ //Enemies can or cannot move
 	}
 }
 
+void Game::Enemy8CanMove(listenm8 h){ //Enemies can or cannot move
+	while(!board.IsThereStructure(h->enemy.getx(),h->enemy.gety()+1) && h->enemy.gety()!= board.height-2){ //check if you have something under your feet
+		h->enemy.EnemyGoDown(); //go down
+	}
+}
+
 void Game::Enemy9CanMove(listenm9 h){ //Enemies can or cannot move
 	if(board.IsThereStructure(h->enemy.getx(),h->enemy.gety())){ //check if you have something under your feet or over you head
 		h->enemy.updateCoordinates(0,-h->enemy.getSign()); //you have to go from you went
@@ -1313,6 +1317,7 @@ void Game::enemymovement(){	//Enemies movement
 		if((abs(player.getx() - tmp8->enemy.getx()) <= 10) && (player.gety() == tmp8->enemy.gety())){ //player is sufficiently near to enemy type8
 			tmp8->enemy.movement(dir); //move one enemy
 		}
+		Game::Enemy8CanMove(tmp8);
 		tmp8->enemy.display(); //see one enemy
 		//no damage when player touches enemies type8
 		tmp8 = tmp8->next; //go to the next enemy

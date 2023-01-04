@@ -24,7 +24,6 @@ Player::Player(WINDOW * win, int y, int x){
 	activejump = false; //start without jump
 	segno = -1; //segno for parabola
 	conta = 1;
-	down_arrive = true; //you are not falling
 	onplatform = false; //you are not on a platform
 	//powerup
 	gun = Powerup("None", "No gun", 1, 0, 0); //no gun when you start
@@ -56,7 +55,6 @@ Player::Player(){ //default constructor
 	activejump = false;
 	segno = -1; //segno for parabola
 	conta = 1;
-	down_arrive = true; //you are not falling
 	onplatform = false; //you are not on a platform
 	//powerup
 	gun = Powerup("None", "No gun", 1, 0, 0); //no gun when you start
@@ -204,26 +202,26 @@ int Player::airshoot(){ //during jump movement or down movement, you can just sh
 	int choice = wgetch(curwin);
 	switch(choice){
 		case 'h': //activate the gun
-			if(strcmp(gun.getName().c_str(),"Pistol") == 0){ //you shoot one bullet
+			if(num_bullet>0 && strcmp(gun.getName().c_str(),"Pistol") == 0){ //you shoot one bullet
 				bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc,yLoc,ind); //add the bullet
 				ind = ind + 1; //we want different indexes for the different bullets
 				num_bullet--; //decrement bullets
 			}
-			else if(strcmp(gun.getName().c_str(),"Rifle") == 0){ //you shoot two bullets
+			else if(num_bullet>1 && strcmp(gun.getName().c_str(),"Rifle") == 0){ //you shoot two bullets
 				for(int i=0;i<2;i++){
 					bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc+i*dir,yLoc,ind); //add the bullet
 					ind = ind + 1; //we want different indexes for the different bullets
 					num_bullet--; //decrement bullets
 				}
 			}
-			else if(strcmp(gun.getName().c_str(),"Machinegun") == 0){ //you shoot three bullets
+			else if(num_bullet>2 && strcmp(gun.getName().c_str(),"Machinegun") == 0){ //you shoot three bullets
 				for(int i=0;i<3;i++){
 					bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc+i*dir,yLoc,ind); //add the bullet
 					ind = ind + 1; //we want different indexes for the different bullets
 					num_bullet--; //decrement bullets
 				}
 			}
-			else if(strcmp(gun.getName().c_str(), "Doublegun") == 0){//you shoot two bullets in opposite directions
+			else if(num_bullet>1 && strcmp(gun.getName().c_str(), "Doublegun") == 0){//you shoot two bullets in opposite directions
 				bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc,yLoc,ind); //add the bullet
 				ind = ind + 1; //we want different indexes for the different bullets
 				num_bullet--; //decrement bullets

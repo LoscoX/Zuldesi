@@ -29,7 +29,6 @@ private:
 public:
 	bool activejump; //if it is true, you are jumping
 	int conta;
-	bool down_arrive; //if the player has finished its fall
 	bool onplatform; //if the player is on a platform
 	int segno;
 	//powerup
