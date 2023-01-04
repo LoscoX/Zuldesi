@@ -39,7 +39,8 @@ public:
 	int getSign(); //enemy segn
 	void setSign(); //change enemy sign
 	void updateCoordinates(int x,int y); //update coordinates of enemy
-
+	int getXpern();
+	void setXpern(int x);
 	void injury();
 };
 

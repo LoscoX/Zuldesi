@@ -71,4 +71,5 @@ public:
 	void updatecash(int money); //update your wallet
 	void updateLife(); //Update life if you finish a level
 	void updateCoordinates(int x,int y); //Update your x and y when you went in a not-possible place
+	void setDir(int dir);
 };

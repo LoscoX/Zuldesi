@@ -65,6 +65,3 @@ bool Bullet::shoot(bullt blt2,bullt blt){ //describes the movement of the bullet
 	else mvwaddch(curwin,blt2->yB,blt2->xB,'-'); //draw the bullet
 	return found;
 }
-
-
-

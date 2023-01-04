@@ -135,6 +135,12 @@ public:
 	void shooting(); //handle the shooting
 	void enemymovement(); //enemies movement
 	void playermovement(); //player movement
+
+	void mapMovement();
+	void mapright();
+	void mapleft();
+
+	void StructureUpdate();
 	void PlayerDown(); //player goes down
 
 	int time; //time of the game
@@ -196,4 +202,3 @@ protected:
 	mony coins;
 	bool game_over;
 };
-
