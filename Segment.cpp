@@ -2,21 +2,21 @@
 // Created by LoscoX on 04/01/2023.
 //
 
-#include "data_matrix.hpp"
+#include "Segment.hpp"
 
-data_matrix::data_matrix() {
+Segment::Segment() {
     data = nullptr;
     x = 0;
     y = 0;
     char c = ' ';
 }
 
-data_matrix::data_matrix(int x, int y, char c) {
+Segment::Segment(int x, int y, char c) {
     //assign parameters
     this->x = x;
     this->y = y;
 
-    if (!data){ //creating data_matrix
+    if (!data){ //creating Segment
         data = new char*[x];
         for (int i = 0; i<x; i++){
             data[i] = new char[y];
@@ -26,14 +26,14 @@ data_matrix::data_matrix(int x, int y, char c) {
         }
     }else{
 
-        //deleting older data_matrix
+        //deleting older Segment
         for (int i = 0; i<x; i++){
             delete[]data[i];
         }
 
         delete[] data;
 
-        //creating data_matrix
+        //creating Segment
         data = new char*[x];
         for (int i = 0; i<x; i++){
             data[i] = new char[y];
@@ -45,10 +45,10 @@ data_matrix::data_matrix(int x, int y, char c) {
     }
 }
 
-data_matrix::~data_matrix() {
+Segment::~Segment() {
     if (data){
 
-        //deleting data_matrix
+        //deleting Segment
 
         for (int i = 0; i<x; i++){
             delete[]data[i];
@@ -62,10 +62,10 @@ data_matrix::~data_matrix() {
     }
 }
 
-int data_matrix::wide() const {
+int Segment::wide() const {
     return x;
 }
 
-int data_matrix::high() const {
+int Segment::high() const {
     return y;
 }

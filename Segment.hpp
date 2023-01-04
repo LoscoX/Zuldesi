@@ -1,17 +1,58 @@
+//
+// Created by LoscoX on 04/01/2023.
+//
+
+#ifndef ZULDESI_Segment_HPP
+#define ZULDESI_Segment_HPP
+
+#endif //ZULDESI_Segment_HPP
+
 class Segment{
-    "---------------------"
-    "---------------------"
-    "---44444-------------"
-    "--------------6------"
-    "--------------6------"
-    "----@---------6------"
-    "--------   ----------"
-    "        ^^^          "
-    private:
-    int dim_x, dim_y;
-    char a[6][3] ;
+private:
 
-    segment(){
+    char** data = nullptr;
 
-    }
-}
+    int x = 0; // number of rows
+    int y = 0; // number of columns
+
+public:
+
+    /**
+     * Class constructor
+     *
+     * Parameter-less class constructor
+     */
+    Segment();
+
+    /**
+     * Class constructor
+     *
+     * Creates a new matrix of size x*y initialized at value c
+     *
+     * @param x
+     * @param y
+     * @param c
+     */
+    Segment(int x, int y, char c = ' ');
+
+    /**
+     * Class distructor
+     *
+     * Cleanup the data when deallocated
+     */
+    ~Segment();
+
+    /**
+     *
+     * @return the wide value
+     */
+    int wide()const;
+
+    /**
+     *
+     * @return the high value
+     */
+    int high()const;
+
+
+};
