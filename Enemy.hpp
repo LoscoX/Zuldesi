@@ -14,39 +14,45 @@
 #include "Player.hpp" //take information about bullets and player
 
 class Enemy0{
-public:
-	int xMax,yMax; //coordinates of the box
-	WINDOW * curwin;
+protected:
 	int segno; //change the movement
 	int xLoc,yLoc; //coordinates of the enemy
+	int xMax,yMax; //coordinates of the box
+	int life; //life
 	int color; //color for the enemy
 	char character; //icon for the enemy
 	int xpern,ypern; //coordinates for the movement of the enemy
 	int cost; //radius of the movement
-	int life; //life
+public:
+	WINDOW * curwin;
 	Enemy0(WINDOW * win, int y, int x, char c,int mv,int col);
 	Enemy0();
 	//virtual void movement();
 	//virtual ~Enemy0();
 	void initialize(); //start enemy
 	void movement(); //movement
+	void EnemyGoDown(); //fall
 	void display(); //see the enemy
 	int getx(); //x coordinate of the enemy
 	int gety(); //y coordinate of the enemy
+	int getLife(); //enemy life
+	int getSign(); //enemy segn
+	void setSign(); //change enemy sign
+	void updateCoordinates(int x,int y); //update coordinates of enemy
+
 	void injury();
-	int getlife();
 };
 
 class Enemy1 : public Enemy0{
+protected:
+	int up; //direction of the lifting
 public:
-	int conta; //time for the jump
-	int step; //traslation of the vertex of parabola
-	int xv; //xvertex of parabola
-	int yv; //yvertex of parabola
-	int a; //coefficients of degree 2 of parabola
 	Enemy1(WINDOW * win, int y, int x, char c, int mv, int col);
 	Enemy1();
 	void movement(); //modify the movement
+	void setUp(); //change the direction of the lifting
+	int getUp(); //take the direction of the lifting
+	bool ReachAngles(); //reach one of the two limits of the sin movement, you must go up (or down)
 };
 
 class Enemy2 : public Enemy0{
@@ -58,17 +64,21 @@ public:
 
 
 class Enemy3 : public Enemy0{
-public:
+protected:
 	int conta; //time for the jump
-	int step;
+	int up; //direction of the parabola
+public:
 	Enemy3(WINDOW * win, int y, int x, char c, int mv, int col);
 	Enemy3();
+	void SetJump(); //starts the jump
 	void movement(); //modify the movement
+	int GetConta(); //take conta
 };
 
 class Enemy4 : public Enemy0{
-public:
+protected:
 	int conta;
+public:
 	Enemy4(WINDOW * win, int y, int x, char c, int mv, int col);
 	Enemy4();
 	void movement(); //modify the movement
@@ -82,9 +92,10 @@ public:
 };
 
 class Enemy6 : public Enemy0{
-public:
+protected:
 	int conta; //time for one shot
 	char gun; //character for the gun
+public:
 	Enemy6(WINDOW * win, int y, int x, char c, int mv, int col);
 	Enemy6();
 	void movement(); //modify the movement

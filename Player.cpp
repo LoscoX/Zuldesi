@@ -36,7 +36,7 @@ Player::Player(WINDOW * win, int y, int x){
 	TELEPORT_DISTANCE[0] = 20; TELEPORT_DISTANCE[1] = 30; TELEPORT_DISTANCE[2] = 40; //different teleport distance
 	ACTIVE_ARMOR = false; //no Armor when you start
 	ARMOR_ACTIVE_DURATION = 0; //no armor when you start
-	num_bullet = 9; //number of bullets
+	num_bullet = 99; //number of bullets
 };
 
 Player::Player(){ //default constructor
@@ -68,7 +68,7 @@ Player::Player(){ //default constructor
 	TELEPORT_DISTANCE[0] = 20; TELEPORT_DISTANCE[1] = 30; TELEPORT_DISTANCE[2] = 40; //different teleport distance
 	ACTIVE_ARMOR = false; //no Armor when you start
 	ARMOR_ACTIVE_DURATION = 0; //no armor when you start
-	num_bullet = 9; //number of bullets
+	num_bullet = 99; //number of bullets
 }
 
 void Player::initialize(){
@@ -153,34 +153,32 @@ int Player::getmv(){ //move the character with gun by user
 			mvright();
 			break;
 		case 'h': //activate the gun
-			if(num_bullet>0){
-				if(strcmp(gun.getName().c_str(),"Pistol") == 0){ //you shoot one bullet
-					bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc,yLoc,ind); //add the bullet
+			if(num_bullet>0 && strcmp(gun.getName().c_str(),"Pistol") == 0){ //you shoot one bullet
+				bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc,yLoc,ind); //add the bullet
+				ind = ind + 1; //we want different indexes for the different bullets
+				num_bullet--; //decrement bullets
+			}
+			else if(num_bullet>1 && strcmp(gun.getName().c_str(),"Rifle") == 0){ //you shoot two bullets
+				for(int i=0;i<2;i++){
+					bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc+i*dir,yLoc,ind); //add the bullet
 					ind = ind + 1; //we want different indexes for the different bullets
 					num_bullet--; //decrement bullets
 				}
-				else if(strcmp(gun.getName().c_str(),"Rifle") == 0){ //you shoot two bullets
-					for(int i=0;i<2;i++){
-						bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc+i*dir,yLoc,ind); //add the bullet
-						ind = ind + 1; //we want different indexes for the different bullets
-						num_bullet--; //decrement bullets
-					}
-				}
-				else if(strcmp(gun.getName().c_str(),"Machinegun") == 0){ //you shoot three bullets
-					for(int i=0;i<3;i++){
-						bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc+i*dir,yLoc,ind); //add the bullet
-						ind = ind + 1; //we want different indexes for the different bullets
-						num_bullet--; //decrement bullets
-					}
-				}
-				else if(strcmp(gun.getName().c_str(), "Doublegun") == 0){//you shoot two bullets in opposite directions
-					bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc,yLoc,ind); //add the bullet
+			}
+			else if(num_bullet>2 && strcmp(gun.getName().c_str(),"Machinegun") == 0){ //you shoot three bullets
+				for(int i=0;i<3;i++){
+					bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc+i*dir,yLoc,ind); //add the bullet
 					ind = ind + 1; //we want different indexes for the different bullets
 					num_bullet--; //decrement bullets
-					bullet.blt = bullet.head_insert(bullet.blt,-dir,xLoc,yLoc,ind); //add the bullet
-					ind = ind + 1;
-					num_bullet--; //decrement bullets
 				}
+			}
+			else if(num_bullet>1 && strcmp(gun.getName().c_str(), "Doublegun") == 0){//you shoot two bullets in opposite directions
+				bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc,yLoc,ind); //add the bullet
+				ind = ind + 1; //we want different indexes for the different bullets
+				num_bullet--; //decrement bullets
+				bullet.blt = bullet.head_insert(bullet.blt,-dir,xLoc,yLoc,ind); //add the bullet
+				ind = ind + 1;
+				num_bullet--; //decrement bullets
 			}
 			break;
 		case 't': //activate the teleport
