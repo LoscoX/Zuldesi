@@ -20,7 +20,7 @@ Game::Game(int height,int width){
 	difficulty = 0; //diffcult = 0 when you start the game
 
 	//Initialize Powerups (quantity of the guns is fixed to 1-->you can have just one gun)
-    guns[0] = Powerup("Pistol", "you shoot one bullet", 1, 1, 1);
+  guns[0] = Powerup("Pistol", "you shoot one bullet", 1, 1, 1);
 	guns[1] = Powerup("Rifle", "you shoot two bullets", 1, 1, 1);
 	guns[2] = Powerup("Machinegun", "you shoot three bullets", 1, 1, 1);
 	guns[3] = Powerup("Doublegun", "you shoot two bullets, one dx direction and one sx direction", 1, 1, 1);
@@ -1485,6 +1485,12 @@ void Game::Enemy7CanMove(listenm7 h){ //Enemies can or cannot move
 	}
 }
 
+void Game::Enemy8CanMove(listenm8 h){ //Enemies can or cannot move
+	while(!board.IsThereStructure(h->enemy.getx(),h->enemy.gety()+1) && h->enemy.gety()!= board.height-2){ //check if you have something under your feet
+		h->enemy.EnemyGoDown(); //go down
+	}
+}
+
 void Game::Enemy9CanMove(listenm9 h){ //Enemies can or cannot move
 	if(board.IsThereStructure(h->enemy.getx(),h->enemy.gety())){ //check if you have something under your feet or over you head
 		h->enemy.updateCoordinates(0,-h->enemy.getSign()); //you have to go from you went
@@ -1577,6 +1583,7 @@ void Game::enemymovement(){	//Enemies movement
 		if((abs(player.getx() - tmp8->enemy.getx()) <= 10) && (player.gety() == tmp8->enemy.gety())){ //player is sufficiently near to enemy type8
 			tmp8->enemy.movement(dir); //move one enemy
 		}
+		Game::Enemy8CanMove(tmp8);
 		tmp8->enemy.display(); //see one enemy
 		//no damage when player touches enemies type8
 		tmp8 = tmp8->next; //go to the next enemy

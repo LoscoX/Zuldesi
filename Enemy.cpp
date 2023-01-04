@@ -116,6 +116,7 @@ int Enemy0::getSign(){
 void Enemy0::setSign(){
 	segno = segno * (-1); //change sign
 }
+
 int Enemy0::getXpern()
 {
 	return xpern;
@@ -125,8 +126,6 @@ void Enemy0::setXpern(int x)
 {
 	xpern=x;
 }
-
-
 
 void Enemy0::updateCoordinates(int x,int y){ //update coordinates
 	xLoc = xLoc+x;
@@ -150,6 +149,7 @@ Enemy1::Enemy1() : Enemy0(){ //default constructor
 void Enemy1::movement(){
 	mvwaddch(curwin, yLoc, xLoc, ' '); //Delete previous character
 	Enemy0::updateCoordinates(segno,0); //update coordinates
+
 	/*if(xLoc > xMax - 2){ //reach the max
 		xLoc = xMax - 2;
 		Enemy0::setSign(); //change the direction of the movement
