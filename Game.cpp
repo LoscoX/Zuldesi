@@ -8,7 +8,6 @@
 #include "Game.hpp"
 
 Game::Game(int height,int width){
-
 	start_color();
 	init_pair(1,COLOR_RED, COLOR_BLACK); //color enemy type 0/6
 	init_pair(2,COLOR_BLUE, COLOR_BLACK); //color enemy type 1
