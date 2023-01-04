@@ -107,14 +107,23 @@ public:
 	bool isOver(); //Game is over
 	void drawPowerUp(Powerup pwp[]);
 
+	void Structure();
+
 	void updatePowerup();
 	void market(); //activate the market
 
 	void interaction(Enemy0 e); //Game interaction between Enemy without gun and Player
 	bool interactionBullet(bullt tmp); //Game interaction between Enemy with gun and Player
-	//bool interactionPlatform(int choice); //Game interaction between player and enemies with platforms
-	//bool onplatform; //it is = a true if you are on a platform
-	bool interactionWall(int choice); //Game interaction between player and enemies with walls
+	void PlayerCanMove(int choice); //Game interaction between player and structure map
+	void Enemy0CanMove(listenm0 h); //Game interaction between enemy0 and structure map
+	void Enemy1CanMove(listenm1 h); //Game interaction between enemy1 and structure map
+	void Enemy2CanMove(listenm2 h); //Game interaction between enemy2 and structure map
+	void Enemy3CanMove(listenm3 h); //Game interaction between enemy3 and structure map
+	void Enemy4CanMove(listenm4 h); //Game interaction between enemy4 and structure map
+	void Enemy5CanMove(listenm5 h); //Game interaction between enemy5 and structure map
+	void Enemy6CanMove(listenm6 h); //Game interaction between enemy6 and structure map
+	void Enemy7CanMove(listenm7 h); //Game interaction between enemy7 and structure map
+	void Enemy9CanMove(listenm9 h); //Game interaction between enemy9 and structure map
 
 	int directionSmartEnemy5(Enemy5 e); //Handle the direction of the enemy based on the position of the player
 	int directionSmartEnemy7(Enemy7 e); //Handle the direction of the enemy based on the position of the player
@@ -125,7 +134,10 @@ public:
 	void shooting(); //handle the shooting
 	void enemymovement(); //enemies movement
 	void playermovement(); //player movement
+	void PlayerDown(); //player goes down
+
 	int time; //time of the game
+	int ind_plat; //index for platforms
 
 	mony head_insert_coin(mony h,int val,int x,int y);
 
@@ -157,6 +169,12 @@ public:
 
 	void initializeEnemies(); //initalize enemies
 	bool enemydeath(bullt tmp);
+	bullt deletePlayerBullets(bullt tmp); //delete bullets of the Player
+	bullt deleteEnemy6Bullets(bullt tmp,listenm6 e); //delete bullets of Enemy6
+	bullt deleteEnemy7Bullets(bullt tmp,listenm7 e); //delete bullets of Enemy7
+	bullt deleteEnemy8Bullets(bullt tmp,listenm8 e); //delete bullets of Enemy8
+	bullt deleteEnemy9Bullets(bullt tmp,listenm9 e); //delete bullets of Enemy9
+
 protected:
 
 	Board board; //board

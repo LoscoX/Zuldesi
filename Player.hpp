@@ -23,13 +23,15 @@ private:
 	int xLoc,yLoc; //coordinates of the player
 	int xMax,yMax; //coordinates of the box
 	int dir; //save the direction of the movement
+	int num_bullet; //number of bullets
 	void mvleft();
 	void mvright();
 public:
 	bool activejump; //if it is true, you are jumping
-	int xpern,ypern; //pivot for jumping
 	int conta;
 	bool down_arrive; //if the player has finished its fall
+	bool onplatform; //if the player is on a platform
+	int segno;
 	//powerup
 	Powerup gun; //type of gun
 	Powerup shield; //shield
@@ -45,14 +47,13 @@ public:
 	Player(WINDOW * win, int y, int x);
 
 	int getmv(); //movement
-
-	void updatepivot(); //update pivotvariables
 	void jump();
-	int jumpandshoot(); //shoot during the jump
-	void godown(); //fall from one platform
+	int airshoot(); //shoot during the jump movement or the down movement
+	void godown(); //fall
 	void teleport();
 
 	Bullet bullet; //gun magazine
+	int getnumblt();
 	int ind; //index for the list of bullet
 
 	void display(); //see the player
@@ -65,6 +66,8 @@ public:
 	int getlife(); //return life of player
 	int getcoins(); //return coins of player
 	int getdir(); //return dir of player
+
+	void SetJump(); //restart the variable of jump
 
 	void updatecash(int money); //update your wallet
 	void updateLife(); //Update life if you finish a level

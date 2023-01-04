@@ -33,8 +33,6 @@ int main(int argc, char ** argv) {
 		game.redraw();
 	}
 
-	//getch(); //whats for user input, returns int value for that key
-
 	endwin(); //deallocates memory and ends ncurses
 	return 0;
 }
