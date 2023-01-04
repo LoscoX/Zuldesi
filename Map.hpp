@@ -1,7 +1,9 @@
+#include "Segment.hpp"
+
 class Map{
     int dim_x, dim_y;
     Enemy enemies[];
-    Segment segments[];
+    Segment a;
     int trigger_start, trigger_end;
 
     Map()

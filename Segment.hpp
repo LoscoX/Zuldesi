@@ -43,6 +43,18 @@ public:
     ~Segment();
 
     /**
+     * Constant Initialization
+     *
+     * Perform the initialization of the segment to a value c
+     *
+     * @param x
+     * @param y
+     * @param c
+     */
+    void init(int x, int y, char c=' ');
+
+
+    /**
      *
      * @return the wide value
      */

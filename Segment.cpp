@@ -62,6 +62,18 @@ Segment::~Segment() {
     }
 }
 
+void Segment::init(int x, int y, char c) {
+    if (!data){
+        data = new char*[x];
+        for (int i = 0; i<x; i++){
+            data[i] = new char[y];
+            for (int j = 0; j<y; j++){
+                this->data[i][j] = c;
+            }
+        }
+    }
+}
+
 int Segment::wide() const {
     return x;
 }
