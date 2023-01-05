@@ -358,7 +358,7 @@ void Enemy7::movement(int direction){
 	else mvwaddch(curwin,yLoc,xLoc-1,' '); //delete the gun, sx when enemy goes to sx
 	segno = direction; //update direction of enemy
 	Enemy0::updateCoordinates(segno,0); //direction = 1-->dx   direction = -1-->sx
-	if(conta==10){ //every 10 seconds, the enemy fires
+	if(conta==10){ //every 10 milliseconds, the enemy fires
 		bullet.blt = bullet.head_insert(bullet.blt,segno,xLoc,yLoc,ind); //add the bullet
 		ind = ind + 1; //we want different indexes for the different bullets
 		conta = 0;
@@ -390,7 +390,7 @@ void Enemy8::movement(int direction){
 	if(segno == 1) mvwaddch(curwin,yLoc,xLoc+1,' '); //delete the gun, dx when enemy goes to dx
 	else mvwaddch(curwin,yLoc,xLoc-1,' '); //delete the gun, sx when enemy goes to sx
 	segno = direction; //update direction of enemy
-	if(conta==5){ //every 5 seconds, the enemy fires
+	if(conta==5){ //every 5 milliseconds, the enemy fires
 		bullet.blt = bullet.head_insert(bullet.blt,segno,xLoc,yLoc,ind); //add the bullet
 		ind = ind + 1; //we want different indexes for the different bullets
 		conta = 0;

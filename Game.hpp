@@ -173,6 +173,7 @@ public:
 	void initializeCoins(); //spawn of coins
 	void updateCoins(); //check if one coin has to be removed
 	mony removeCoins(mony h,int cod); //remove one coin
+	mony FallCoins(mony h); //avoid coins on the air
 
 	void initializeEnemies(); //initalize enemies
 	bool enemydeath(bullt tmp); //enemy death

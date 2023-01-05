@@ -15,6 +15,8 @@ Player::Player(WINDOW * win, int y, int x){
 	keypad(curwin,true);
 	character[0] = '@';
 	character[1] = '^';
+	character[2] = '|';
+	character[3] = '-';
 	life = 99;
 	cash = 0;
 	dir = 1; //initial direction
@@ -24,7 +26,7 @@ Player::Player(WINDOW * win, int y, int x){
 	activejump = false; //start without jump
 	segno = -1; //segno for parabola
 	conta = 1;
-	jump_height = 9; //max height of the jump
+	jump_height = 5; //max height of the jump
 	onplatform = false; //you are not on a platform
 	NUM_BULLETS = 100; //number of bullets
 	//powerup
@@ -49,6 +51,8 @@ Player::Player(){ //default constructor
 	keypad(curwin,true);
 	character[0] = '@';
 	character[1] = '^';
+	character[2] = '|';
+	character[3] = '-';
 	life = 99;
 	cash = 0;
 	dir = 1;
@@ -59,7 +63,7 @@ Player::Player(){ //default constructor
 	segno = -1; //segno for parabola
 	conta = 1;
 	onplatform = false; //you are not on a platform
-	jump_height = 9; //max height of the jump
+	jump_height = 5; //max height of the jump
 	NUM_BULLETS = 100; //number of bullets
 	//powerup
 	gun = Powerup("None", "No gun", 1, 0, 0); //no gun when you start
@@ -87,7 +91,10 @@ void Player::SetJump(){ //Rearrange jump variables
 
 void Player::jump(){ //not move the x
 	mvwaddch(curwin, yLoc, xLoc,' '); //Delete previous character
-	mvwaddch(curwin, yLoc-1, xLoc,' '); //Delete previous character
+	if(armor.getQnt()>0) mvwaddch(curwin,yLoc-1,xLoc,' '); //Delete armor
+	if(shield.getQnt()>0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //delete shield
+	if(shield.getQnt()==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //delete old gun
+	if(gun.getName()!="none") mvwaddch(curwin,yLoc,xLoc+getDir(),' '); //delete gun
 	if(conta<=2*(jumping.getQnt()-1)){
 		if(conta == jumping.getQnt())segno = 1; //go down
 		yLoc = yLoc + segno;
@@ -113,14 +120,20 @@ void Player::jump(){ //not move the x
 }
 
 void Player::godown(){ //go down
-	mvwaddch(curwin, yLoc, xLoc,' ');
-	mvwaddch(curwin, yLoc-1, xLoc,' ');
+	mvwaddch(curwin, yLoc, xLoc,' '); //delete character
+	if(armor.getQnt()>0) mvwaddch(curwin,yLoc-1,xLoc,' '); //Delete armor
+	if(shield.getQnt()>0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //delete shield
+	if(shield.getQnt()==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //old gun
+	if(gun.getName()!="none") mvwaddch(curwin,yLoc,xLoc+getDir(),' '); //delete gun
 	yLoc = yLoc + 1; //you are falling
 }
 
 void Player::teleport(){
-	mvwaddch(curwin, yLoc, xLoc,' ');
-	mvwaddch(curwin, yLoc-1, xLoc,' ');
+	mvwaddch(curwin, yLoc, xLoc,' '); //delete character
+	if(armor.getQnt()>0) mvwaddch(curwin,yLoc-1,xLoc,' '); //delete armor
+	if(shield.getQnt()>0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //delete shield
+	if(shield.getQnt()==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //delete old gun
+	if(gun.getName()!="none") mvwaddch(curwin,yLoc,xLoc+getDir(),' '); //delete gun
 	yLoc = yMax - 2; //ground floor
 	xLoc = xLoc + TELEPORT_DISTANCE[teleportation.getQnt()-1]; //teleport the character
 	if(xLoc > xMax-2) xLoc = xMax - 2; //you reach the wall
@@ -219,13 +232,23 @@ int Player::airshoot(){ //during jump movement or down movement, you can just sh
 
 void Player::display(){ //display the character
 	if(hp.getQnt()>1){
-		mvwaddch(curwin,yLoc,xLoc,character[0]);
-		mvwaddch(curwin,yLoc-1,xLoc,character[1]);
+		mvwaddch(curwin,yLoc,xLoc,character[0]); //see the player
+		if(ACTIVE_ARMOR==true){
+			mvwaddch(curwin,yLoc,xLoc,'O'); //see armor
+		}
+		if(shield.getQnt()>0) mvwaddch(curwin,yLoc,xLoc-getDir(),character[2]); //see the shield
+		if(shield.getQnt()==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //delete old gun
+		if(gun.getName()!="none") mvwaddch(curwin,yLoc,xLoc+getDir(),character[3]); //see the gun
 	}
 	else{ //if you have one life, you become red
 		wattron(curwin,COLOR_PAIR(1)); //color
-		mvwaddch(curwin,yLoc,xLoc,character[0]);
-		mvwaddch(curwin,yLoc-1,xLoc,character[1]);
+		mvwaddch(curwin,yLoc,xLoc,character[0]); //see the player
+		if(ACTIVE_ARMOR==true){
+			mvwaddch(curwin,yLoc,xLoc,'O'); //see armor
+		}
+		if(shield.getQnt()>0) mvwaddch(curwin,yLoc,xLoc-getDir(),character[2]); //see the shield
+		if(shield.getQnt()==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //delete old gun
+		if(gun.getName()!="none") mvwaddch(curwin,yLoc,xLoc+getDir(),character[3]); //see the gun
 		wattroff(curwin,COLOR_PAIR(1));
 	}
 }
@@ -233,10 +256,9 @@ void Player::display(){ //display the character
 
 void Player::injury(){ //Injury
 	if(shield.getQnt() == 0 && !ACTIVE_ARMOR){ //check if the player has the shield and the armor
-		mvwaddch(curwin,yLoc,xLoc,' ');
-		mvwaddch(curwin, yLoc-1, xLoc,' ');
-		xLoc = 20; //back to beginning
-		yLoc = yMax - 2; //back to beginning
+		//mvwaddch(curwin,yLoc,xLoc,' ');
+		//xLoc = 20; //back to beginning
+		//yLoc = yMax - 2; //back to beginning
 		hp.setQnt(hp.getQnt()-1); // one point
 	}
 	else if(shield.getQnt() > 0 && !ACTIVE_ARMOR){ //check if the player has the shield but not the armor

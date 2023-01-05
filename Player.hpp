@@ -16,7 +16,7 @@
 
 class Player{
 private:
-	char character[2]; //icon of the player
+	char character[4]; //icon of the player
 	WINDOW * curwin;
 	int life; //life
 	int cash; //money

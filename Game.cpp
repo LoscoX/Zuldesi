@@ -28,7 +28,7 @@ Game::Game(int height,int width){
 
     bonus[0] = Powerup("HP", "Additional life", 1, 1, 1); //quantity corresponds to the number of lives which you have bought
 	bonus[1] = Powerup("Shield", "A shield that blocks damage one time", 1, 1, 1);//quantity corresponds to the number of protection you have (max 2)
-	bonus[2] = Powerup("Jump","Change the height of the jump",10,1,1); //quantity corresponds to max (plus with respect to basi jump) height of the jump
+	bonus[2] = Powerup("Jump","Change the height of the jump",2,1,1); //quantity corresponds to max (plus with respect to basi jump) height of the jump
 
 	active[0] = Powerup("Armor", "Become invincible for a limited time", 1, 1, 1); //quantity corresponds to the number of protection you have (max 3)
 	active[1] = Powerup("Teleport", "Teleport a short distance", 1, 1, 1); //quantity corresponds to the number of possibility of teleportation you have
@@ -61,10 +61,10 @@ Game::Game(int height,int width){
 	int iniz = -300; //range  of the map for the spawning
 	int fin = 500; //range  of the map for the spawning
 
-	nc = rand()%100; //number of coins
+	nc = 100; //number of coins
 
 	for(int i=0;i<nc;i++){ //create coins with random position and add them to the list
-		coins = Game::head_insert_coin(coins,i,(rand()%(fin)+iniz),height-2);
+		coins = Game::head_insert_coin(coins,i,(rand()%(fin)+iniz),(1 + rand()%(height-2)));
 	}
 
 	Game::initializeCoins(); //initialize coins
@@ -139,16 +139,19 @@ Game::Game(int height,int width){
 	//player.gun.name = guns[2].getName();
 	//player.gun.name = guns[3].getName();
 
-	//player.shield.setQnt(player.shield.getQnt() + bonus[1].getQnt());
+	player.shield.setQnt(player.shield.getQnt() + bonus[1].getQnt());
 	player.hp.setQnt(player.hp.getQnt() + bonus[0].getQnt());
 	//player.jumping.setQnt(player.jumping.getQnt()+ bonus[2].getQnt());
 
-	//player.armor.qnt = player.armor.qnt + active[0].getQnt();
+	player.armor.qnt = player.armor.qnt + active[0].getQnt();
 	player.teleportation.setQnt(player.teleportation.getQnt() + active[1].getQnt());
 	//player.bullets.setQnt(player.bullets.getQnt() + active[2].getQnt());
 
 	//initialize the enemies
 	Game::initializeEnemies();
+
+	//fall coins
+	coins = Game::FallCoins(coins);
 
 	game_over = false;
 }
@@ -322,11 +325,11 @@ void Game::displayLife(){ //display life and bullets
 	mvwprintw(board.board_win,1,1,"Life: ");
 	mvwprintw(board.board_win,1,6,"%d",player.hp.getQnt());
 	if(player.hp.getQnt()<100) mvwprintw(board.board_win,1,8," ");
-	else if(player.hp.getQnt()<10) mvwprintw(board.board_win,1,7," ");
+	if(player.hp.getQnt()<10) mvwprintw(board.board_win,1,7," ");
 	mvwprintw(board.board_win,1,45,"Number of Bullets: ");
 	mvwprintw(board.board_win,1,63,"%d",player.bullets.getQnt());
 	if(player.bullets.getQnt()<100) mvwprintw(board.board_win,1,65," ");
-	else if(player.bullets.getQnt()<10) mvwprintw(board.board_win,1,64," ");
+	if(player.bullets.getQnt()<10) mvwprintw(board.board_win,1,64," ");
 }
 
 void Game::displayCoins(){ //display coins
@@ -1089,45 +1092,94 @@ void Game::PlayerCanMove(int choice){ //Player can or cannot move
 	//bool down;
 	switch(choice){
 	case KEY_LEFT: //you went to sx
-		if(board.IsThereStructure(player.getx(),player.gety())){ //check it there has been collision
-			mapleft(); //move map
+		if(player.gun.getName()=="none"){ //no gun
+			if(board.IsThereStructure(player.getx(),player.gety())){ //check it there has been collision
+				mapleft(); //move map
+			}
+			else{
+				while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
+					Game::PlayerDown(); //go down
+				}
+			}
 		}
-		else{
-			while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
-				Game::PlayerDown(); //go down
+		else{ //gun
+			if(board.IsThereStructure(player.getx()+player.getDir(),player.gety())){ //check it there has been collision
+				mapleft(); //move map
+			}
+			else{
+				while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
+					Game::PlayerDown(); //go down
+				}
 			}
 		}
 		break;
 	case KEY_RIGHT: //you went to dx
-		if(board.IsThereStructure(player.getx(),player.gety())){ //check it there has been collision
-			mapright(); //move map
+		if(player.gun.getName()=="none"){ //no gun
+			if(board.IsThereStructure(player.getx(),player.gety())){ //check it there has been collision
+				mapright(); //move map
+			}
+			else{
+				while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
+					Game::PlayerDown(); //go down
+				}
+			}
 		}
-		else{
-			while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
-				Game::PlayerDown(); //go down
+		else{ //gun
+			if(board.IsThereStructure(player.getx()+player.getDir(),player.gety())){ //check it there has been collision
+				mapright(); //move map
+			}
+			else{
+				while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
+					Game::PlayerDown(); //go down
+				}
 			}
 		}
 		break;
 	case KEY_UP: //you went up
-		if(board.IsThereStructure(player.getx(),player.gety())){ //check if reach one piece of one structure
-			if(player.getDir()==1) //you have to go where you went(it depends on the direction)
-				mapright(); //move map
-			else
-				mapleft(); //move map
-			player.SetJump(); //for the next jump
-			while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
-				Game::PlayerDown(); //go down
+		if(player.gun.getName()=="none"){ //no gun
+			if(board.IsThereStructure(player.getx(),player.gety())){ //check if you reach one piece of one structure
+				if(player.getDir()==1) //you have to go where you went(it depends on the direction)
+					mapright(); //move map
+				else
+					mapleft(); //move map
+				player.SetJump(); //for the next jump
+				while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
+					Game::PlayerDown(); //go down
+				}
+			}
+			else if(board.IsThereStructure(player.getx(),player.gety()-1) || board.IsThereStructure(player.getx(),player.gety()+1)){ //check if you have something under your feet or over you head
+				player.SetJump(); //for the next jump
+				while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
+					Game::PlayerDown(); //go down
+				}
+			}
+			else if(player.activejump == false){
+				while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
+					Game::PlayerDown(); //go down
+				}
 			}
 		}
-		else if(board.IsThereStructure(player.getx(),player.gety()-1) || board.IsThereStructure(player.getx(),player.gety()+1)){ //check if you have something under your feet or over you head
-			player.SetJump(); //for the next jump
-			while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
-				Game::PlayerDown(); //go down
+		else{ //gun
+			if(board.IsThereStructure(player.getx()+player.getDir(),player.gety())){ //check if the gun reaches one piece of one structure
+				if(player.getDir()==1) //you have to go where you went(it depends on the direction)
+					mapright(); //move map
+				else
+					mapleft(); //move map
+				player.SetJump(); //for the next jump
+				while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
+					Game::PlayerDown(); //go down
+				}
 			}
-		}
-		else if(player.activejump == false){
-			while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
-				Game::PlayerDown(); //go down
+			else if(board.IsThereStructure(player.getx(),player.gety()-1) || board.IsThereStructure(player.getx(),player.gety()+1)){ //check if you have something under your feet or over you head
+				player.SetJump(); //for the next jump
+				while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
+					Game::PlayerDown(); //go down
+				}
+			}
+			else if(player.activejump == false){
+				while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
+					Game::PlayerDown(); //go down
+				}
 			}
 		}
 		break;
@@ -1318,31 +1370,30 @@ void Game::enemyMovement(){	//Enemies movement
 		tmp6->enemy.movement(); //move one enemy
 		Game::Enemy6CanMove(tmp6); //interaction with the structure
 		tmp6->enemy.display(); //see one enemy
-		//no damage when player touches enemies type6
+		Game::interaction(tmp6->enemy);
 		tmp6 = tmp6->next; //go to the next enemy
 	}
 
 	listenm7 tmp7 = enemies7;  //type7
 	while(tmp7!=NULL){
 		dir = Game::directionSmartEnemy7(tmp7->enemy);
-		if(abs(player.getx() - tmp7->enemy.getx()) <= 20){ //player is sufficiently near to enemy type7
+		if(abs(player.getx() - tmp7->enemy.getx()) <=30 && player.gety()==tmp7->enemy.gety()){ //player is sufficiently near to enemy type7
 			tmp7->enemy.movement(dir); //move one enemy
 		}
 		Game::Enemy7CanMove(tmp7); //interaction with the structure
 		tmp7->enemy.display(); //see one enemy
-		//no damage when player touches enemies type7
 		tmp7 = tmp7->next; //go to the next enemy
 	}
 
 	listenm8 tmp8 = enemies8;  //type8
 	while(tmp8!=NULL){
 		dir = Game::directionSmartEnemy8(tmp8->enemy);
-		if((abs(player.getx() - tmp8->enemy.getx()) <= 10) && (player.gety() == tmp8->enemy.gety())){ //player is sufficiently near to enemy type8
+		if((abs(player.getx() - tmp8->enemy.getx()) <= 20) && (player.gety() == tmp8->enemy.gety())){ //player is sufficiently near to enemy type8
 			tmp8->enemy.movement(dir); //move one enemy
 		}
 		Game::Enemy8CanMove(tmp8);
 		tmp8->enemy.display(); //see one enemy
-		//no damage when player touches enemies type8
+		Game::interaction(tmp8->enemy);
 		tmp8 = tmp8->next; //go to the next enemy
 	}
 
@@ -1351,7 +1402,7 @@ void Game::enemyMovement(){	//Enemies movement
 		tmp9->enemy.movement(); //move one enemy
 		Game::Enemy9CanMove(tmp9); //interaction with the structure
 		tmp9->enemy.display(); //see one enemy
-		//no damage when player touches enemies type9
+		Game::interaction(tmp9->enemy);
 		tmp9 = tmp9->next; //go to the next enemy
 	}
 
@@ -1410,6 +1461,18 @@ mony Game::removeCoins(mony h,int cod){ //remove the coin with this cod
 			}
 			else tmp = tmp->next;
 		}
+	}
+	return h;
+}
+
+mony Game::FallCoins(mony h){ //avoid coins in the air
+	mony tmp = h;
+	while(tmp!=NULL){
+		while(!board.IsThereStructure(tmp->x,tmp->y+1) && tmp->y<board.height-2){
+			mvwaddch(board.board_win,tmp->y,tmp->x,' ');
+			tmp->y++;
+		}
+		tmp = tmp->next;
 	}
 	return h;
 }
