@@ -24,18 +24,21 @@ Player::Player(WINDOW * win, int y, int x){
 	activejump = false; //start without jump
 	segno = -1; //segno for parabola
 	conta = 1;
+	jump_height = 9; //max height of the jump
 	onplatform = false; //you are not on a platform
+	NUM_BULLETS = 100; //number of bullets
 	//powerup
 	gun = Powerup("None", "No gun", 1, 0, 0); //no gun when you start
 	shield = Powerup("Shield", "A shield that blocks damage one time", 0, 1, 1); //no shield when you start
 	hp = Powerup("HP", "Get back on your feet one more time", life, 1, 1);
 	armor = Powerup("Armor", "Become invincible for a limited time", 0, 1, 1); //no armor when you start
 	teleportation = Powerup("Teleport", "Teleport a short distance", 0, 1, 1); //you cannot teleport when you start
+	bullets = Powerup("Bullets","Charge of bullets",NUM_BULLETS,1,1); //no bullets when you start
+	jumping = Powerup("Jump","Change the height of the jump",jump_height,1,1); //basic jump when you start
 	ARMOR_DURATION[0] = 50; ARMOR_DURATION[1] = 100; ARMOR_DURATION[2] = 500; //different type of Armor duration
-	TELEPORT_DISTANCE[0] = 20; TELEPORT_DISTANCE[1] = 30; TELEPORT_DISTANCE[2] = 40; //different teleport distance
+	TELEPORT_DISTANCE[0] = dir*20; TELEPORT_DISTANCE[1] = dir*30; TELEPORT_DISTANCE[2] = dir*40; //different teleport distance
 	ACTIVE_ARMOR = false; //no Armor when you start
 	ARMOR_ACTIVE_DURATION = 0; //no armor when you start
-	num_bullet = 99; //number of bullets
 };
 
 Player::Player(){ //default constructor
@@ -56,17 +59,20 @@ Player::Player(){ //default constructor
 	segno = -1; //segno for parabola
 	conta = 1;
 	onplatform = false; //you are not on a platform
+	jump_height = 9; //max height of the jump
+	NUM_BULLETS = 100; //number of bullets
 	//powerup
 	gun = Powerup("None", "No gun", 1, 0, 0); //no gun when you start
 	shield = Powerup("Shield", "A shield that blocks damage one time", 0, 1, 1); //no shield when you start
 	hp = Powerup("HP", "Get back on your feet one more time", life, 1, 1);
 	armor = Powerup("Armor", "Become invincible for a limited time", 0, 1, 1); //no armor when you start
 	teleportation = Powerup("Teleport", "Teleport a short distance", 0, 1, 1); //you cannot teleport when you start
+	bullets = Powerup("Bullets","Charge of bullets",NUM_BULLETS,1,1); //no bullets when you start
+	jumping = Powerup("Jump","Change the height of the jump",jump_height,1,1); //basic jump when you start
 	ARMOR_DURATION[0] = 50; ARMOR_DURATION[1] = 100; ARMOR_DURATION[2] = 500; //different type of Armor duration
 	TELEPORT_DISTANCE[0] = 20; TELEPORT_DISTANCE[1] = 30; TELEPORT_DISTANCE[2] = 40; //different teleport distance
 	ACTIVE_ARMOR = false; //no Armor when you start
 	ARMOR_ACTIVE_DURATION = 0; //no armor when you start
-	num_bullet = 99; //number of bullets
 }
 
 void Player::initialize(){
@@ -79,43 +85,31 @@ void Player::SetJump(){ //Rearrange jump variables
 	activejump = false; //you reach the ground floor
 }
 
-void Player::jump(){
+void Player::jump(){ //not move the x
 	mvwaddch(curwin, yLoc, xLoc,' '); //Delete previous character
 	mvwaddch(curwin, yLoc-1, xLoc,' '); //Delete previous character
-	if(conta<=16){
-		if(conta == 9)segno = 1; //go down
+	if(conta<=2*(jumping.getQnt()-1)){
+		if(conta == jumping.getQnt())segno = 1; //go down
 		yLoc = yLoc + segno;
 		conta++;
 		if(xLoc>xMax-2){ //if you reach the wall
-			Player::SetJump(); //ready for a new jump
+			SetJump(); //ready for a new jump
 			xLoc = xMax-2; //fix the x
 			while(yLoc>yMax-2)godown(); //go down
 		}
 		else if(xLoc<1){ //if you reach the wall
-			Player::SetJump(); //ready for a new jump
+			SetJump(); //ready for a new jump
 			xLoc = 1; //fix the x
 			while(yLoc>yMax-2)godown(); //go down
 		}
+		else if(yLoc<1){ //if you reach the roof
+			SetJump(); //ready for a new jump
+			while(yLoc>yMax-2)godown(); //godown
+		}
 	}
 	else{
-		Player::SetJump(); //ready for a new jump
+		SetJump(); //ready for a new jump
 	}
-}
-
-void Player::mvleft(){ //move left
-	dir = -1; //update direction
-	mvwaddch(curwin, yLoc, xLoc,' ');
-	mvwaddch(curwin, yLoc-1, xLoc,' ');
-	xLoc = xLoc - 1;
-	if (xLoc < 1) xLoc = 1;
-}
-
-void Player::mvright(){ //move right
-	dir = 1; //update direction
-	mvwaddch(curwin, yLoc, xLoc,' ');
-	mvwaddch(curwin, yLoc-1, xLoc,' ');
-	xLoc = xLoc + 1;
-	if (xLoc > xMax-2) xLoc = xMax - 2;
 }
 
 void Player::godown(){ //go down
@@ -139,46 +133,37 @@ int Player::getmv(){ //move the character with gun by user
 	}
 	int choice = wgetch(curwin);
 	switch (choice){
-		/*case KEY_RIGHT:
-			mvright();
-			break;*/
-		case KEY_UP:
+		case KEY_UP: //just go up
 			activejump = true; //active jump
 			jump();
 		break;
 		case 'h': //activate the gun
-			if(num_bullet>0 && strcmp(gun.getName().c_str(),"Pistol") == 0){ //you shoot one bullet
+			if(bullets.getQnt()>0 && strcmp(gun.getName().c_str(),"Pistol") == 0){ //you shoot one bullet
 				bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc,yLoc,ind); //add the bullet
 				ind = ind + 1; //we want different indexes for the different bullets
-				num_bullet--; //decrement bullets
+				bullets.setQnt(bullets.getQnt()-1); //decrement bullets
 			}
-			else if(num_bullet>1 && strcmp(gun.getName().c_str(),"Rifle") == 0){ //you shoot two bullets
+			else if(bullets.getQnt()>1 && strcmp(gun.getName().c_str(),"Rifle") == 0){ //you shoot two bullets
 				for(int i=0;i<2;i++){
 					bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc+i*dir,yLoc,ind); //add the bullet
 					ind = ind + 1; //we want different indexes for the different bullets
-					num_bullet--; //decrement bullets
+					bullets.setQnt(bullets.getQnt()-1); //decrement bullets
 				}
 			}
-			else if(num_bullet>2 && strcmp(gun.getName().c_str(),"Machinegun") == 0){ //you shoot three bullets
+			else if(bullets.getQnt()>2 && strcmp(gun.getName().c_str(),"Machinegun") == 0){ //you shoot three bullets
 				for(int i=0;i<3;i++){
 					bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc+i*dir,yLoc,ind); //add the bullet
 					ind = ind + 1; //we want different indexes for the different bullets
-					num_bullet--; //decrement bullets
+					bullets.setQnt(bullets.getQnt()-1); //decrement bullets
 				}
 			}
-			else if(num_bullet>1 && strcmp(gun.getName().c_str(), "Doublegun") == 0){//you shoot two bullets in opposite directions
+			else if(bullets.getQnt()>1 && strcmp(gun.getName().c_str(), "Doublegun") == 0){//you shoot two bullets in opposite directions
 				bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc,yLoc,ind); //add the bullet
 				ind = ind + 1; //we want different indexes for the different bullets
-				num_bullet--; //decrement bullets
+				bullets.setQnt(bullets.getQnt()-1); //decrement bullets
 				bullet.blt = bullet.head_insert(bullet.blt,-dir,xLoc,yLoc,ind); //add the bullet
 				ind = ind + 1;
-				num_bullet--; //decrement bullets
-			}
-			break;
-		case 't': //activate the teleport
-			if(teleportation.getQnt()>0){
-				Player::teleport(); //check if you have the teleportation powerup
-				teleportation.setQnt(teleportation.getQnt()-1); //delete one teleport which you have
+				bullets.setQnt(bullets.getQnt()-1); //decrement bullets
 			}
 			break;
 		case 'a': //activate the armor (time_life of armor starts)
@@ -198,32 +183,32 @@ int Player::airshoot(){ //during jump movement or down movement, you can just sh
 	int choice = wgetch(curwin);
 	switch(choice){
 		case 'h': //activate the gun
-			if(num_bullet>0 && strcmp(gun.getName().c_str(),"Pistol") == 0){ //you shoot one bullet
+			if(bullets.getQnt()>0 && strcmp(gun.getName().c_str(),"Pistol") == 0){ //you shoot one bullet
 				bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc,yLoc,ind); //add the bullet
 				ind = ind + 1; //we want different indexes for the different bullets
-				num_bullet--; //decrement bullets
+				bullets.setQnt(bullets.getQnt()-1); //decrement bullets
 			}
-			else if(num_bullet>1 && strcmp(gun.getName().c_str(),"Rifle") == 0){ //you shoot two bullets
+			else if(bullets.getQnt()>1 && strcmp(gun.getName().c_str(),"Rifle") == 0){ //you shoot two bullets
 				for(int i=0;i<2;i++){
 					bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc+i*dir,yLoc,ind); //add the bullet
 					ind = ind + 1; //we want different indexes for the different bullets
-					num_bullet--; //decrement bullets
+					bullets.setQnt(bullets.getQnt()-1); //decrement bullets
 				}
 			}
-			else if(num_bullet>2 && strcmp(gun.getName().c_str(),"Machinegun") == 0){ //you shoot three bullets
+			else if(bullets.getQnt()>2 && strcmp(gun.getName().c_str(),"Machinegun") == 0){ //you shoot three bullets
 				for(int i=0;i<3;i++){
 					bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc+i*dir,yLoc,ind); //add the bullet
 					ind = ind + 1; //we want different indexes for the different bullets
-					num_bullet--; //decrement bullets
+					bullets.setQnt(bullets.getQnt()-1); //decrement bullets
 				}
 			}
-			else if(num_bullet>1 && strcmp(gun.getName().c_str(), "Doublegun") == 0){//you shoot two bullets in opposite directions
+			else if(bullets.getQnt()>1 && strcmp(gun.getName().c_str(), "Doublegun") == 0){//you shoot two bullets in opposite directions
 				bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc,yLoc,ind); //add the bullet
 				ind = ind + 1; //we want different indexes for the different bullets
-				num_bullet--; //decrement bullets
+				bullets.setQnt(bullets.getQnt()-1); //decrement bullets
 				bullet.blt = bullet.head_insert(bullet.blt,-dir,xLoc,yLoc,ind); //add the bullet
 				ind = ind + 1;
-				num_bullet--; //decrement bullets
+				bullets.setQnt(bullets.getQnt()-1); //decrement bullets
 			}
 			break;
 		default:
@@ -233,7 +218,7 @@ int Player::airshoot(){ //during jump movement or down movement, you can just sh
 }
 
 void Player::display(){ //display the character
-	if(life>1){
+	if(hp.getQnt()>1){
 		mvwaddch(curwin,yLoc,xLoc,character[0]);
 		mvwaddch(curwin,yLoc-1,xLoc,character[1]);
 	}
@@ -252,7 +237,7 @@ void Player::injury(){ //Injury
 		mvwaddch(curwin, yLoc-1, xLoc,' ');
 		xLoc = 20; //back to beginning
 		yLoc = yMax - 2; //back to beginning
-		life = life - 1; // one point
+		hp.setQnt(hp.getQnt()-1); // one point
 	}
 	else if(shield.getQnt() > 0 && !ACTIVE_ARMOR){ //check if the player has the shield but not the armor
 		shield.setQnt(shield.getQnt()-1); //you lose one piece of shield
@@ -268,28 +253,16 @@ int Player::gety(){
 	return yLoc;
 }
 
-int Player::getlife(){
-	return life;
-}
-
-int Player::getcoins(){
+int Player::getCoins(){
 	return cash;
 }
 
-int Player::getdir(){
+int Player::getDir(){
 	return dir;
 }
 
-int Player::getnumblt(){
-	return num_bullet;
-}
-
-void Player::updatecash(int money){ //update cash
+void Player::updateCash(int money){ //update cash
 	cash = cash + money;
-}
-
-void Player::updateLife(){ //update life
-	life = hp.qnt;
 }
 
 void Player::updateCoordinates(int x,int y){ //update coordinates
@@ -300,4 +273,8 @@ void Player::updateCoordinates(int x,int y){ //update coordinates
 void Player::setDir(int dir)
 {
 	this->dir=dir;
+}
+
+void Player::setLife(int life){
+	this->life = life;
 }

@@ -26,17 +26,17 @@ struct wall{ //structure for a wall
 	int ypos[len];
 };
 
-const int num_ogg = 6; //number of one type of objects
+const int num_ogg = 30; //number of one type of objects
 
 class Board{
 public:
 	WINDOW *board_win;
 	Board();
 	Board(int height, int width);
-	void addBorder();
+	void addBorder(int x,int y);
 	void clear();
 	void refresh();
-	void initialize();
+	void initialize(int x,int y);
 	void addAt(int y,int x,char ch);
 	char getInput();
 	void initializeWall(int x,int y,int ind); //build the walls

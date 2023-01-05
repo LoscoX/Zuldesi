@@ -28,9 +28,9 @@ void Board::construct(int height,int width){
 	keypad(board_win,true);
 }
 
-void Board::initialize(){
+void Board::initialize(int x,int y){
 	clear();
-	addBorder();
+	addBorder(x,y);
 	refresh();
 }
 
@@ -39,8 +39,8 @@ char Board::getInput(){
 	return wgetch(board_win);
 }
 
-void Board::addBorder(){
-	box(board_win, 0, 0);
+void Board::addBorder(int x,int y){
+	box(board_win, x, y);
 }
 
 void Board::clear(){
@@ -66,6 +66,20 @@ void Board::initializeWall(int pivotx,int pivoty,int ind){ //pivot = first point
 		wal[ind].xpos[i] = pivotx;
 		wal[ind].ypos[i] = pivoty-i;
 		mvwaddch(board_win,wal[ind].ypos[i],wal[ind].xpos[i],wal[ind].graph[i]); //graph
+	}
+}
+
+void Board::deleteWall(int pivotx,int pivoty,int ind){
+	for(int i=0;i<len;i++){
+		wal[ind].graph[i] = ' '; //symbol of the wall
+		mvwaddch(board_win,wal[ind].ypos[i],wal[ind].xpos[i],wal[ind].graph[i]); //graph
+	}
+}
+
+void Board::deletePlatform(int pivot,int h,int ind){ //pivot = first point of the platform,ind = index of the platform,h = height
+	for(int i=0;i<len;i++){
+		plat[ind].graph[i] = ' '; //symbol of the platform
+		mvwaddch(board_win,plat[ind].ypos[i],plat[ind].xpos[i],plat[ind].graph[i]); //graph
 	}
 }
 

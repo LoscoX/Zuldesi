@@ -70,15 +70,7 @@ void Enemy0::display(){ //display the character
 void Enemy0::movement(){
 	mvwaddch(curwin, yLoc, xLoc, ' '); //Delete previous character
 	Enemy0::updateCoordinates(segno,0); //implement the movement
-	/*if(xLoc > xMax - 2){ //reach the max
-		xLoc = xMax - 2;
-		Enemy0::setSign(); //change the direction of the movement
-	}
-	else if(xLoc < 1){ //reach the minimum
-		xLoc = 1;
-		Enemy0::setSign(); //change the direction of the movement
-	}
-	else*/ if(xLoc > xpern + cost){ //reach the max of radius
+	if(xLoc > xpern + cost){ //reach the max of radius
 		xLoc = xpern + cost;
 		Enemy0::setSign(); //change the direction of the movement
 	}
@@ -102,7 +94,7 @@ int Enemy0::gety(){
 }
 
 void Enemy0::injury(){ //Injury
-	life = life - 1;
+	setLife(getLife()-1);
 }
 
 int Enemy0::getLife(){
@@ -122,9 +114,13 @@ int Enemy0::getXpern()
 	return xpern;
 }
 
+void Enemy0::setLife(int life){
+	this->life = life;
+}
+
 void Enemy0::setXpern(int x)
 {
-	xpern=x;
+	xpern = x;
 }
 
 void Enemy0::updateCoordinates(int x,int y){ //update coordinates
@@ -149,16 +145,7 @@ Enemy1::Enemy1() : Enemy0(){ //default constructor
 void Enemy1::movement(){
 	mvwaddch(curwin, yLoc, xLoc, ' '); //Delete previous character
 	Enemy0::updateCoordinates(segno,0); //update coordinates
-
-	/*if(xLoc > xMax - 2){ //reach the max
-		xLoc = xMax - 2;
-		Enemy0::setSign(); //change the direction of the movement
-	}
-	else if(xLoc < 1){ //reach the minimum
-		xLoc = 1;
-		Enemy0::setSign(); //change the direction of the movement
-	}
-	else*/ if(xLoc > xpern + cost){ //reach the max of radius
+	if(xLoc > xpern + cost){ //reach the max of radius
 		yLoc = yLoc + up; //go up
 		xLoc = xpern + cost;
 		Enemy0::setSign(); //change the direction of the movement
@@ -168,7 +155,7 @@ void Enemy1::movement(){
 		xLoc = xpern - cost;
 		Enemy0::setSign(); //change the direction of the movement
 	}
-	if(yLoc < yMax - 2 - cost){ //lifting depends from cost
+	else if(yLoc < yMax - 2 - cost){ //lifting depends from cost
 		yLoc = yMax - 2 - cost;
 		Enemy1::setUp(); //change the direction of the lifting
 	}
@@ -239,19 +226,7 @@ void Enemy3::movement(){
 		yLoc = yLoc + up;
 		if(conta%2==0)xLoc = xLoc + segno; //go to the next point
 		conta++;
-		/*if(xLoc>xMax-2){ //if you reach the wall
-			Enemy0::setSign(); //you have to change direction
-			Enemy3::SetJump(); //Set to zero variable of the jump
-			xLoc = xMax-2; //fix the x
-			while(yLoc>yMax-2)EnemyGoDown(); //go down
-		}
-		else if(xLoc<1){ //if you reach the wall
-			Enemy0::setSign(); //you have to change direction
-			Enemy3::SetJump(); //Set to zero variable of the jump
-			xLoc = 1; //fix the x
-			while(yLoc>yMax-2)EnemyGoDown(); //go down
-		}
-		else*/ if(yLoc<1){
+		if(yLoc<1){
 			yLoc = 1;
 			while(yLoc>yMax-2)EnemyGoDown(); //go down
 		}
@@ -287,8 +262,6 @@ void Enemy4::movement(){
 	if(conta == 8){ //delay (bigger-->easier)
 		mvwaddch(curwin, yLoc, xLoc,' '); //Delete previous character
 		xLoc = (xpern - cost) + rand()%(2*cost+1); //generate a random number between xpen-cost and xpern+cost
-		//if (xLoc < 1) xLoc = 1; //avoid spawn out of the map
-		//if (xLoc > xMax - 2) xLoc = xMax - 2; //avoid spawn out of the map
 		conta = 0; //time starts again
 	}
 }
@@ -344,15 +317,7 @@ void Enemy6::movement(){
 	if(segno == 1) mvwaddch(curwin,yLoc,xLoc+1,' '); //delete the gun, dx when enemy goes to dx
 	else mvwaddch(curwin,yLoc,xLoc-1,' '); //delete the gun, sx when enemy goes to sx
 	Enemy0::updateCoordinates(segno,0); //implement the movement
-	/*if(xLoc > xMax - 3){ //reach the max (Pay attention,there is the gun)
-		xLoc = xMax - 3;
-		Enemy0::setSign(); //change the direction of the movement
-	}
-	else if(xLoc < 2){ //reach the minimum (Pay attention,there is the gun)
-		xLoc = 2;
-		Enemy0::setSign();
-	}
-	else*/ if(xLoc > xpern + cost){ //reach the max of radius
+	if(xLoc > xpern + cost){ //reach the max of radius
 		xLoc = xpern + cost;
 		Enemy0::setSign();
 	}
