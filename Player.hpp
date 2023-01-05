@@ -29,7 +29,6 @@ private:
 public:
 	bool activejump; //if it is true, you are jumping
 	int conta;
-	bool down_arrive; //if the player has finished its fall
 	bool onplatform; //if the player is on a platform
 	int segno;
 	//powerup
@@ -72,4 +71,5 @@ public:
 	void updatecash(int money); //update your wallet
 	void updateLife(); //Update life if you finish a level
 	void updateCoordinates(int x,int y); //Update your x and y when you went in a not-possible place
+	void setDir(int dir);
 };

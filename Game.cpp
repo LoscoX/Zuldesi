@@ -20,7 +20,7 @@ Game::Game(int height,int width){
 	difficulty = 0; //diffcult = 0 when you start the game
 
 	//Initialize Powerups (quantity of the guns is fixed to 1-->you can have just one gun)
-    guns[0] = Powerup("Pistol", "you shoot one bullet", 1, 1, 1);
+  guns[0] = Powerup("Pistol", "you shoot one bullet", 1, 1, 1);
 	guns[1] = Powerup("Rifle", "you shoot two bullets", 1, 1, 1);
 	guns[2] = Powerup("Machinegun", "you shoot three bullets", 1, 1, 1);
 	guns[3] = Powerup("Doublegun", "you shoot two bullets, one dx direction and one sx direction", 1, 1, 1);
@@ -35,7 +35,7 @@ Game::Game(int height,int width){
 	board.initialize(); //initialize the board
 	WINDOW* win = board.board_win;
 
-	player = Player(win,height-2,1); //create the player
+	player = Player(win,height-2,20); //create the player
 	player.initialize(); //initialize the player
 
 	Game::Structure(); //ceate the structure
@@ -83,7 +83,7 @@ Game::Game(int height,int width){
 		enemies2 = Game::head_insert_enemy2(enemies2,e,i); //add the enemy into the list
 	}
 
-	n3 = 3; //number of enemies of type 3
+	n3 = rand()%k; //number of enemies of type 3
 	for(int i=0;i<n3;i++){
 		Enemy3 e = Enemy3(win,(1 + rand()%(height-2)),(1 + rand()%(width-2)),'3',9,4); //create one enemy
 		enemies3 = Game::head_insert_enemy3(enemies3,e,i); //add the enemy into the list
@@ -249,8 +249,8 @@ void Game::updateState(){
 	Game::displaycoins();
 
 	//player movement
-	Game::playermovement();
-
+	//Game::playermovement();
+	Game::mapMovement();
 	//Update coins
 	Game::updateCoins();
 
@@ -258,11 +258,11 @@ void Game::updateState(){
 	Game::shooting();
 
 	//enemy movement
-	if(time%5 == 0) Game::enemymovement(); //you want to slow down enemies
+	if(time%10 == 0) Game::enemymovement(); //you want to slow down enemies
 	time++;
 
 	//update structure
-	Game::Structure();
+	//Game::StructureUpdate();
 
 	if(player.getlife() == 0) game_over = true; //Player death
 }
@@ -682,11 +682,28 @@ void Game::Structure(){
 	board.initializePlatform(25,board.height-8,2); //platform
 	board.initializePlatform(29,board.height-9,3); //platform
 	board.initializePlatform(35,board.height-13,4); //platform
+	board.initializePlatform(-30,board.height-5,5); //platform
 	board.initializeWall(4,board.height-4,0); //wall
 	board.initializeWall(100,board.height-2,1); //wall
 	board.initializeWall(60,board.height-2,2); //wall
 	board.initializeWall(70,board.height-2,3); //wall
 	board.initializeWall(80,board.height-2,4); //wall
+	board.initializeWall(150,board.height-2,5); //wall
+}
+
+void Game::StructureUpdate(){
+	board.initializePlatform(board.plat[0].xpos[0],board.height-7,0); //platform
+	board.initializePlatform(board.plat[1].xpos[0],board.height-5,1); //platform
+	board.initializePlatform(board.plat[2].xpos[0],board.height-8,2); //platform
+	board.initializePlatform(board.plat[3].xpos[0],board.height-9,3); //platform
+	board.initializePlatform(board.plat[4].xpos[0],board.height-13,4); //platform
+	board.initializePlatform(board.plat[5].xpos[0],board.height-5,5); //platform
+	board.initializeWall(board.wal[0].xpos[0],board.height-4,0); //wall
+	board.initializeWall(board.wal[1].xpos[0],board.height-2,1); //wall
+	board.initializeWall(board.wal[2].xpos[0],board.height-2,2); //wall
+	board.initializeWall(board.wal[3].xpos[0],board.height-2,3); //wall
+	board.initializeWall(board.wal[4].xpos[0],board.height-2,4); //wall
+	board.initializeWall(board.wal[5].xpos[0],board.height-4,5); //wall
 }
 
 bullt Game::deletePlayerBullets(bullt tmp){ //delete Player's bullets
@@ -732,7 +749,7 @@ void Game::shooting(){
 			if(player.bullet.shoot(tmp,player.bullet.blt) == true){ //move the bullet if it exists (in this case you reached the walls)
 				tmp = Game::deletePlayerBullets(tmp); //delete bullet
 			}
-			else if(board.IsThereStructure(tmp->xB,tmp->yB) == true){ //you have had a collision with a structure
+			else if(board.IsThereStructure(tmp->xB,tmp->yB) == true || board.IsThereStructure(tmp->xB+1,tmp->yB) || board.IsThereStructure(tmp->xB-1,tmp->yB)){ //you have had a collision with a structure
 				mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
 				tmp = Game::deletePlayerBullets(tmp); //delete bullet
 			}
@@ -750,7 +767,7 @@ void Game::shooting(){
 				if(cont->enemy.bullet.shoot(tmp,cont->enemy.bullet.blt) == true){ //move the bullet if it exists and check if reaches the wall
 					tmp = deleteEnemy6Bullets(tmp,cont); //delete bullet
 				}
-				else if(board.IsThereStructure(tmp->xB,tmp->yB) == true){ //you have had a collision with a structure
+				else if(board.IsThereStructure(tmp->xB,tmp->yB) == true || board.IsThereStructure(tmp->xB+1,tmp->yB) || board.IsThereStructure(tmp->xB-1,tmp->yB)){ //you have had a collision with a structure
 					mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
 					tmp = deleteEnemy6Bullets(tmp,cont); //delete bullet
 				}
@@ -771,7 +788,7 @@ void Game::shooting(){
 				if(cont2->enemy.bullet.shoot(tmp,cont2->enemy.bullet.blt)==true){ //move the bullet if it exists and check if it reaches the wall
 					tmp = deleteEnemy7Bullets(tmp,cont2); //delete bullet
 				}
-				else if(board.IsThereStructure(tmp->xB,tmp->yB) == true){ //you have had a collision with a structure
+				else if(board.IsThereStructure(tmp->xB,tmp->yB) == true || board.IsThereStructure(tmp->xB+1,tmp->yB) || board.IsThereStructure(tmp->xB-1,tmp->yB)){ //you have had a collision with a structure
 					mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
 					tmp = deleteEnemy7Bullets(tmp,cont2); //delete bullet
 				}
@@ -792,7 +809,7 @@ void Game::shooting(){
 				if(cont3->enemy.bullet.shoot(tmp,cont3->enemy.bullet.blt) == true){ //move the bullet if it exists and check if it reaches the wall
 					tmp = deleteEnemy8Bullets(tmp,cont3); //delete bullet
 				}
-				else if(board.IsThereStructure(tmp->xB,tmp->yB) == true){ //you have had a collision with a structure
+				else if(board.IsThereStructure(tmp->xB,tmp->yB) == true || board.IsThereStructure(tmp->xB+1,tmp->yB) || board.IsThereStructure(tmp->xB-1,tmp->yB)){ //you have had a collision with a structure
 					mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
 					tmp = deleteEnemy8Bullets(tmp,cont3); //delete bullet
 				}
@@ -813,7 +830,7 @@ void Game::shooting(){
 				if(cont4->enemy.bullet.shoot(tmp,cont4->enemy.bullet.blt) == true){ //move the bullet if it exists and check if it reaches the wall
 					tmp = deleteEnemy9Bullets(tmp,cont4); //delete bullet
 				}
-				else if(board.IsThereStructure(tmp->xB,tmp->yB) == true){ //you have had a collision with a structure
+				else if(board.IsThereStructure(tmp->xB,tmp->yB) == true || board.IsThereStructure(tmp->xB+1,tmp->yB) || board.IsThereStructure(tmp->xB-1,tmp->yB)){ //you have had a collision with a structure
 					mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
 					tmp = deleteEnemy9Bullets(tmp,cont4); //delete bullet
 				}
@@ -1041,9 +1058,8 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 	return found;
 }
 
-void Game::playermovement(){
+/*void Game::playermovement(){
 	int choice;
-	if(player.down_arrive){ //check if you are not going down
 		if(!player.activejump){ //you are not jumping
 			choice = player.getmv(); //save the movement
 			Game::PlayerCanMove(choice); //check if you can move
@@ -1055,8 +1071,254 @@ void Game::playermovement(){
 			player.airshoot(); //if you want shoot you have to press h
 		}
 	//see player
-	}
+	
 	player.display();
+}*/
+
+void Game::mapMovement(){
+	int choice;
+	if(!player.activejump){ //you are not jumping
+		choice = player.getmv(); //save the movement
+		switch (choice)
+		{
+			case KEY_LEFT:
+				player.setDir(-1); 
+				mapright();
+				break;
+			case KEY_RIGHT:
+				player.setDir(1); 
+				mapleft();
+				break;
+			case KEY_UP:
+				if(player.getdir()==1)
+					mapleft();
+				else
+					mapright();
+			default:
+				break;
+		}
+		Game::PlayerCanMove(choice); //check if you can move
+	}
+	else{
+		player.jump();
+		if(player.getdir()==1)
+			mapleft();
+		else
+			mapright();
+		Game::PlayerCanMove(KEY_UP); //check if you can move (you are jumping)
+		player.display();
+		player.airshoot(); //if you want shoot you have to press h
+	}
+	//see player
+	player.display();
+}
+
+void Game::mapleft(){ //move left
+	listenm0 tmp0=enemies0;
+	while(tmp0!=NULL)
+	{
+		mvwaddch(board.board_win,tmp0->enemy.gety(),tmp0->enemy.getx(),' ');
+		tmp0->enemy.updateCoordinates(-1,0);
+		tmp0->enemy.setXpern(tmp0->enemy.getXpern()-1);
+		tmp0=tmp0->next;
+	}
+	listenm1 tmp1=enemies1;
+	while(tmp1!=NULL)
+	{
+		mvwaddch(board.board_win,tmp1->enemy.gety(),tmp1->enemy.getx(),' ');
+		tmp1->enemy.updateCoordinates(-1,0);
+		tmp1->enemy.setXpern(tmp1->enemy.getXpern()-1);
+		tmp1=tmp1->next;
+	}
+	listenm2 tmp2=enemies2;
+	while(tmp2!=NULL)
+	{
+		mvwaddch(board.board_win,tmp2->enemy.gety(),tmp2->enemy.getx(),' ');
+		tmp2->enemy.updateCoordinates(-1,0);
+		tmp2=tmp2->next;
+	}
+	listenm3 tmp3=enemies3;
+	while(tmp3!=NULL)
+	{
+		mvwaddch(board.board_win,tmp3->enemy.gety(),tmp3->enemy.getx(),' ');
+		tmp3->enemy.updateCoordinates(-1,0);
+		tmp3->enemy.setXpern(tmp3->enemy.getXpern()-1);
+		tmp3=tmp3->next;
+	}
+	listenm4 tmp4=enemies4;
+	while(tmp4!=NULL)
+	{
+		mvwaddch(board.board_win,tmp4->enemy.gety(),tmp4->enemy.getx(),' ');
+		tmp4->enemy.updateCoordinates(-1,0);
+		tmp4->enemy.setXpern(tmp4->enemy.getXpern()-1);
+		tmp4=tmp4->next;
+	}
+	listenm5 tmp5=enemies5;
+	while(tmp5!=NULL)
+	{
+		mvwaddch(board.board_win,tmp5->enemy.gety(),tmp5->enemy.getx(),' ');
+		tmp5->enemy.updateCoordinates(-1,0);
+		tmp5=tmp5->next;
+	}
+	listenm6 tmp6=enemies6;
+	while(tmp6!=NULL)
+	{
+		mvwaddch(board.board_win,tmp6->enemy.gety(),tmp6->enemy.getx(),' ');
+		mvwaddch(board.board_win,tmp6->enemy.gety(),tmp6->enemy.getx()+tmp6->enemy.getSign(),' ');
+		tmp6->enemy.updateCoordinates(-1,0);
+		tmp6->enemy.setXpern(tmp6->enemy.getXpern()-1);
+		tmp6=tmp6->next;
+	}
+	listenm7 tmp7=enemies7;
+	while(tmp7!=NULL)
+	{
+		mvwaddch(board.board_win,tmp7->enemy.gety(),tmp7->enemy.getx(),' ');
+		mvwaddch(board.board_win,tmp7->enemy.gety(),tmp7->enemy.getx()+tmp7->enemy.getSign(),' ');
+		tmp7->enemy.updateCoordinates(-1,0);
+		tmp7=tmp7->next;
+	}
+	listenm8 tmp8=enemies8;
+	while(tmp8!=NULL)
+	{
+		mvwaddch(board.board_win,tmp8->enemy.gety(),tmp8->enemy.getx(),' ');
+		mvwaddch(board.board_win,tmp8->enemy.gety(),tmp8->enemy.getx()+tmp8->enemy.getSign(),' ');
+		tmp8->enemy.updateCoordinates(-1,0);
+		tmp8=tmp8->next;
+	}
+	listenm9 tmp9=enemies9;
+	while(tmp9!=NULL)
+	{
+		mvwaddch(board.board_win,tmp9->enemy.gety(),tmp9->enemy.getx(),' ');
+		mvwaddch(board.board_win,tmp9->enemy.gety(),tmp9->enemy.getx()+1,' ');
+		mvwaddch(board.board_win,tmp9->enemy.gety(),tmp9->enemy.getx()-1,' ');
+		tmp9->enemy.updateCoordinates(-1,0);
+		tmp9=tmp9->next;
+	}
+	for(int i=0;i<num_ogg;i++)
+	{
+		board.deletePlatform(board.plat[i].xpos[0],board.plat[i].ypos[0],i);
+		for(int j=0;j<len;j++)
+			board.plat[i].xpos[j]--;
+	}
+	for(int i=0;i<num_ogg;i++)
+	{
+		board.deleteWall(board.wal[i].xpos[0],board.wal[i].ypos[0],i);
+		for(int j=0;j<len;j++)
+			board.wal[i].xpos[j]--;
+	}
+	StructureUpdate();
+	mony tmp=coins;
+	while (tmp!=NULL)
+	{
+		mvwaddch(board.board_win,tmp->y,tmp->x,' ');
+		tmp->x--;
+		mvwaddch(board.board_win,tmp->y,tmp->x,' ');
+		tmp=tmp->next;
+	}
+}
+
+void Game::mapright(){ //move right
+	listenm0 tmp0=enemies0;
+	while(tmp0!=NULL)
+	{
+		mvwaddch(board.board_win,tmp0->enemy.gety(),tmp0->enemy.getx(),' ');
+		tmp0->enemy.updateCoordinates(1,0);
+		tmp0->enemy.setXpern(tmp0->enemy.getXpern()+1);
+		tmp0=tmp0->next;
+	}
+	listenm1 tmp1=enemies1;
+	while(tmp1!=NULL)
+	{
+		mvwaddch(board.board_win,tmp1->enemy.gety(),tmp1->enemy.getx(),' ');
+		tmp1->enemy.updateCoordinates(1,0);
+		tmp1->enemy.setXpern(tmp1->enemy.getXpern()+1);
+		tmp1=tmp1->next;
+	}
+	listenm2 tmp2=enemies2;
+	while(tmp2!=NULL)
+	{
+		mvwaddch(board.board_win,tmp2->enemy.gety(),tmp2->enemy.getx(),' ');
+		tmp2->enemy.updateCoordinates(1,0);
+		tmp2=tmp2->next;
+	}
+	listenm3 tmp3=enemies3;
+	while(tmp3!=NULL)
+	{
+		mvwaddch(board.board_win,tmp3->enemy.gety(),tmp3->enemy.getx(),' ');
+		tmp3->enemy.updateCoordinates(1,0);
+		tmp3->enemy.setXpern(tmp3->enemy.getXpern()+1);
+		tmp3=tmp3->next;
+	}
+	listenm4 tmp4=enemies4;
+	while(tmp4!=NULL)
+	{
+		mvwaddch(board.board_win,tmp4->enemy.gety(),tmp4->enemy.getx(),' ');
+		tmp4->enemy.updateCoordinates(1,0);
+		tmp4->enemy.setXpern(tmp4->enemy.getXpern()+1);
+		tmp4=tmp4->next;
+	}
+	listenm5 tmp5=enemies5;
+	while(tmp5!=NULL)
+	{
+		mvwaddch(board.board_win,tmp5->enemy.gety(),tmp5->enemy.getx(),' ');
+		tmp5->enemy.updateCoordinates(1,0);
+		tmp5=tmp5->next;
+	}
+	listenm6 tmp6=enemies6;
+	while(tmp6!=NULL)
+	{
+		mvwaddch(board.board_win,tmp6->enemy.gety(),tmp6->enemy.getx(),' ');
+		mvwaddch(board.board_win,tmp6->enemy.gety(),tmp6->enemy.getx()+tmp6->enemy.getSign(),' ');
+		tmp6->enemy.updateCoordinates(1,0);
+		tmp6->enemy.setXpern(tmp6->enemy.getXpern()+1);
+		tmp6=tmp6->next;
+	}
+	listenm7 tmp7=enemies7;
+	while(tmp7!=NULL)
+	{
+		mvwaddch(board.board_win,tmp7->enemy.gety(),tmp7->enemy.getx(),' ');
+		mvwaddch(board.board_win,tmp7->enemy.gety(),tmp7->enemy.getx()+tmp7->enemy.getSign(),' ');
+		tmp7->enemy.updateCoordinates(1,0);
+		tmp7=tmp7->next;
+	}
+	listenm8 tmp8=enemies8;
+	while(tmp8!=NULL)
+	{
+		mvwaddch(board.board_win,tmp8->enemy.gety(),tmp8->enemy.getx(),' ');
+		mvwaddch(board.board_win,tmp8->enemy.gety(),tmp8->enemy.getx()+tmp8->enemy.getSign(),' ');
+		tmp8->enemy.updateCoordinates(1,0);
+		tmp8=tmp8->next;
+	}
+	listenm9 tmp9=enemies9;
+	while(tmp9!=NULL)
+	{
+		mvwaddch(board.board_win,tmp9->enemy.gety(),tmp9->enemy.getx(),' ');
+		mvwaddch(board.board_win,tmp9->enemy.gety(),tmp9->enemy.getx()+1,' ');
+		mvwaddch(board.board_win,tmp9->enemy.gety(),tmp9->enemy.getx()-1,' ');
+		tmp9->enemy.updateCoordinates(1,0);
+		tmp9=tmp9->next;
+	}
+	for(int i=0;i<num_ogg;i++)
+	{
+		board.deletePlatform(board.plat[i].xpos[0],board.plat[i].ypos[0],i);
+		for(int j=0;j<len;j++)
+			board.plat[i].xpos[j]++;
+	}
+	for(int i=0;i<num_ogg;i++)
+	{
+		board.deleteWall(board.wal[i].xpos[0],board.wal[i].ypos[0],i);
+		for(int j=0;j<len;j++)
+			board.wal[i].xpos[j]++;
+	}
+	StructureUpdate();
+	mony tmp=coins;
+	while (tmp!=NULL)
+	{
+		mvwaddch(board.board_win,tmp->y,tmp->x,' ');
+		tmp->x++;
+		mvwaddch(board.board_win,tmp->y,tmp->x,' ');
+		tmp=tmp->next;
+	}
 }
 
 void Game::PlayerDown(){
@@ -1070,7 +1332,7 @@ void Game::PlayerCanMove(int choice){ //Player can or cannot move
 	switch(choice){
 	case KEY_LEFT: //you went to sx
 		if(board.IsThereStructure(player.getx(),player.gety())){ //check it there has been collision
-			player.updateCoordinates(1,0); //you have to go where you went
+			mapleft(); //you have to go where you went
 		}
 		else{
 			while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
@@ -1080,7 +1342,7 @@ void Game::PlayerCanMove(int choice){ //Player can or cannot move
 		break;
 	case KEY_RIGHT: //you went to dx
 		if(board.IsThereStructure(player.getx(),player.gety())){ //check it there has been collision
-			player.updateCoordinates(-1,0); //you have to go where you went
+			mapright(); //you have to go where you went
 		}
 		else{
 			while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
@@ -1090,7 +1352,10 @@ void Game::PlayerCanMove(int choice){ //Player can or cannot move
 		break;
 	case KEY_UP: //you went up
 		if(board.IsThereStructure(player.getx(),player.gety())){ //check if reach one piece of one structure
-			player.updateCoordinates(-player.getdir(),-1); //you have to go where you went(it depends on the direction)
+			if(player.getdir()==1) //you have to go where you went(it depends on the direction)
+				mapright();
+			else
+				mapleft(); 
 			player.SetJump(); //for the next jump
 			while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
 				Game::PlayerDown(); //go down
@@ -1220,6 +1485,12 @@ void Game::Enemy7CanMove(listenm7 h){ //Enemies can or cannot move
 	}
 }
 
+void Game::Enemy8CanMove(listenm8 h){ //Enemies can or cannot move
+	while(!board.IsThereStructure(h->enemy.getx(),h->enemy.gety()+1) && h->enemy.gety()!= board.height-2){ //check if you have something under your feet
+		h->enemy.EnemyGoDown(); //go down
+	}
+}
+
 void Game::Enemy9CanMove(listenm9 h){ //Enemies can or cannot move
 	if(board.IsThereStructure(h->enemy.getx(),h->enemy.gety())){ //check if you have something under your feet or over you head
 		h->enemy.updateCoordinates(0,-h->enemy.getSign()); //you have to go from you went
@@ -1312,6 +1583,7 @@ void Game::enemymovement(){	//Enemies movement
 		if((abs(player.getx() - tmp8->enemy.getx()) <= 10) && (player.gety() == tmp8->enemy.gety())){ //player is sufficiently near to enemy type8
 			tmp8->enemy.movement(dir); //move one enemy
 		}
+		Game::Enemy8CanMove(tmp8);
 		tmp8->enemy.display(); //see one enemy
 		//no damage when player touches enemies type8
 		tmp8 = tmp8->next; //go to the next enemy

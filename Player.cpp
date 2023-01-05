@@ -15,7 +15,7 @@ Player::Player(WINDOW * win, int y, int x){
 	keypad(curwin,true);
 	character[0] = '@';
 	character[1] = '^';
-	life = 3;
+	life = 99;
 	cash = 0;
 	dir = 1; //initial direction
 	bullet = Bullet(curwin); //initialize the bullet
@@ -24,7 +24,6 @@ Player::Player(WINDOW * win, int y, int x){
 	activejump = false; //start without jump
 	segno = -1; //segno for parabola
 	conta = 1;
-	down_arrive = true; //you are not falling
 	onplatform = false; //you are not on a platform
 	//powerup
 	gun = Powerup("None", "No gun", 1, 0, 0); //no gun when you start
@@ -56,7 +55,6 @@ Player::Player(){ //default constructor
 	activejump = false;
 	segno = -1; //segno for parabola
 	conta = 1;
-	down_arrive = true; //you are not falling
 	onplatform = false; //you are not on a platform
 	//powerup
 	gun = Powerup("None", "No gun", 1, 0, 0); //no gun when you start
@@ -87,7 +85,6 @@ void Player::jump(){
 	if(conta<=16){
 		if(conta == 9)segno = 1; //go down
 		yLoc = yLoc + segno;
-		if(conta%2==0)xLoc = xLoc + dir; //go to the next point
 		conta++;
 		if(xLoc>xMax-2){ //if you reach the wall
 			Player::SetJump(); //ready for a new jump
@@ -142,16 +139,13 @@ int Player::getmv(){ //move the character with gun by user
 	}
 	int choice = wgetch(curwin);
 	switch (choice){
+		/*case KEY_RIGHT:
+			mvright();
+			break;*/
 		case KEY_UP:
 			activejump = true; //active jump
 			jump();
 		break;
-		case KEY_LEFT:
-			mvleft();
-			break;
-		case KEY_RIGHT:
-			mvright();
-			break;
 		case 'h': //activate the gun
 			if(num_bullet>0 && strcmp(gun.getName().c_str(),"Pistol") == 0){ //you shoot one bullet
 				bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc,yLoc,ind); //add the bullet
@@ -204,26 +198,26 @@ int Player::airshoot(){ //during jump movement or down movement, you can just sh
 	int choice = wgetch(curwin);
 	switch(choice){
 		case 'h': //activate the gun
-			if(strcmp(gun.getName().c_str(),"Pistol") == 0){ //you shoot one bullet
+			if(num_bullet>0 && strcmp(gun.getName().c_str(),"Pistol") == 0){ //you shoot one bullet
 				bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc,yLoc,ind); //add the bullet
 				ind = ind + 1; //we want different indexes for the different bullets
 				num_bullet--; //decrement bullets
 			}
-			else if(strcmp(gun.getName().c_str(),"Rifle") == 0){ //you shoot two bullets
+			else if(num_bullet>1 && strcmp(gun.getName().c_str(),"Rifle") == 0){ //you shoot two bullets
 				for(int i=0;i<2;i++){
 					bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc+i*dir,yLoc,ind); //add the bullet
 					ind = ind + 1; //we want different indexes for the different bullets
 					num_bullet--; //decrement bullets
 				}
 			}
-			else if(strcmp(gun.getName().c_str(),"Machinegun") == 0){ //you shoot three bullets
+			else if(num_bullet>2 && strcmp(gun.getName().c_str(),"Machinegun") == 0){ //you shoot three bullets
 				for(int i=0;i<3;i++){
 					bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc+i*dir,yLoc,ind); //add the bullet
 					ind = ind + 1; //we want different indexes for the different bullets
 					num_bullet--; //decrement bullets
 				}
 			}
-			else if(strcmp(gun.getName().c_str(), "Doublegun") == 0){//you shoot two bullets in opposite directions
+			else if(num_bullet>1 && strcmp(gun.getName().c_str(), "Doublegun") == 0){//you shoot two bullets in opposite directions
 				bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc,yLoc,ind); //add the bullet
 				ind = ind + 1; //we want different indexes for the different bullets
 				num_bullet--; //decrement bullets
@@ -256,7 +250,7 @@ void Player::injury(){ //Injury
 	if(shield.getQnt() == 0 && !ACTIVE_ARMOR){ //check if the player has the shield and the armor
 		mvwaddch(curwin,yLoc,xLoc,' ');
 		mvwaddch(curwin, yLoc-1, xLoc,' ');
-		xLoc = 1; //back to beginning
+		xLoc = 20; //back to beginning
 		yLoc = yMax - 2; //back to beginning
 		life = life - 1; // one point
 	}
@@ -303,4 +297,7 @@ void Player::updateCoordinates(int x,int y){ //update coordinates
 	yLoc = yLoc+y;
 }
 
-
+void Player::setDir(int dir)
+{
+	this->dir=dir;
+}

@@ -26,7 +26,7 @@ struct wall{ //structure for a wall
 	int ypos[len];
 };
 
-const int num_ogg = 5; //number of one type of objects
+const int num_ogg = 6; //number of one type of objects
 
 class Board{
 public:
@@ -40,7 +40,9 @@ public:
 	void addAt(int y,int x,char ch);
 	char getInput();
 	void initializeWall(int x,int y,int ind); //build the walls
+	void deleteWall(int x,int y,int ind);
 	void initializePlatform(int pivot,int h,int ind); //build the structures
+	void deletePlatform(int pivot,int h,int ind);
 	platform plat[num_ogg]; //platforms
 	wall wal[num_ogg]; //walls
 	bool IsThereStructure(int x,int y); //check if one character collides with a structure

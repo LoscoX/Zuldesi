@@ -123,6 +123,7 @@ public:
 	void Enemy5CanMove(listenm5 h); //Game interaction between enemy5 and structure map
 	void Enemy6CanMove(listenm6 h); //Game interaction between enemy6 and structure map
 	void Enemy7CanMove(listenm7 h); //Game interaction between enemy7 and structure map
+	void Enemy8CanMove(listenm8 h);
 	void Enemy9CanMove(listenm9 h); //Game interaction between enemy9 and structure map
 
 	int directionSmartEnemy5(Enemy5 e); //Handle the direction of the enemy based on the position of the player
@@ -134,6 +135,12 @@ public:
 	void shooting(); //handle the shooting
 	void enemymovement(); //enemies movement
 	void playermovement(); //player movement
+
+	void mapMovement();
+	void mapright();
+	void mapleft();
+
+	void StructureUpdate();
 	void PlayerDown(); //player goes down
 
 	int time; //time of the game
@@ -195,4 +202,3 @@ protected:
 	mony coins;
 	bool game_over;
 };
-
