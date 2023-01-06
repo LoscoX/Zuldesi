@@ -22,7 +22,7 @@ Segment::Segment(string path){
 }
 
 string* Segment::getMatrix(){
-    return this->matrix;
+    return matrix;
 	/*string* mat;
 	for(int i=0;i<MATRIX_SIZE_X;i++){
 		strcpy(mat[i],matrix[i]);

@@ -62,10 +62,14 @@ bool Map::isSolid(int x, int y){
 }
 
 string* Map::toString(){ //build matrix
-    string* mat;
+    string mat[25];
+    string* t;
 
     seg_list_ptr tmp = segList;
-    mat = tmp->seg.getMatrix();
+    t = tmp->seg.getMatrix();
+    for(int i=0; i<25; i++){
+        mat[i] = t[i];
+    }
     tmp = tmp->next;
 
     while(tmp!=NULL){
@@ -84,8 +88,8 @@ string* Map::toString(){ //build matrix
     	tmp2 = tmp2->next;
     }
 
-
-    return mat;
+    string* t2 = mat;
+    return t2;
 }
 
 int Map::getDim_x(){
