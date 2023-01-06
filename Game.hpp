@@ -61,7 +61,7 @@ struct listenemy8{ //list of enemies type8
 	Enemy8 enemy; //enemy
 	listenemy8* next;
 };
-struct listenemy9{ //list of enemies type8
+struct listenemy9{ //list of enemies type9
 	int val; //ID
 	Enemy9 enemy; //enemy
 	listenemy9* next;
