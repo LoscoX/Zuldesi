@@ -23,12 +23,3 @@ Segment::Segment(string path){
 string* Segment::getMatrix(){
     return this->matrix;
 }
-
-/*int main(){
-    Segment seg = Segment("asd.txt");
-    string* mat = seg.getMatrix();
-    for (int i=0; i<MATRIX_SIZE_X; i++){
-        cout<<mat[i]<<endl;
-    }
-    return 0;
-}*/

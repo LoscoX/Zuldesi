@@ -28,13 +28,13 @@ Map::Map(int difficulty){
 
 bool Map::isSolid(int y, int x){
     int target = (int)x/MATRIX_SIZE_X;
-    cout<<"target"<<target<<endl;
+
     seg_list_ptr tmp = segList;
     for(int i=0; i<target && tmp!=NULL; i++){
         tmp = tmp->next;
     }
     char symbol = tmp->seg.getMatrix()[x%MATRIX_SIZE_X][y];
-    cout<<"symbol:"<<symbol<<endl;
+
     if(symbol != '#' && symbol != '-' && symbol != '^'){
         return false;
     }
@@ -58,14 +58,3 @@ string* Map::toString(){
 
     return mat;
 }
-
-/*int main(){
-    Map map = Map(2);
-    string* mat;
-    mat = map.toString();
-    for(int i=0; i<MATRIX_SIZE_X; i++){
-        cout<<mat[i]<<endl;
-    }
-    map.isSolid(25, 1);
-    return 0;
-}*/
