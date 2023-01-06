@@ -18,13 +18,13 @@ Game::Game(int height,int width){
 	init_pair(6,COLOR_CYAN,COLOR_BLACK); //color enemy type 5/7
 	init_pair(7,COLOR_WHITE,COLOR_BLACK); //color enemy type 8
 
-	difficulty = 0; //diffcult = 0 when you start the game
+	difficulty = 0; //difficult = 0 when you start the game
 
-	//Initialize Powerups (quantity of the guns is fixed to 1-->you can have just one gun)
+	//Initialize Power-ups (quantity of the guns is fixed to 1-->you can have just one gun)
 	guns[0] = Powerup("Pistol", "you shoot one bullet", 1, 1, 1);
 	guns[1] = Powerup("Rifle", "you shoot two bullets", 1, 1, 1);
-	guns[2] = Powerup("Machinegun", "you shoot three bullets", 1, 1, 1);
-	guns[3] = Powerup("Doublegun", "you shoot two bullets, one dx direction and one sx direction", 1, 1, 1);
+	guns[2] = Powerup("Machine-gun", "you shoot three bullets", 1, 1, 1);
+	guns[3] = Powerup("Double-gun", "you shoot two bullets, one dx direction and one sx direction", 1, 1, 1);
 
     bonus[0] = Powerup("HP", "Additional life", 1, 1, 1); //quantity corresponds to the number of lives which you have bought
 	bonus[1] = Powerup("Shield", "A shield that blocks damage one time", 1, 1, 1);//quantity corresponds to the number of protection you have (max 2)
@@ -130,7 +130,7 @@ Game::Game(int height,int width){
 
 	//Game::market(); //starts market
 
-	//try powerups
+	//try power-ups
 	player.gun.name = guns[0].getName();
 	//player.gun.name = guns[1].getName();
 	//player.gun.name = guns[2].getName();
@@ -160,18 +160,18 @@ void Game::PrintMap(){
 }
 
 void Game::market(){
-	//Generate randomally 3 powerups
+	//Generate randomly 3 power-ups
 	int a = rand()%NUM_GUNS;
 	int b = rand()%NUM_BONUS;
 	int c = rand()%NUM_ACTIVE;
 	Powerup pu_market[3] = {guns[a], bonus[b], active[c]};
-	//call graphic lib to load market level passing the 3 powerups selected for sale
+	//call graphic lib to load market level passing the 3 power-ups selected for sale
 	Game::drawPowerUp(pu_market);
 
 	//Game::updatePowerup(Powerup pwp);
 
 	//once we exit the market level
-	//update difficulty based on powerups
+	//update difficulty based on power-ups
 	int diff = player.gun.getDifficulty();
 	diff += player.hp.getQnt() * player.hp.getDifficulty();
 	diff += player.shield.getQnt() * player.shield.getDifficulty();
@@ -186,7 +186,7 @@ void Game::market(){
 
 //}
 
-void Game::drawPowerUp(Powerup pwp[]){ //Draw powerups which are spawned
+void Game::drawPowerUp(Powerup pwp[]){ //Draw power-ups which are spawned
 	mvwprintw(board.board_win,20,28,pwp[0].getName().c_str());
 	mvwprintw(board.board_win,20,52,pwp[1].getName().c_str());
 	mvwprintw(board.board_win,20,80,pwp[2].getName().c_str());
@@ -262,7 +262,7 @@ void Game::updateState(){
 	Game::displayCoins();
 
 	//Map movement
-	if(time%600 == 0)Game::mapMovement(); //We move the map on orrizzontal directionand the player only on vertical direction
+	if(time%600 == 0)Game::mapMovement(); //We move the map on horizontal direction and the player only on vertical direction
 
 	if(map.updateCoins(xMin+player.getx(), player.gety())){
 		matrix = map.toString(); //update the map removing coin
@@ -404,7 +404,7 @@ void Game::shooting(){
 				mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
 				tmp = Game::deletePlayerBullets(tmp); //delete bullet
 			}
-			else if(Game::enemydeath(tmp) == true){
+			else if(Game::enemydeath(tmp)){
 				mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
 				tmp = Game::deletePlayerBullets(tmp); //delete bullet
 			}
@@ -422,7 +422,7 @@ void Game::shooting(){
 					mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
 					tmp = deleteEnemy6Bullets(tmp,cont); //delete bullet
 				}
-				else if(Game::interactionBullet(tmp) == true){
+				else if(Game::interactionBullet(tmp)){
 					mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
 					tmp = deleteEnemy6Bullets(tmp,cont); //delete bullet
 				}
@@ -443,7 +443,7 @@ void Game::shooting(){
 					mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
 					tmp = deleteEnemy7Bullets(tmp,cont2); //delete bullet
 				}
-				else if(Game::interactionBullet(tmp) == true){
+				else if(Game::interactionBullet(tmp)){
 					mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
 					tmp = deleteEnemy7Bullets(tmp,cont2); //delete bullet
 				}
@@ -464,7 +464,7 @@ void Game::shooting(){
 					mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
 					tmp = deleteEnemy8Bullets(tmp,cont3); //delete bullet
 				}
-				else if(Game::interactionBullet(tmp) == true){
+				else if(Game::interactionBullet(tmp)){
 					mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
 					tmp = deleteEnemy8Bullets(tmp,cont3); //delete bullet
 				}
@@ -485,7 +485,7 @@ void Game::shooting(){
 					mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
 					tmp = deleteEnemy9Bullets(tmp,cont4); //delete bullet
 				}
-				else if(Game::interactionBullet(tmp) == true){
+				else if(Game::interactionBullet(tmp)){
 					mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
 					tmp = deleteEnemy9Bullets(tmp,cont4); //delete bullet
 				}
@@ -808,7 +808,7 @@ void Game::mapleft(){ //move left
 	{
 		mvwaddch(board.board_win,tmp0->enemy.gety(),tmp0->enemy.getx(),' '); //delete enemy
 		tmp0->enemy.updateCoordinates(-1,0); //go left
-		tmp0->enemy.setXpern(tmp0->enemy.getXpern()-1); //change pern block
+		tmp0->enemy.setXpern(tmp0->enemy.getXpern()-1); //change per block
 		tmp0=tmp0->next; //change enemy
 	}
 	listenm1 tmp1=enemies1;
@@ -816,7 +816,7 @@ void Game::mapleft(){ //move left
 	{
 		mvwaddch(board.board_win,tmp1->enemy.gety(),tmp1->enemy.getx(),' '); //delete enemy
 		tmp1->enemy.updateCoordinates(-1,0); //go left
-		tmp1->enemy.setXpern(tmp1->enemy.getXpern()-1);//change pern block
+		tmp1->enemy.setXpern(tmp1->enemy.getXpern()-1);//change per block
 		tmp1=tmp1->next; //change enemy
 	}
 	listenm2 tmp2=enemies2;
@@ -831,7 +831,7 @@ void Game::mapleft(){ //move left
 	{
 		mvwaddch(board.board_win,tmp3->enemy.gety(),tmp3->enemy.getx(),' '); //delete enemy
 		tmp3->enemy.updateCoordinates(-1,0);//go left
-		tmp3->enemy.setXpern(tmp3->enemy.getXpern()-1);//change pern block
+		tmp3->enemy.setXpern(tmp3->enemy.getXpern()-1);//change per block
 		tmp3=tmp3->next; //change enemy
 	}
 	listenm4 tmp4=enemies4;
@@ -839,7 +839,7 @@ void Game::mapleft(){ //move left
 	{
 		mvwaddch(board.board_win,tmp4->enemy.gety(),tmp4->enemy.getx(),' '); //delete enemy
 		tmp4->enemy.updateCoordinates(-1,0);//go left
-		tmp4->enemy.setXpern(tmp4->enemy.getXpern()-1);//change pern block
+		tmp4->enemy.setXpern(tmp4->enemy.getXpern()-1);//change per block
 		tmp4=tmp4->next; //change enemy
 	}
 	listenm5 tmp5=enemies5;
@@ -855,7 +855,7 @@ void Game::mapleft(){ //move left
 		mvwaddch(board.board_win,tmp6->enemy.gety(),tmp6->enemy.getx(),' '); //delete enemy
 		mvwaddch(board.board_win,tmp6->enemy.gety(),tmp6->enemy.getx()+tmp6->enemy.getSign(),' '); //delete gun
 		tmp6->enemy.updateCoordinates(-1,0);//go left
-		tmp6->enemy.setXpern(tmp6->enemy.getXpern()-1);//change pern block
+		tmp6->enemy.setXpern(tmp6->enemy.getXpern()-1);//change per block
 		tmp6=tmp6->next; //change enemy
 	}
 	listenm7 tmp7=enemies7;
@@ -945,7 +945,7 @@ void Game::mapright(){ //move right
 	{
 		mvwaddch(board.board_win,tmp0->enemy.gety(),tmp0->enemy.getx(),' '); //delete enemy
 		tmp0->enemy.updateCoordinates(1,0); //go right
-		tmp0->enemy.setXpern(tmp0->enemy.getXpern()+1); //change pern block
+		tmp0->enemy.setXpern(tmp0->enemy.getXpern()+1); //change per block
 		tmp0=tmp0->next; //change enemy
 	}
 	listenm1 tmp1=enemies1;
@@ -953,7 +953,7 @@ void Game::mapright(){ //move right
 	{
 		mvwaddch(board.board_win,tmp1->enemy.gety(),tmp1->enemy.getx(),' '); //delete enemy
 		tmp1->enemy.updateCoordinates(1,0);//go right
-		tmp1->enemy.setXpern(tmp1->enemy.getXpern()+1);//change pern block
+		tmp1->enemy.setXpern(tmp1->enemy.getXpern()+1);//change per block
 		tmp1=tmp1->next; //change enemy
 	}
 	listenm2 tmp2=enemies2;
@@ -968,7 +968,7 @@ void Game::mapright(){ //move right
 	{
 		mvwaddch(board.board_win,tmp3->enemy.gety(),tmp3->enemy.getx(),' ');//delete enemy
 		tmp3->enemy.updateCoordinates(1,0);//go right
-		tmp3->enemy.setXpern(tmp3->enemy.getXpern()+1);//change pern block
+		tmp3->enemy.setXpern(tmp3->enemy.getXpern()+1);//change per block
 		tmp3=tmp3->next; //change enemy
 	}
 	listenm4 tmp4=enemies4;
@@ -976,7 +976,7 @@ void Game::mapright(){ //move right
 	{
 		mvwaddch(board.board_win,tmp4->enemy.gety(),tmp4->enemy.getx(),' ');//delete enemy
 		tmp4->enemy.updateCoordinates(1,0);//go right
-		tmp4->enemy.setXpern(tmp4->enemy.getXpern()+1);//change pern block
+		tmp4->enemy.setXpern(tmp4->enemy.getXpern()+1);//change per block
 		tmp4=tmp4->next; //change enemy
 	}
 	listenm5 tmp5=enemies5;
@@ -992,7 +992,7 @@ void Game::mapright(){ //move right
 		mvwaddch(board.board_win,tmp6->enemy.gety(),tmp6->enemy.getx(),' ');//delete enemy
 		mvwaddch(board.board_win,tmp6->enemy.gety(),tmp6->enemy.getx()+tmp6->enemy.getSign(),' '); //delete gun
 		tmp6->enemy.updateCoordinates(1,0);//go right
-		tmp6->enemy.setXpern(tmp6->enemy.getXpern()+1);//change pern block
+		tmp6->enemy.setXpern(tmp6->enemy.getXpern()+1);//change per block
 		tmp6=tmp6->next; //change enemy
 	}
 	listenm7 tmp7=enemies7;
@@ -1253,9 +1253,9 @@ void Game::Enemy1CanMove(listenm1 h){ //Enemies can or cannot move
 			h->enemy.updateCoordinates(0,-h->enemy.getUp()); //you have to go from you went
 			h->enemy.setUp(); //change the vertical direction
 		}
-		else{ //orrizontal collision
+		else{ //horizontal collision
 			h->enemy.updateCoordinates(-h->enemy.getSign(),0); //you have to go from you went
-			h->enemy.setSign(); //change the orrizontal direction
+			h->enemy.setSign(); //change the horizontal direction
 		}
 	}
 }
@@ -1540,7 +1540,7 @@ listenm9 Game::head_insert_enemy9(listenm9 h,Enemy9 e, int val){ //add one enemy
 listenm0 Game::obj_remove_enemy0(listenm0 h,int cod,bool head){ //remove the enemy type0 with this cod
 	if (h==NULL) return h;
 	else if(h->val == cod){ //if the enemy is in the top of the list
-		if(head == true){ //we need because we have a problem if we delete the list and use again the element pointed by the list
+		if(head){ //we need because we have a problem if we delete the list and use again the element pointed by the list
 			listenm0 tmp = h;
 			h = h->next;  //ok also if h has one element
 			delete tmp;
@@ -1568,7 +1568,7 @@ listenm0 Game::obj_remove_enemy0(listenm0 h,int cod,bool head){ //remove the ene
 listenm1 Game::obj_remove_enemy1(listenm1 h,int cod,bool head){ //remove the enemy type1 with this cod
 	if (h==NULL) return h;
 	else if(h->val == cod){ //if the enemy is in the top of the list
-		if(head == true){ //we need because we have a problem if we delete the list and use again the element pointed by the list
+		if(head){ //we need because we have a problem if we delete the list and use again the element pointed by the list
 			listenm1 tmp = h;
 			h = h->next;  //ok also if h has one element
 			delete tmp;
@@ -1596,7 +1596,7 @@ listenm1 Game::obj_remove_enemy1(listenm1 h,int cod,bool head){ //remove the ene
 listenm2 Game::obj_remove_enemy2(listenm2 h,int cod,bool head){ //remove the enemy type2 with this cod
 	if (h==NULL) return h;
 	else if(h->val == cod){ //if the enemy is in the top of the list
-		if(head == true){ //we need because we have a problem if we delete the list and use again the element pointed by the list
+		if(head){ //we need because we have a problem if we delete the list and use again the element pointed by the list
 			listenm2 tmp = h;
 			h = h->next;  //ok also if h has one element
 			delete tmp;
@@ -1624,7 +1624,7 @@ listenm2 Game::obj_remove_enemy2(listenm2 h,int cod,bool head){ //remove the ene
 listenm3 Game::obj_remove_enemy3(listenm3 h,int cod,bool head){ //remove the enemy type3 with this cod
 	if (h==NULL) return h;
 	else if(h->val == cod){ //if the enemy is in the top of the list
-		if(head == true){ //we need because we have a problem if we delete the list and use again the element pointed by the list
+		if(head){ //we need because we have a problem if we delete the list and use again the element pointed by the list
 			listenm3 tmp = h;
 			h = h->next;  //ok also if h has one element
 			delete tmp;
@@ -1652,7 +1652,7 @@ listenm3 Game::obj_remove_enemy3(listenm3 h,int cod,bool head){ //remove the ene
 listenm4 Game::obj_remove_enemy4(listenm4 h,int cod,bool head){ //remove the enemy type4 with this cod
 	if (h==NULL) return h;
 	else if(h->val == cod){ //if the enemy is in the top of the list
-		if(head == true){ //we need because we have a problem if we delete the list and use again the element pointed by the list
+		if(head){ //we need because we have a problem if we delete the list and use again the element pointed by the list
 			listenm4 tmp = h;
 			h = h->next;  //ok also if h has one element
 			delete tmp;
@@ -1680,7 +1680,7 @@ listenm4 Game::obj_remove_enemy4(listenm4 h,int cod,bool head){ //remove the ene
 listenm5 Game::obj_remove_enemy5(listenm5 h,int cod,bool head){ //remove the enemy type5 with this cod
 	if (h==NULL) return h;
 	else if(h->val == cod){ //if the enemy is in the top of the list
-		if(head == true){ //we need because we have a problem if we delete the list and use again the element pointed by the list
+		if(head){ //we need because we have a problem if we delete the list and use again the element pointed by the list
 			listenm5 tmp = h;
 			h = h->next;  //ok also if h has one element
 			delete tmp;
@@ -1708,7 +1708,7 @@ listenm5 Game::obj_remove_enemy5(listenm5 h,int cod,bool head){ //remove the ene
 listenm6 Game::obj_remove_enemy6(listenm6 h,int cod,bool head){ //remove the enemy type6 with this cod
 	if (h==NULL) return h;
 	else if(h->val == cod){ //if the enemy is in the top of the list
-		if(head == true){ //we need because we have a problem if we delete the list and use again the element pointed by the list
+		if(head){ //we need because we have a problem if we delete the list and use again the element pointed by the list
 			listenm6 tmp = h;
 			h = h->next;  //ok also if h has one element
 			delete tmp;
@@ -1736,7 +1736,7 @@ listenm6 Game::obj_remove_enemy6(listenm6 h,int cod,bool head){ //remove the ene
 listenm7 Game::obj_remove_enemy7(listenm7 h,int cod,bool head){ //remove the enemy type7 with this cod
 	if (h==NULL) return h;
 	else if(h->val == cod){ //if the enemy is in the top of the list
-		if(head == true){ //we need because we have a problem if we delete the list and use again the element pointed by the list
+		if(head){ //we need because we have a problem if we delete the list and use again the element pointed by the list
 			listenm7 tmp = h;
 			h = h->next;  //ok also if h has one element
 			delete tmp;
@@ -1764,7 +1764,7 @@ listenm7 Game::obj_remove_enemy7(listenm7 h,int cod,bool head){ //remove the ene
 listenm8 Game::obj_remove_enemy8(listenm8 h,int cod,bool head){ //remove the enemy type7 with this cod
 	if (h==NULL) return h;
 	else if(h->val == cod){ //if the enemy is in the top of the list
-		if(head == true){ //we need because we have a problem if we delete the list and use again the element pointed by the list
+		if(head){ //we need because we have a problem if we delete the list and use again the element pointed by the list
 			listenm8 tmp = h;
 			h = h->next;  //ok also if h has one element
 			delete tmp;
@@ -1792,7 +1792,7 @@ listenm8 Game::obj_remove_enemy8(listenm8 h,int cod,bool head){ //remove the ene
 listenm9 Game::obj_remove_enemy9(listenm9 h,int cod,bool head){ //remove the enemy type7 with this cod
 	if (h==NULL) return h;
 	else if(h->val == cod){ //if the enemy is in the top of the list
-		if(head == true){ //we need because we have a problem if we delete the list and use again the element pointed by the list
+		if(head){ //we need because we have a problem if we delete the list and use again the element pointed by the list
 			listenm9 tmp = h;
 			h = h->next;  //ok also if h has one element
 			delete tmp;
