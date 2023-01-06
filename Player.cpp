@@ -37,10 +37,14 @@ Player::Player(WINDOW * win, int y, int x){
 	teleportation = Powerup("Teleport", "Teleport a short distance", 0, 1, 1); //you cannot teleport when you start
 	bullets = Powerup("Bullets","Charge of bullets",NUM_BULLETS,1,1); //no bullets when you start
 	jumping = Powerup("Jump","Change the height of the jump",jump_height,1,1); //basic jump when you start
-	ARMOR_DURATION[0] = 50; ARMOR_DURATION[1] = 100; ARMOR_DURATION[2] = 500; //different type of Armor duration
+	fly = Powerup("Fly","You can fly",0,1,1); //you cannot fly when you start
+	ARMOR_DURATION[0] = 500; ARMOR_DURATION[1] = 1000; ARMOR_DURATION[2] = 5000; //different type of Armor duration
 	TELEPORT_DISTANCE[0] = dir*20; TELEPORT_DISTANCE[1] = dir*30; TELEPORT_DISTANCE[2] = dir*40; //different teleport distance
-	ACTIVE_ARMOR = false; //no Armor when you start
+	ACTIVE_ARMOR = false; //no armor when you start
 	ARMOR_ACTIVE_DURATION = 0; //no armor when you start
+	FLY_ACTIVE_DURATION = 0; //no fly when you start
+	FLY_DURATION = 5000; //duration of the fly
+	ACTIVE_FLY = false; //no fly when you start
 };
 
 Player::Player(){ //default constructor
@@ -73,10 +77,14 @@ Player::Player(){ //default constructor
 	teleportation = Powerup("Teleport", "Teleport a short distance", 0, 1, 1); //you cannot teleport when you start
 	bullets = Powerup("Bullets","Charge of bullets",NUM_BULLETS,1,1); //no bullets when you start
 	jumping = Powerup("Jump","Change the height of the jump",jump_height,1,1); //basic jump when you start
-	ARMOR_DURATION[0] = 50; ARMOR_DURATION[1] = 100; ARMOR_DURATION[2] = 500; //different type of Armor duration
+	fly = Powerup("Fly","You can fly",0,1,1); //you cannot fly when you start
+	ARMOR_DURATION[0] = 500; ARMOR_DURATION[1] = 1000; ARMOR_DURATION[2] = 5000; //different type of Armor duration
 	TELEPORT_DISTANCE[0] = 20; TELEPORT_DISTANCE[1] = 30; TELEPORT_DISTANCE[2] = 40; //different teleport distance
 	ACTIVE_ARMOR = false; //no Armor when you start
 	ARMOR_ACTIVE_DURATION = 0; //no armor when you start
+	FLY_ACTIVE_DURATION = 0; //no fly when you start
+	FLY_DURATION = 5000; //duration of the fly
+	ACTIVE_FLY = false; //no fly when you start
 }
 
 void Player::initialize(){
@@ -128,6 +136,16 @@ void Player::godown(){ //go down
 	yLoc = yLoc + 1; //you are falling
 }
 
+void Player::goup(){ //go up
+	mvwaddch(curwin, yLoc, xLoc,' '); //delete character
+	if(armor.getQnt()>0) mvwaddch(curwin,yLoc-1,xLoc,' '); //Delete armor
+	if(shield.getQnt()>0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //delete shield
+	if(shield.getQnt()==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //old gun
+	if(gun.getName()!="none") mvwaddch(curwin,yLoc,xLoc+getDir(),' '); //delete gun
+	yLoc = yLoc - 1; //you are liftfing
+	if(yLoc<1) yLoc = 1;
+}
+
 void Player::teleport(){
 	mvwaddch(curwin, yLoc, xLoc,' '); //delete character
 	if(armor.getQnt()>0) mvwaddch(curwin,yLoc-1,xLoc,' '); //delete armor
@@ -143,6 +161,10 @@ int Player::getmv(){ //move the character with gun by user
 	if(ACTIVE_ARMOR){ //check if you have actived your armor
 		if(ARMOR_ACTIVE_DURATION>0)ARMOR_ACTIVE_DURATION--; //if you have the armor actived, you have to decrement the time life of armor
 		else ACTIVE_ARMOR = false; //Your armor finishes its life
+	}
+	if(ACTIVE_FLY){ //check if you have actived your fly
+		if(FLY_ACTIVE_DURATION>0)FLY_ACTIVE_DURATION--; //if you have fly actived, you have to decrement the time life of fly
+		else ACTIVE_FLY = false; //Your fly finishes its life
 	}
 	int choice = wgetch(curwin);
 	switch (choice){
@@ -181,9 +203,16 @@ int Player::getmv(){ //move the character with gun by user
 			break;
 		case 'a': //activate the armor (time_life of armor starts)
 			if(armor.getQnt()>0){ //you have at least on piece of armor
-				ARMOR_ACTIVE_DURATION = ARMOR_DURATION[armor.getQnt()-1]; //thanks to the quantity you get the armor duration. For example if you have two pieces of armor, you have 5000 time duration
+				ARMOR_ACTIVE_DURATION = ARMOR_DURATION[armor.getQnt()-1]; //thanks to the quantity you get the armor duration. For example if you have two pieces of armor, you have 1000 time duration
 				armor.setQnt(0); //no armor anymore (you lose all piecies)
 				ACTIVE_ARMOR = true;
+			}
+			break;
+		case 'f': //activate the fly (time_life of fly starts)
+			if(fly.getQnt()>0){ //you have the fly
+				FLY_ACTIVE_DURATION = FLY_DURATION; //thanks to the quantity you get the fly duration.
+				fly.setQnt(0); //no fly anymore
+				ACTIVE_FLY = true;
 			}
 			break;
 		default:

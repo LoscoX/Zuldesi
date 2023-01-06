@@ -89,7 +89,7 @@ typedef money* mony;
 
 const int NUM_GUNS = 4; //max number of powerup type gun
 const int NUM_BONUS = 3; //max number of powerup type bonus
-const int NUM_ACTIVE = 3; //max number of powerup type activable
+const int NUM_ACTIVE = 4; //max number of powerup type activable
 
 class Game{
 public:
@@ -115,6 +115,7 @@ public:
 	void interaction(Enemy0 e); //Game interaction between Enemy without gun and Player
 	bool interactionBullet(bullt tmp); //Game interaction between Enemy with gun and Player
 	void PlayerCanMove(int choice); //Game interaction between player and structure map
+	void PlayerCanFly(int choice); //Game interaction between player and structure map when you fly
 	void Enemy0CanMove(listenm0 h); //Game interaction between enemy0 and structure map
 	void Enemy1CanMove(listenm1 h); //Game interaction between enemy1 and structure map
 	void Enemy2CanMove(listenm2 h); //Game interaction between enemy2 and structure map

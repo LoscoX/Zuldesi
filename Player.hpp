@@ -39,11 +39,15 @@ public:
 	Powerup teleportation; //teleport
 	Powerup bullets; //bullets
 	Powerup jumping; //jump
+	Powerup fly; //fly
 	int ARMOR_DURATION[3]; //duration of the armor
 	int TELEPORT_DISTANCE[3]; //distance of teleport
 	bool ACTIVE_ARMOR; //you active or not armor
 	int ARMOR_ACTIVE_DURATION; //time duration of actived armor
 	int NUM_BULLETS; //number of bullets
+	int FLY_DURATION; //duration of the fly
+	int FLY_ACTIVE_DURATION; //time duration of actived fly
+	bool ACTIVE_FLY; //you activd or not fly
 
 	Player();
 	Player(WINDOW * win, int y, int x);
@@ -52,7 +56,8 @@ public:
 	void jump(); //jump
 	int airshoot(); //shoot during the jump movement or the down movement
 	void godown(); //fall
-	void teleport();
+	void teleport(); //teleport
+	void goup(); //go up
 
 	Bullet bullet; //gun magazine
 	int ind; //index for the list of bullet

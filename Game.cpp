@@ -33,6 +33,7 @@ Game::Game(int height,int width){
 	active[0] = Powerup("Armor", "Become invincible for a limited time", 1, 1, 1); //quantity corresponds to the number of protection you have (max 3)
 	active[1] = Powerup("Teleport", "Teleport a short distance", 1, 1, 1); //quantity corresponds to the number of possibility of teleportation you have
 	active[2] = Powerup("Bullets","Charge of bullets",100,1,1); //quantity corresponds to the number of bullets
+	active[3] = Powerup("Fly","You can fly",1,1,1); //quantity corresponds to the number of fly you can do it (max 1)
 
 	board = Board(height,width); //create the board
 	board.initialize(0,0); //initialize the board in 0,0
@@ -143,9 +144,10 @@ Game::Game(int height,int width){
 	player.hp.setQnt(player.hp.getQnt() + bonus[0].getQnt());
 	//player.jumping.setQnt(player.jumping.getQnt()+ bonus[2].getQnt());
 
-	player.armor.qnt = player.armor.qnt + active[0].getQnt();
+	player.armor.setQnt(player.armor.getQnt() + active[0].getQnt());
 	player.teleportation.setQnt(player.teleportation.getQnt() + active[1].getQnt());
 	//player.bullets.setQnt(player.bullets.getQnt() + active[2].getQnt());
+	player.fly.setQnt(player.fly.getQnt() + active[3].getQnt());
 
 	//initialize the enemies
 	Game::initializeEnemies();
@@ -330,6 +332,9 @@ void Game::displayLife(){ //display life and bullets
 	mvwprintw(board.board_win,1,63,"%d",player.bullets.getQnt());
 	if(player.bullets.getQnt()<100) mvwprintw(board.board_win,1,65," ");
 	if(player.bullets.getQnt()<10) mvwprintw(board.board_win,1,64," ");
+	mvwprintw(board.board_win,1,80,"%d",player.ACTIVE_FLY);
+	mvwprintw(board.board_win,1,85,"%d",player.fly.getQnt());
+	mvwprintw(board.board_win,1,90,"%d",player.activejump);
 }
 
 void Game::displayCoins(){ //display coins
@@ -705,10 +710,58 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 
 void Game::mapMovement(){
 	int choice;
-	if(!player.activejump){ //you are not jumping
-		choice = player.getmv(); //save the movement
-		switch (choice)
-		{
+	choice = player.getmv(); //save the movement
+	if(!player.ACTIVE_FLY){
+		if(!player.activejump){ //you are not jumping
+			switch (choice)
+			{
+				case KEY_LEFT:
+					player.setDir(-1);  //direction of the player
+					mapright(); //map movement (opposite movement with respect to the player)
+					break;
+				case KEY_RIGHT:
+					player.setDir(1); //direction of the player
+					mapleft(); //map movement (opposite movement with respect to the player)
+					break;
+				case KEY_UP:
+					if(player.getDir()==1) //the jump depends on previous player direction
+						mapleft(); //map movement (opposite movement with respect to the player)
+					else
+						mapright(); //map movement (opposite movement with respect to the player)
+					break;
+				case 't': //teleport
+					if(player.teleportation.getQnt()>0){ //check if the player has teleport
+						if(player.getDir()==1) //the jump depends on previous player direction
+							for(int i=0;i<player.TELEPORT_DISTANCE[player.teleportation.getQnt()-1];i++){
+								mapleft(); //map movement (opposite movement with respect to the player)
+							}
+						else
+							for(int i=0;i<player.TELEPORT_DISTANCE[player.teleportation.getQnt()-1];i++){
+								mapright(); //map movement (opposite movement with respect to the player)
+							}
+						player.teleportation.setQnt(0); //delete teleports you have
+					}
+					break;
+				default:
+					break;
+			}
+			Game::PlayerCanMove(choice); //check if you can move
+			Game::StructureUpdate();;
+		}
+		else{
+			player.jump();
+			if(player.getDir()==1) //the jump depends on previous player direction
+				mapleft(); //map movement (opposite movement with respect to the player)
+			else
+				mapright(); //map movement (opposite movement with respect to the player)
+			Game::PlayerCanMove(KEY_UP); //check if you can move (you are jumping)
+			player.display();
+			player.airshoot(); //if you want shoot you have to press h
+			Game::StructureUpdate();;
+		}
+	}
+	else{
+		switch(choice){
 			case KEY_LEFT:
 				player.setDir(-1);  //direction of the player
 				mapright(); //map movement (opposite movement with respect to the player)
@@ -718,40 +771,16 @@ void Game::mapMovement(){
 				mapleft(); //map movement (opposite movement with respect to the player)
 				break;
 			case KEY_UP:
-				if(player.getDir()==1) //the jump depends on previous player direction
-					mapleft(); //map movement (opposite movement with respect to the player)
-				else
-					mapright(); //map movement (opposite movement with respect to the player)
+				player.goup(); //go up
 				break;
-			case 't': //teleport
-				if(player.teleportation.getQnt()>0){ //check if the player has teleport
-					if(player.getDir()==1) //the jump depends on previous player direction
-						for(int i=0;i<player.TELEPORT_DISTANCE[player.teleportation.getQnt()-1];i++){
-							mapleft(); //map movement (opposite movement with respect to the player)
-						}
-					else
-						for(int i=0;i<player.TELEPORT_DISTANCE[player.teleportation.getQnt()-1];i++){
-							mapright(); //map movement (opposite movement with respect to the player)
-						}
-					player.teleportation.setQnt(0); //delete teleports you have
-				}
+			case KEY_DOWN:
+				player.godown(); //go down
 				break;
 			default:
 				break;
 		}
-		Game::PlayerCanMove(choice); //check if you can move
-		Game::StructureUpdate();;
-	}
-	else{
-		player.jump();
-		if(player.getDir()==1) //the jump depends on previous player direction
-			mapleft(); //map movement (opposite movement with respect to the player)
-		else
-			mapright(); //map movement (opposite movement with respect to the player)
-		Game::PlayerCanMove(KEY_UP); //check if you can move (you are jumping)
-		player.display();
-		player.airshoot(); //if you want shoot you have to press h
-		Game::StructureUpdate();;
+		Game::PlayerCanFly(choice); //check if you can fly
+		Game::StructureUpdate();
 	}
 	//see player
 	player.display();
@@ -1086,6 +1115,47 @@ void Game::PlayerDown(){
 	player.godown(); //go down
 	player.display(); //see the player
 	player.airshoot(); //you can shoot
+}
+
+void Game::PlayerCanFly(int choice){ //Player can or cannot fly
+	switch(choice){
+		case KEY_LEFT: //you went to sx
+			if(player.gun.getName()=="none"){ //no gun
+				if(board.IsThereStructure(player.getx(),player.gety())){ //check it there has been collision
+					mapleft(); //move map
+				}
+			}
+			else{ //gun
+				if(board.IsThereStructure(player.getx()+player.getDir(),player.gety())){ //check it there has been collision
+					mapleft(); //move map
+				}
+			}
+			break;
+		case KEY_RIGHT: //you went to dx
+			if(player.gun.getName()=="none"){ //no gun
+				if(board.IsThereStructure(player.getx(),player.gety())){ //check it there has been collision
+					mapright(); //move map
+				}
+			}
+			else{ //gun
+				if(board.IsThereStructure(player.getx()+player.getDir(),player.gety())){ //check it there has been collision
+					mapright(); //move map
+				}
+			}
+			break;
+		case KEY_UP: //you went to up
+			if(board.IsThereStructure(player.getx(),player.gety())){ //check it there has been collision
+				player.godown(); //move map
+			}
+			break;
+		case KEY_DOWN: //you went to down
+			if(board.IsThereStructure(player.getx(),player.gety())){ //check it there has been collision
+				player.goup(); //move map
+			}
+			break;
+		default:
+			break;
+	}
 }
 
 void Game::PlayerCanMove(int choice){ //Player can or cannot move
