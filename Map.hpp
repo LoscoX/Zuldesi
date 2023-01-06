@@ -15,10 +15,20 @@ struct segment_el{ //element of segment list
 	segment_el* next;
 };
 
+struct money{
+	int val; //ID
+	int x; //x position of coin
+	int y; //y position of coin
+	money* next;
+};
+
+typedef money* mony;
+
 typedef segment_el* seg_list_ptr;
 
 class Map{
-    private:
+    protected:
+		int nc; //number of coins
         int dim_x, dim_y;
         int trigger_start, trigger_end;
         seg_list_ptr segList;
@@ -30,4 +40,12 @@ class Map{
         int getDim_x();
         int getDim_y();
         string* toString();
+
+        //coins
+    	mony head_insert_coin(mony h,int val,int x,int y);
+    	bool updateCoins(int x,int y); //check if one coin has to be removed
+    	mony removeCoins(mony h,int cod); //remove one coin
+    	mony FallCoins(mony h); //avoid coins on the air
+
+    	mony coins;
 };

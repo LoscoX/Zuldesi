@@ -67,14 +67,6 @@ struct listenemy9{ //list of enemies type8
 	listenemy9* next;
 };
 
-struct money{
-	int val; //ID
-	int x; //x position of coin
-	int y; //y position of coin
-	money* next;
-};
-
-
 typedef listenemy0* listenm0;
 typedef listenemy1* listenm1;
 typedef listenemy2* listenm2;
@@ -86,8 +78,6 @@ typedef listenemy7* listenm7;
 typedef listenemy8* listenm8;
 typedef listenemy9* listenm9;
 
-typedef money* mony;
-
 const int NUM_GUNS = 4; //max number of powerup type gun
 const int NUM_BONUS = 3; //max number of powerup type bonus
 const int NUM_ACTIVE = 4; //max number of powerup type activable
@@ -95,7 +85,6 @@ const int NUM_ACTIVE = 4; //max number of powerup type activable
 class Game{
 public:
 	int n0,n1,n2,n3,n4,n5,n6,n7,n8,n9; //number of enemies
-	int nc; //number of coins
 	int difficulty; //difficulty of the level. It depends on the number of powerup you have. It handles the generation of the map
 	//powerup
 	Powerup guns[NUM_GUNS]; //guns powerup
@@ -151,8 +140,6 @@ public:
 
 	int time; //time of the game
 
-	mony head_insert_coin(mony h,int val,int x,int y);
-
 	listenm0 head_insert_enemy0(listenm0 h,Enemy0 e, int val); //add one enemy type0
 	listenm1 head_insert_enemy1(listenm1 h,Enemy1 e, int val); //add one enemy type1
 	listenm2 head_insert_enemy2(listenm2 h,Enemy2 e, int val); //add one enemy type2
@@ -174,11 +161,6 @@ public:
 	listenm7 obj_remove_enemy7(listenm7 h,int cod,bool head); //delete one enemy type7 (head == true, clean memory when delete an element in the head, otherwise not)
 	listenm8 obj_remove_enemy8(listenm8 h,int cod,bool head); //delete one enemy type8 (head == true, clean memory when delete an element in the head, otherwise not)
 	listenm9 obj_remove_enemy9(listenm9 h,int cod,bool head); //delete one enemy type9 (head == true, clean memory when delete an element in the head, otherwise not)
-
-	void initializeCoins(); //spawn of coins
-	void updateCoins(); //check if one coin has to be removed
-	mony removeCoins(mony h,int cod); //remove one coin
-	mony FallCoins(mony h); //avoid coins on the air
 
 	void initializeEnemies(); //initalize enemies
 	bool enemydeath(bullt tmp); //enemy death
@@ -210,6 +192,5 @@ protected:
 	listenm8 enemies8; //list of enemies type 8
 	listenm9 enemies9; //list of enemies type 8
 
-	mony coins;
 	bool game_over;
 };

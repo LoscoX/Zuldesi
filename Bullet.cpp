@@ -62,6 +62,6 @@ bool Bullet::shoot(bullt blt2,bullt blt){ //describes the movement of the bullet
 	if(blt2->xB >= 1 && blt2->xB <= xMax - 2) mvwaddch(curwin,blt2->yB,blt2->xB,' ');
 	blt2->xB = blt2->xB + blt2->dir; //update the x of the bullet
 	if(blt2->xB < 1 || blt2->xB > xMax-2) found = true; //you reach the wall
-	else mvwaddch(curwin,blt2->yB,blt2->xB,'-'); //draw the bullet
+	else mvwaddch(curwin,blt2->yB,blt2->xB,'*'); //draw the bullet
 	return found;
 }
