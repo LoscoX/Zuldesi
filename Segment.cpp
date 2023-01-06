@@ -7,7 +7,7 @@ using namespace std;
 
 Segment::Segment(){}
 
-Segment::Segment(string path){
+Segment::Segment(string path){ //create the segment
     ifstream src(path);
     string mat[MATRIX_SIZE_X];
     for(int i=0; i<MATRIX_SIZE_X; i++) {

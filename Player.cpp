@@ -20,7 +20,7 @@ Player::Player(WINDOW * win, int y, int x){
 	life = 99;
 	cash = 0;
 	dir = 1; //initial direction
-	bullet = Bullet(curwin); //initialize the bullet
+	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
 	//jump
 	activejump = false; //start without jump
@@ -47,45 +47,7 @@ Player::Player(WINDOW * win, int y, int x){
 	ACTIVE_FLY = false; //no fly when you start
 };
 
-Player::Player(){ //default constructor
-	yLoc = 0;
-	xLoc = 0;
-	curwin = newwin(0,0,0,0);
-	getmaxyx(curwin,yMax,xMax);
-	keypad(curwin,true);
-	character[0] = '@';
-	character[1] = '^';
-	character[2] = '|';
-	character[3] = '-';
-	life = 99;
-	cash = 0;
-	dir = 1;
-	bullet = Bullet(curwin); //initialize the bullet
-	ind = 0; //no bullet
-	//jump
-	activejump = false;
-	segno = -1; //segno for parabola
-	conta = 1;
-	onplatform = false; //you are not on a platform
-	jump_height = 5; //max height of the jump
-	NUM_BULLETS = 100; //number of bullets
-	//powerup
-	gun = Powerup("None", "No gun", 1, 0, 0); //no gun when you start
-	shield = Powerup("Shield", "A shield that blocks damage one time", 0, 1, 1); //no shield when you start
-	hp = Powerup("HP", "Get back on your feet one more time", life, 1, 1);
-	armor = Powerup("Armor", "Become invincible for a limited time", 0, 1, 1); //no armor when you start
-	teleportation = Powerup("Teleport", "Teleport a short distance", 0, 1, 1); //you cannot teleport when you start
-	bullets = Powerup("Bullets","Charge of bullets",NUM_BULLETS,1,1); //no bullets when you start
-	jumping = Powerup("Jump","Change the height of the jump",jump_height,1,1); //basic jump when you start
-	fly = Powerup("Fly","You can fly",0,1,1); //you cannot fly when you start
-	ARMOR_DURATION[0] = 500; ARMOR_DURATION[1] = 1000; ARMOR_DURATION[2] = 5000; //different type of Armor duration
-	TELEPORT_DISTANCE[0] = 20; TELEPORT_DISTANCE[1] = 30; TELEPORT_DISTANCE[2] = 40; //different teleport distance
-	ACTIVE_ARMOR = false; //no Armor when you start
-	ARMOR_ACTIVE_DURATION = 0; //no armor when you start
-	FLY_ACTIVE_DURATION = 0; //no fly when you start
-	FLY_DURATION = 5000; //duration of the fly
-	ACTIVE_FLY = false; //no fly when you start
-}
+Player::Player(){} //default constructor
 
 void Player::initialize(){
 	display();

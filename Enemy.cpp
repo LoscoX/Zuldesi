@@ -25,12 +25,9 @@ Gun type (If you touch them, nothing happens)
 
 //Enemy type 0
 
-Enemy0::Enemy0(WINDOW * win, int y, int x, char c, int mv,int col){
-	curwin = win;
+Enemy0::Enemy0(int y, int x, char c, int mv,int col){
 	yLoc = y;
 	xLoc = x;
-	getmaxyx(curwin,yMax,xMax);
-	keypad(curwin,true);
 	character = c;
 	life = 5;
 	xpern = x; //save coordinates
@@ -41,11 +38,8 @@ Enemy0::Enemy0(WINDOW * win, int y, int x, char c, int mv,int col){
 }
 
 Enemy0::Enemy0(){ //default constructor
-	curwin = newwin(0,0,0,0);
 	yLoc = 0;
 	xLoc = 0;
-	getmaxyx(curwin,yMax,xMax);
-	keypad(curwin,true);
 	character = '0'; //graphic icon
 	life = 5;
 	xpern = 0;
@@ -55,20 +49,8 @@ Enemy0::Enemy0(){ //default constructor
 	segno = -1;
 }
 
-//Enemy0::~Enemy0(){};
-
-void Enemy0::initialize(){
-	display();
-}
-
-void Enemy0::display(){ //display the character
-	wattron(curwin,COLOR_PAIR(Enemy0::color)); //color
-	mvwaddch(curwin,yLoc,xLoc,character);
-	wattroff(curwin,COLOR_PAIR(Enemy0::color));
-}
 
 void Enemy0::movement(){
-	mvwaddch(curwin, yLoc, xLoc, ' '); //Delete previous character
 	Enemy0::updateCoordinates(segno,0); //implement the movement
 	if(xLoc > xpern + cost){ //reach the max of radius
 		xLoc = xpern + cost;
@@ -81,7 +63,6 @@ void Enemy0::movement(){
 }
 
 void Enemy0::EnemyGoDown(){ //go down
-	mvwaddch(curwin, yLoc, xLoc,' ');
 	yLoc = yLoc + 1; //Enemy is falling
 }
 
@@ -114,6 +95,14 @@ int Enemy0::getXpern()
 	return xpern;
 }
 
+char Enemy0::getChar(){
+	return character;
+}
+
+int Enemy0::getColor(){
+	return color;
+}
+
 void Enemy0::setLife(int life){
 	this->life = life;
 }
@@ -130,7 +119,7 @@ void Enemy0::updateCoordinates(int x,int y){ //update coordinates
 
 //Enemy type 1
 
-Enemy1::Enemy1(WINDOW * win, int y, int x, char c,int mv, int col) : Enemy0(win,y,x,c,mv,col){
+Enemy1::Enemy1(int y, int x, char c,int mv, int col) : Enemy0(y,x,c,mv,col){
 	life = 7;
 	up = -1;
 }
@@ -143,7 +132,6 @@ Enemy1::Enemy1() : Enemy0(){ //default constructor
 }
 
 void Enemy1::movement(){
-	mvwaddch(curwin, yLoc, xLoc, ' '); //Delete previous character
 	Enemy0::updateCoordinates(segno,0); //update coordinates
 	if(xLoc > xpern + cost){ //reach the max of radius
 		yLoc = yLoc + up; //go up
@@ -155,12 +143,12 @@ void Enemy1::movement(){
 		xLoc = xpern - cost;
 		Enemy0::setSign(); //change the direction of the movement
 	}
-	else if(yLoc < yMax - 2 - cost){ //lifting depends from cost
-		yLoc = yMax - 2 - cost;
+	else if(yLoc < 25 - 2 - cost){ //lifting depends from cost
+		yLoc = 25 - 2 - cost;
 		Enemy1::setUp(); //change the direction of the lifting
 	}
-	else if(yLoc > yMax - 2){
-		yLoc = yMax - 2;
+	else if(yLoc > 25 - 2){
+		yLoc = 25 - 2;
 		Enemy1::setUp(); //change the direction of the lifting
 	}
 }
@@ -180,7 +168,7 @@ bool Enemy1::ReachAngles(){
 
 //Enemy type 2
 
-Enemy2::Enemy2(WINDOW * win, int y, int x, char c,int mv, int col) : Enemy0(win,y,x,c,mv,col){
+Enemy2::Enemy2(int y, int x, char c,int mv, int col) : Enemy0(y,x,c,mv,col){
 	life = 7;
 }
 
@@ -191,21 +179,20 @@ Enemy2::Enemy2() : Enemy0(){
 }
 
 void Enemy2::movement(){
-	mvwaddch(curwin, yLoc, xLoc,' '); //Delete previous character
 	Enemy0::updateCoordinates(0,segno);
-	if(yLoc < yMax - 2 - cost){ //lifting depends from cost
-		yLoc = yMax - 2 - cost;
+	if(yLoc < 25 - 2 - cost){ //lifting depends from cost
+		yLoc = 25 - 2 - cost;
 		Enemy0::setSign(); //change the direction of the lifting
 	}
-	else if(yLoc > yMax - 2){
-		yLoc = yMax - 2;
+	else if(yLoc > 25 - 2){
+		yLoc = 25 - 2;
 		Enemy0::setSign(); //change the direction of the lifting
 	}
 }
 
 //Enemy type 3
 
-Enemy3::Enemy3(WINDOW * win, int y, int x, char c,int mv, int col) : Enemy0(win,y,x,c,mv,col){
+Enemy3::Enemy3(int y, int x, char c,int mv, int col) : Enemy0(y,x,c,mv,col){
 	life = 2;
 	conta = 1;
 	up = -1;
@@ -220,7 +207,6 @@ Enemy3::Enemy3() : Enemy0(){
 }
 
 void Enemy3::movement(){
-	mvwaddch(curwin, yLoc, xLoc,' '); //Delete previous character
 	if(conta<=16){
 		if(conta == 9)up = 1; //go down
 		yLoc = yLoc + up;
@@ -228,7 +214,7 @@ void Enemy3::movement(){
 		conta++;
 		if(yLoc<1){
 			yLoc = 1;
-			while(yLoc>yMax-2)EnemyGoDown(); //go down
+			while(yLoc>25-3)EnemyGoDown(); //go down
 		}
 	}
 	else Enemy3::SetJump(); //Set to zero variable of the jump
@@ -245,7 +231,7 @@ int Enemy3::GetConta(){
 
 //Enemy type 4
 
-Enemy4::Enemy4(WINDOW * win, int y, int x, char c,int mv, int col) : Enemy0(win,y,x,c,mv,col){
+Enemy4::Enemy4(int y, int x, char c,int mv, int col) : Enemy0(y,x,c,mv,col){
 	life = 3;
 	conta = 0; //handle delay of the movement
 }
@@ -260,7 +246,6 @@ Enemy4::Enemy4() : Enemy0(){
 void Enemy4::movement(){
 	conta++;
 	if(conta == 8){ //delay (bigger-->easier)
-		mvwaddch(curwin, yLoc, xLoc,' '); //Delete previous character
 		xLoc = (xpern - cost) + rand()%(2*cost+1); //generate a random number between xpen-cost and xpern+cost
 		conta = 0; //time starts again
 	}
@@ -268,7 +253,7 @@ void Enemy4::movement(){
 
 //Enemy type 5
 
-Enemy5::Enemy5(WINDOW * win, int y, int x, char c,int mv, int col) : Enemy0(win,y,x,c,mv,col){
+Enemy5::Enemy5(int y, int x, char c,int mv, int col) : Enemy0(y,x,c,mv,col){
 	life = 2;
 }
 
@@ -279,15 +264,14 @@ Enemy5::Enemy5() : Enemy0(){
 }
 
 void Enemy5::movement(int direction){
-	mvwaddch(curwin, yLoc, xLoc,' ');
 	Enemy0::updateCoordinates(direction, 0); //Delete previous character//direction = 1-->dx   direction = -1-->sx
 }
 
 //Enemy type 6
 
-Enemy6::Enemy6(WINDOW * win, int y, int x, char c,int mv, int col) : Enemy0(win,y,x,c,mv,col){
+Enemy6::Enemy6(int y, int x, char c,int mv, int col) : Enemy0(y,x,c,mv,col){
 	life = 5;
-	bullet = Bullet(curwin); //initialize the bullet
+	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
 	conta = 0; //no shots
 	gun = '-'; //gun
@@ -297,25 +281,14 @@ Enemy6::Enemy6() : Enemy0(){
 	character = '0';
 	color = 1;
 	life = 5;
-	bullet = Bullet(curwin); //initialize the bullet
+	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
 	conta = 0; //no shots
 	gun = '-';
 }
 
-void Enemy6::display(){
-	wattron(curwin,COLOR_PAIR(Enemy6::color)); //color
-	mvwaddch(curwin,yLoc,xLoc,character);
-	if(segno == 1) mvwaddch(curwin,yLoc,xLoc+1,gun); //create the gun, dx when enemy goes to dx
-	else mvwaddch(curwin,yLoc,xLoc-1,gun); //create the gun, sx when enemy goes to sx
-	wattroff(curwin,COLOR_PAIR(Enemy6::color));
-}
-
 void Enemy6::movement(){
 	conta++; //increment time for the shot
-	mvwaddch(curwin, yLoc, xLoc, ' '); //Delete previous character
-	if(segno == 1) mvwaddch(curwin,yLoc,xLoc+1,' '); //delete the gun, dx when enemy goes to dx
-	else mvwaddch(curwin,yLoc,xLoc-1,' '); //delete the gun, sx when enemy goes to sx
 	Enemy0::updateCoordinates(segno,0); //implement the movement
 	if(xLoc > xpern + cost){ //reach the max of radius
 		xLoc = xpern + cost;
@@ -334,9 +307,9 @@ void Enemy6::movement(){
 
 //Enemy type7
 
-Enemy7::Enemy7(WINDOW * win, int y, int x, char c,int mv, int col) : Enemy6(win,y,x,c,mv,col){
+Enemy7::Enemy7(int y, int x, char c,int mv, int col) : Enemy6(y,x,c,mv,col){
 	life = 5;
-	bullet = Bullet(curwin); //initialize the bullet
+	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
 	conta = 0; //no shots
 	gun = '-'; //gun
@@ -345,7 +318,7 @@ Enemy7::Enemy7(WINDOW * win, int y, int x, char c,int mv, int col) : Enemy6(win,
 Enemy7::Enemy7() : Enemy6(){
 	character = '5'; //It's the enemy type5 but with the gun
 	life = 5;
-	bullet = Bullet(curwin); //initialize the bullet
+	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
 	conta = 0; //no shots
 	gun = '-';
@@ -353,9 +326,6 @@ Enemy7::Enemy7() : Enemy6(){
 
 void Enemy7::movement(int direction){
 	conta++; //increment time for the shot
-	mvwaddch(curwin, yLoc, xLoc,' '); //Delete previous character
-	if(segno == 1) mvwaddch(curwin,yLoc,xLoc+1,' '); //delete the gun, dx when enemy goes to dx
-	else mvwaddch(curwin,yLoc,xLoc-1,' '); //delete the gun, sx when enemy goes to sx
 	segno = direction; //update direction of enemy
 	Enemy0::updateCoordinates(segno,0); //direction = 1-->dx   direction = -1-->sx
 	if(conta==10){ //every 10 milliseconds, the enemy fires
@@ -367,9 +337,9 @@ void Enemy7::movement(int direction){
 
 //Enemy type8
 
-Enemy8::Enemy8(WINDOW * win, int y, int x, char c,int mv, int col) : Enemy6(win,y,x,c,mv,col){
+Enemy8::Enemy8(int y, int x, char c,int mv, int col) : Enemy6(y,x,c,mv,col){
 	life = 5;
-	bullet = Bullet(curwin); //initialize the bullet
+	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
 	conta = 0; //no shots
 	gun = '-'; //gun
@@ -378,7 +348,7 @@ Enemy8::Enemy8(WINDOW * win, int y, int x, char c,int mv, int col) : Enemy6(win,
 Enemy8::Enemy8() : Enemy6(){
 	character = '7';
 	life = 5;
-	bullet = Bullet(curwin); //initialize the bullet
+	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
 	conta = 0; //no shots
 	gun = '-';
@@ -386,9 +356,6 @@ Enemy8::Enemy8() : Enemy6(){
 
 void Enemy8::movement(int direction){
 	conta++; //increment time for the shot
-	mvwaddch(curwin, yLoc, xLoc,' '); //Delete previous character
-	if(segno == 1) mvwaddch(curwin,yLoc,xLoc+1,' '); //delete the gun, dx when enemy goes to dx
-	else mvwaddch(curwin,yLoc,xLoc-1,' '); //delete the gun, sx when enemy goes to sx
 	segno = direction; //update direction of enemy
 	if(conta==5){ //every 5 milliseconds, the enemy fires
 		bullet.blt = bullet.head_insert(bullet.blt,segno,xLoc,yLoc,ind); //add the bullet
@@ -399,9 +366,9 @@ void Enemy8::movement(int direction){
 
 //Enemy type9
 
-Enemy9::Enemy9(WINDOW * win, int y, int x, char c,int mv, int col) : Enemy6(win,y,x,c,mv,col){
+Enemy9::Enemy9(int y, int x, char c,int mv, int col) : Enemy6(y,x,c,mv,col){
 	life = 5;
-	bullet = Bullet(curwin); //initialize the bullet
+	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
 	conta = 0; //no shots
 	gun = '-'; //gun
@@ -410,7 +377,7 @@ Enemy9::Enemy9(WINDOW * win, int y, int x, char c,int mv, int col) : Enemy6(win,
 Enemy9::Enemy9() : Enemy6(){
 	character = '2'; //It's the enemy type2 but with two guns
 	life = 5;
-	bullet = Bullet(curwin); //initialize the bullet
+	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
 	conta = 0; //no shots
 	gun = '-';
@@ -418,16 +385,13 @@ Enemy9::Enemy9() : Enemy6(){
 
 void Enemy9::movement(){
 	conta++; //increment time for the shot
-	mvwaddch(curwin, yLoc, xLoc,' '); //Delete previous character
-	mvwaddch(curwin, yLoc, xLoc+1,' '); //Delete the first gun
-	mvwaddch(curwin, yLoc, xLoc-1,' '); //Delete the second gun
 	Enemy0::updateCoordinates(0,segno);
-	if(yLoc < yMax - 2 - cost){ //lifting depends from cost
-		yLoc = yMax - 2 - cost;
+	if(yLoc < 25 - 2 - cost){ //lifting depends from cost
+		yLoc = 25 - 2 - cost;
 		Enemy0::setSign(); //change the direction of the lifting
 	}
-	else if(yLoc > yMax - 2){
-		yLoc = yMax - 2;
+	else if(yLoc > 25 - 2){
+		yLoc = 25 - 2;
 		Enemy0::setSign(); //change the direction of the lifting
 	}
 	if(conta==5){ //every 5 seconds, the enemy fires two bullets in opposite directions
@@ -437,12 +401,4 @@ void Enemy9::movement(){
 		ind = ind + 1;
 		conta = 0;
 	}
-}
-
-void Enemy9::display(){
-	wattron(curwin,COLOR_PAIR(Enemy6::color)); //color
-	mvwaddch(curwin,yLoc,xLoc,character);
-	mvwaddch(curwin,yLoc,xLoc+1,gun); //create the dx gun
-	mvwaddch(curwin,yLoc,xLoc-1,gun); //create the sx gun
-	wattroff(curwin,COLOR_PAIR(Enemy6::color));
 }
