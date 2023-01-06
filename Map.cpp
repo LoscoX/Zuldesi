@@ -7,7 +7,7 @@ using namespace std;
 Map::Map(int difficulty){
 
     //procedural generation
-    Segment seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/seg0.txt");//fix before production
+    Segment seg = Segment("segments/seg0.txt");//fix before production
     segList = new segment_el;
     segList->id = 0; //first segment (start)
     segList->next = NULL;
@@ -18,7 +18,7 @@ Map::Map(int difficulty){
     for(int i=1; i<=difficulty; i++){
         seg_list_ptr tmp = new segment_el; //add new segment
         tmp->id = i;
-        tmp->seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/seg"+to_string(i)+".txt");
+        tmp->seg = Segment("segments/seg"+to_string(i)+".txt");
         tmp->next = NULL;
         segtmp->next = tmp;
         segtmp = segtmp->next;
