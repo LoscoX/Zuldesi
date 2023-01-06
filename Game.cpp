@@ -39,10 +39,18 @@ Game::Game(int height,int width){
 	board.initialize(0,0); //initialize the board in 0,0
 	WINDOW* win = board.board_win;
 
-	player = Player(win,height-2,20); //create the player
+	map = Map(10);
+
+	matrix = map.toString();
+
+	xMin = 0;
+	//print all map
+	Game::PrintMap();
+
+	player = Player(win,height-4,20); //create the player
 	player.initialize(); //initialize the player
 
-	Game::Structure(); //ceate the structure
+	//Game::Structure(); //ceate the structure
 
 	time = 0;
 
@@ -62,7 +70,7 @@ Game::Game(int height,int width){
 	int iniz = -300; //range  of the map for the spawning
 	int fin = 500; //range  of the map for the spawning
 
-	nc = 100; //number of coins
+	nc = 0; //number of coins
 
 	for(int i=0;i<nc;i++){ //create coins with random position and add them to the list
 		coins = Game::head_insert_coin(coins,i,(rand()%(fin)+iniz),(1 + rand()%(height-2)));
@@ -70,7 +78,7 @@ Game::Game(int height,int width){
 
 	Game::initializeCoins(); //initialize coins
 
-	int k = 4; //max number of enemies
+	int k = 1; //max number of enemies
 
 	n0 = rand()%k; //number of enemies of type 0
 	for(int i=0;i<n0;i++){
@@ -147,7 +155,7 @@ Game::Game(int height,int width){
 	player.armor.setQnt(player.armor.getQnt() + active[0].getQnt());
 	player.teleportation.setQnt(player.teleportation.getQnt() + active[1].getQnt());
 	//player.bullets.setQnt(player.bullets.getQnt() + active[2].getQnt());
-	player.fly.setQnt(player.fly.getQnt() + active[3].getQnt());
+	//player.fly.setQnt(player.fly.getQnt() + active[3].getQnt());
 
 	//initialize the enemies
 	Game::initializeEnemies();
@@ -156,6 +164,14 @@ Game::Game(int height,int width){
 	coins = Game::FallCoins(coins);
 
 	game_over = false;
+}
+
+void Game::PrintMap(){
+	for(int i=0;i<map.getDim_y();i++){
+		for(int j=xMin;j<map.getDim_x()&&j<xMin+110;j++){
+			mvwaddch(board.board_win,i,j-xMin,matrix[i][j]);
+		}
+	}
 }
 
 void Game::market(){
@@ -324,22 +340,19 @@ bool Game::isOver(){
 }
 
 void Game::displayLife(){ //display life and bullets
-	mvwprintw(board.board_win,1,1,"Life: ");
-	mvwprintw(board.board_win,1,6,"%d",player.hp.getQnt());
-	if(player.hp.getQnt()<100) mvwprintw(board.board_win,1,8," ");
-	if(player.hp.getQnt()<10) mvwprintw(board.board_win,1,7," ");
-	mvwprintw(board.board_win,1,45,"Number of Bullets: ");
-	mvwprintw(board.board_win,1,63,"%d",player.bullets.getQnt());
-	if(player.bullets.getQnt()<100) mvwprintw(board.board_win,1,65," ");
-	if(player.bullets.getQnt()<10) mvwprintw(board.board_win,1,64," ");
-	mvwprintw(board.board_win,1,80,"%d",player.ACTIVE_FLY);
-	mvwprintw(board.board_win,1,85,"%d",player.fly.getQnt());
-	mvwprintw(board.board_win,1,90,"%d",player.activejump);
+	mvwprintw(board.board_win,24,1,"Life: ");
+	mvwprintw(board.board_win,24,6,"%d",player.hp.getQnt());
+	if(player.hp.getQnt()<100) mvwprintw(board.board_win,24,8," ");
+	if(player.hp.getQnt()<10) mvwprintw(board.board_win,24,7," ");
+	mvwprintw(board.board_win,24,45,"Number of Bullets: ");
+	mvwprintw(board.board_win,24,63,"%d",player.bullets.getQnt());
+	if(player.bullets.getQnt()<100) mvwprintw(board.board_win,24,65," ");
+	if(player.bullets.getQnt()<10) mvwprintw(board.board_win,24,64," ");
 }
 
 void Game::displayCoins(){ //display coins
-	mvwprintw(board.board_win,1,101,"Money: ");
-	mvwprintw(board.board_win,1,107,"%d",player.getCoins());
+	mvwprintw(board.board_win,24,101,"Money: ");
+	mvwprintw(board.board_win,24,107,"%d",player.getCoins());
 }
 
 void Game::Structure(){ //create structures
@@ -717,27 +730,41 @@ void Game::mapMovement(){
 			{
 				case KEY_LEFT:
 					player.setDir(-1);  //direction of the player
-					mapright(); //map movement (opposite movement with respect to the player)
+					xMin--; //decrement the variable
+					if(xMin<0) xMin = 0; //avoid exit
+					PrintMap(); //map movement
 					break;
 				case KEY_RIGHT:
 					player.setDir(1); //direction of the player
-					mapleft(); //map movement (opposite movement with respect to the player)
+					xMin++; //increment the variable
+					if(xMin>map.getDim_x()-90) xMin--; //avoid exit
+					PrintMap(); //map movement
 					break;
 				case KEY_UP:
-					if(player.getDir()==1) //the jump depends on previous player direction
-						mapleft(); //map movement (opposite movement with respect to the player)
-					else
-						mapright(); //map movement (opposite movement with respect to the player)
+					if(player.getDir()==1){ //the jump depends on previous player direction
+						xMin++; //increment the variable
+						if(xMin>map.getDim_x()-90) xMin--; //avoid exit
+						PrintMap(); //map movement
+					}
+					else{
+						xMin--; //decrement the variable
+						if(xMin<0) xMin = 0; //avoid exit
+						PrintMap(); //map movement
+					}
 					break;
 				case 't': //teleport
 					if(player.teleportation.getQnt()>0){ //check if the player has teleport
 						if(player.getDir()==1) //the jump depends on previous player direction
 							for(int i=0;i<player.TELEPORT_DISTANCE[player.teleportation.getQnt()-1];i++){
-								mapleft(); //map movement (opposite movement with respect to the player)
+								xMin++; //increment the variable
+								if(xMin>map.getDim_x()-90) xMin--; //avoid exit
+								PrintMap(); //map movement
 							}
 						else
 							for(int i=0;i<player.TELEPORT_DISTANCE[player.teleportation.getQnt()-1];i++){
-								mapright(); //map movement (opposite movement with respect to the player)
+								xMin--; //decrement the variable
+								if(xMin<0) xMin = 0; //avoid exit
+								PrintMap(); //map movement
 							}
 						player.teleportation.setQnt(0); //delete teleports you have
 					}
@@ -746,18 +773,24 @@ void Game::mapMovement(){
 					break;
 			}
 			Game::PlayerCanMove(choice); //check if you can move
-			Game::StructureUpdate();;
+			//Game::StructureUpdate();;
 		}
 		else{
 			player.jump();
-			if(player.getDir()==1) //the jump depends on previous player direction
-				mapleft(); //map movement (opposite movement with respect to the player)
-			else
-				mapright(); //map movement (opposite movement with respect to the player)
+			if(player.getDir()==1){ //the jump depends on previous player direction
+				xMin++;
+				if(xMin>map.getDim_x()-90) xMin--; //avoid exit
+				PrintMap(); //map movement
+			}
+			else{
+				xMin--;
+				if(xMin<0) xMin = 0; //avoid exit
+				PrintMap(); //map movement
+				}
 			Game::PlayerCanMove(KEY_UP); //check if you can move (you are jumping)
 			player.display();
 			player.airshoot(); //if you want shoot you have to press h
-			Game::StructureUpdate();;
+			//Game::StructureUpdate();;
 		}
 	}
 	else{
@@ -780,13 +813,14 @@ void Game::mapMovement(){
 				break;
 		}
 		Game::PlayerCanFly(choice); //check if you can fly
-		Game::StructureUpdate();
+		//Game::StructureUpdate();
 	}
 	//see player
 	player.display();
 }
 
 void Game::mapleft(){ //move left
+
 	//move alle enemies
 	listenm0 tmp0=enemies0;
 	while(tmp0!=NULL)
@@ -869,6 +903,7 @@ void Game::mapleft(){ //move left
 		tmp9=tmp9->next; //change enemy
 	}
 
+	/*
 	//move all structures
 	for(int i=0;i<num_ogg;i++)
 	{
@@ -885,6 +920,7 @@ void Game::mapleft(){ //move left
 
 	StructureUpdate(); //Rebuild all structures with new coordinates
 
+	 */
 	//move moneys
 	mony tmp=coins;
 	while (tmp!=NULL)
@@ -1030,7 +1066,7 @@ void Game::mapright(){ //move right
 		tmp9->enemy.updateCoordinates(1,0);//go right
 		tmp9=tmp9->next; //change enemy
 	}
-
+	/*
 	//move all structures
 	for(int i=0;i<num_ogg;i++)
 	{
@@ -1046,7 +1082,7 @@ void Game::mapright(){ //move right
 	}
 
 	StructureUpdate(); //Rebuild all structures with new coordinates
-
+	 */
 	//move moneys
 	mony tmp=coins;
 	while (tmp!=NULL)
@@ -1163,21 +1199,25 @@ void Game::PlayerCanMove(int choice){ //Player can or cannot move
 	switch(choice){
 	case KEY_LEFT: //you went to sx
 		if(player.gun.getName()=="none"){ //no gun
-			if(board.IsThereStructure(player.getx(),player.gety())){ //check it there has been collision
-				mapleft(); //move map
+			if(map.isSolid(player.getx(),player.gety())){ //check it there has been collision
+				xMin++; //increment the variable
+				if(xMin>map.getDim_x()-90) xMin--; //avoid exit
+				PrintMap(); //map movement
 			}
 			else{
-				while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
+				while(!map.isSolid(player.getx(),player.gety()+1)){ //check if you have something under your feet
 					Game::PlayerDown(); //go down
 				}
 			}
 		}
 		else{ //gun
-			if(board.IsThereStructure(player.getx()+player.getDir(),player.gety())){ //check it there has been collision
-				mapleft(); //move map
+			if(map.isSolid(player.getx()+player.getDir(),player.gety())){ //check it there has been collision
+				xMin++; //increment the variable
+				if(xMin>map.getDim_x()-90) xMin--; //avoid exit
+				PrintMap(); //map movement
 			}
 			else{
-				while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
+				while(!map.isSolid(player.getx(),player.gety()+1)){ //check if you have something under your feet
 					Game::PlayerDown(); //go down
 				}
 			}
@@ -1185,21 +1225,25 @@ void Game::PlayerCanMove(int choice){ //Player can or cannot move
 		break;
 	case KEY_RIGHT: //you went to dx
 		if(player.gun.getName()=="none"){ //no gun
-			if(board.IsThereStructure(player.getx(),player.gety())){ //check it there has been collision
-				mapright(); //move map
+			if(map.isSolid(player.getx(),player.gety())){ //check it there has been collision
+				xMin--;
+				if(xMin<0) xMin = 0; //avoid exit
+				PrintMap(); //map movement
 			}
 			else{
-				while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
+				while(!map.isSolid(player.getx(),player.gety()+1)){ //check if you have something under your feet
 					Game::PlayerDown(); //go down
 				}
 			}
 		}
 		else{ //gun
-			if(board.IsThereStructure(player.getx()+player.getDir(),player.gety())){ //check it there has been collision
-				mapright(); //move map
+			if(map.isSolid(player.getx()+player.getDir(),player.gety())){ //check it there has been collision
+				xMin--;
+				if(xMin<0) xMin = 0; //avoid exit
+				PrintMap(); //map movement
 			}
 			else{
-				while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
+				while(!map.isSolid(player.getx(),player.gety()+1)){ //check if you have something under your feet
 					Game::PlayerDown(); //go down
 				}
 			}
@@ -1207,47 +1251,59 @@ void Game::PlayerCanMove(int choice){ //Player can or cannot move
 		break;
 	case KEY_UP: //you went up
 		if(player.gun.getName()=="none"){ //no gun
-			if(board.IsThereStructure(player.getx(),player.gety())){ //check if you reach one piece of one structure
-				if(player.getDir()==1) //you have to go where you went(it depends on the direction)
-					mapright(); //move map
-				else
-					mapleft(); //move map
+			if(map.isSolid(player.getx(),player.gety())){ //check if you reach one piece of one structure
+				if(player.getDir()==1){ //you have to go where you went(it depends on the direction)
+					xMin--;
+					if(xMin<0) xMin = 0; //avoid exit
+					PrintMap(); //map movement
+				}
+				else{
+					xMin++; //increment the variable
+					if(xMin>map.getDim_x()-90) xMin--; //avoid exit
+					PrintMap(); //map movement
+				}
 				player.SetJump(); //for the next jump
-				while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
+				while(!map.isSolid(player.getx(),player.gety()+1)){ //check if you have something under your feet
 					Game::PlayerDown(); //go down
 				}
 			}
-			else if(board.IsThereStructure(player.getx(),player.gety()-1) || board.IsThereStructure(player.getx(),player.gety()+1)){ //check if you have something under your feet or over you head
+			else if(map.isSolid(player.getx(),player.gety()-1) || map.isSolid(player.getx(),player.gety()+1)){ //check if you have something under your feet or over you head
 				player.SetJump(); //for the next jump
-				while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
+				while(!map.isSolid(player.getx(),player.gety()+1)){ //check if you have something under your feet
 					Game::PlayerDown(); //go down
 				}
 			}
 			else if(player.activejump == false){
-				while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
+				while(!map.isSolid(player.getx(),player.gety()+1)){ //check if you have something under your feet
 					Game::PlayerDown(); //go down
 				}
 			}
 		}
 		else{ //gun
-			if(board.IsThereStructure(player.getx()+player.getDir(),player.gety())){ //check if the gun reaches one piece of one structure
-				if(player.getDir()==1) //you have to go where you went(it depends on the direction)
-					mapright(); //move map
-				else
-					mapleft(); //move map
+			if(map.isSolid(player.getx()+player.getDir(),player.gety())){ //check if the gun reaches one piece of one structure
+				if(player.getDir()==1){ //you have to go where you went(it depends on the direction)
+					xMin--;
+					if(xMin<0) xMin = 0; //avoid exit
+					PrintMap(); //map movement
+				}
+				else{
+					xMin++; //increment the variable
+					if(xMin>map.getDim_x()-90) xMin--; //avoid exit
+					PrintMap(); //map movement
+				}
 				player.SetJump(); //for the next jump
-				while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
+				while(!map.isSolid(player.getx(),player.gety()+1)){ //check if you have something under your feet
 					Game::PlayerDown(); //go down
 				}
 			}
-			else if(board.IsThereStructure(player.getx(),player.gety()-1) || board.IsThereStructure(player.getx(),player.gety()+1)){ //check if you have something under your feet or over you head
+			else if(map.isSolid(player.getx(),player.gety()-1) || map.isSolid(player.getx(),player.gety()+1)){ //check if you have something under your feet or over you head
 				player.SetJump(); //for the next jump
-				while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
+				while(!map.isSolid(player.getx(),player.gety()+1)){ //check if you have something under your feet
 					Game::PlayerDown(); //go down
 				}
 			}
 			else if(player.activejump == false){
-				while(!board.IsThereStructure(player.getx(),player.gety()+1) && player.gety()!= board.height-2){ //check if you have something under your feet
+				while(!map.isSolid(player.getx(),player.gety()+1)){ //check if you have something under your feet
 					Game::PlayerDown(); //go down
 				}
 			}

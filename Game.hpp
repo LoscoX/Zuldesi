@@ -14,6 +14,7 @@
 #include <typeinfo>
 #include "Board.hpp"
 #include "Enemy.hpp"
+#include "Map.hpp"
 
 struct listenemy0{ //list of enemies type 0
 	int val; //ID
@@ -101,6 +102,9 @@ public:
 	Powerup bonus[NUM_BONUS]; //bouns powerup
 	Powerup active[NUM_ACTIVE]; //activable powerup
 	Game(int height,int width);
+	int xMin;
+
+	void PrintMap(); //Print map
 
 	void updateState(); //Main game
 	void redraw(); //
@@ -190,6 +194,10 @@ protected:
 	Board board; //board
 
 	Player player; //player
+
+	Map map; //map
+
+	string* matrix; //matrix for the map
 
 	listenm0 enemies0; //list of enemies type 0
 	listenm1 enemies1; //list of enemies type 1

@@ -27,7 +27,7 @@ class Map{
         Map();
         Map(int difficulty);
         bool isSolid(int x, int y);
-        int getX();
-        int getY();
+        int getDim_x();
+        int getDim_y();
         string* toString();
 };
