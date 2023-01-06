@@ -27,8 +27,6 @@ public:
 	WINDOW * curwin;
 	Enemy0(WINDOW * win, int y, int x, char c,int mv,int col);
 	Enemy0();
-	//virtual void movement();
-	//virtual ~Enemy0();
 	void initialize(); //start enemy
 	void movement(); //movement
 	void EnemyGoDown(); //fall
@@ -39,8 +37,10 @@ public:
 	int getSign(); //enemy segn
 	void setSign(); //change enemy sign
 	void updateCoordinates(int x,int y); //update coordinates of enemy
-
-	void injury();
+	int getXpern(); //take xpern
+	void setXpern(int x); //change xpern
+	void setLife(int life); //change life
+	void injury(); //damage
 };
 
 class Enemy1 : public Enemy0{
