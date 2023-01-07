@@ -53,65 +53,67 @@ Map::Map(int difficulty){
 	enemies8 = NULL; //initialize the list
 	enemies9 = NULL; //initialize the list
 
-	int k = 4; //max number of enemies
+	int k = 1; //max number of enemies
+	int iniz = 30;
+	int fin = 120;
 
 	n0 = rand()%k; //number of enemies of type 0
 	for(int i=0;i<n0;i++){
-		Enemy0 e = Enemy0((2+rand()%(dim_y-4)),(2 + rand()%(dim_x-92)),'0',9,1); //create one enemy
+		Enemy0 e = Enemy0((2+rand()%(dim_y-4)),(iniz + rand()%(dim_x-fin)),'0',9,1); //create one enemy
 		enemies0 = head_insert_enemy0(enemies0,e,i); //add the enemy into the list
 	}
 
 	n1 = rand()%k; //number of enemies of type 1
 	for(int i=0;i<n1;i++){
-		Enemy1 e = Enemy1((2+rand()%(dim_y-4)),(2 + rand()%(dim_x-92)),'1',9,2); //create one enemy
+		Enemy1 e = Enemy1((2+rand()%(dim_y-4)),(iniz + rand()%(dim_x-fin)),'1',9,2); //create one enemy
 		enemies1 = head_insert_enemy1(enemies1,e,i); //add the enemy into the list
 	}
 
 	n2 = rand()%k; //number of enemies of type 2
 	for(int i=0;i<n2;i++){
-		Enemy2 e = Enemy2((2+rand()%(dim_y-4)),(2 + rand()%(dim_x-92)),'2',15,3); //create one enemy
+		Enemy2 e = Enemy2((2+rand()%(dim_y-4)),(iniz + rand()%(dim_x-fin)),'2',15,3); //create one enemy
 		enemies2 = head_insert_enemy2(enemies2,e,i); //add the enemy into the list
 	}
 
 	n3 = rand()%k; //number of enemies of type 3
 	for(int i=0;i<n3;i++){
-		Enemy3 e = Enemy3((2+rand()%(dim_y-4)),(2 + rand()%(dim_x-92)),'3',9,4); //create one enemy
+		Enemy3 e = Enemy3((2+rand()%(dim_y-4)),(iniz + rand()%(dim_x-fin)),'3',9,4); //create one enemy
 		enemies3 = head_insert_enemy3(enemies3,e,i); //add the enemy into the list
 	}
 
 	n4 = rand()%k; //number of enemies of type 4
 	for(int i=0;i<n4;i++){
-		Enemy4 e = Enemy4((2+rand()%(dim_y-4)),(2 + rand()%(dim_x-92)),'4',7,5); //create one enemy
+		Enemy4 e = Enemy4((2+rand()%(dim_y-4)),(iniz + rand()%(dim_x-fin)),'4',7,5); //create one enemy
 		enemies4 = head_insert_enemy4(enemies4,e,i); //add the enemy into the list
 	}
 
 	n5 = rand()%k; //number of enemies of type 5
 	for(int i=0;i<n5;i++){
-		Enemy5 e = Enemy5((2+rand()%(dim_y-4)),(2 + rand()%(dim_x-92)),'5',7,6); //create one enemy
+		Enemy5 e = Enemy5((2+rand()%(dim_y-4)),(iniz + rand()%(dim_x-fin)),'5',7,6); //create one enemy
 		enemies5 = head_insert_enemy5(enemies5,e,i); //add the enemy into the list
 	}
 
 	n6 = rand()%k; //number of enemies of type 6
 	for(int i=0;i<n6;i++){
-		Enemy6 e = Enemy6((2+rand()%(dim_y-4)),(2 + rand()%(dim_x-92)),'0',7,1); //create one enemy
+		Enemy6 e = Enemy6((2+rand()%(dim_y-4)),(iniz + rand()%(dim_x-fin)),'0',7,1); //create one enemy
 		enemies6 = head_insert_enemy6(enemies6,e,i); //add the enemy into the list
 	}
 
-	n7 = rand()%k; //number of enemies of type 7
+	n7 = 1; //number of enemies of type 7
 	for(int i=0;i<n7;i++){
-		Enemy7 e = Enemy7((2+rand()%(dim_y-4)),(2 + rand()%(dim_x-92)),'5',7,6); //create one enemy
+		Enemy7 e = Enemy7((2+rand()%(dim_y-4)),(iniz + rand()%(dim_x-fin)),'5',7,6); //create one enemy
 		enemies7 = head_insert_enemy7(enemies7,e,i); //add the enemy into the list
 	}
 
 	n8 = rand()%k; //number of enemies of type 8
 	for(int i=0;i<n8;i++){
-		Enemy8 e = Enemy8((2+rand()%(dim_y-4)),(2 + rand()%(dim_x-92)),'8',7,7); //create one enemy
+		Enemy8 e = Enemy8((2+rand()%(dim_y-4)),(iniz + rand()%(dim_x-fin)),'8',7,7); //create one enemy
 		enemies8 = head_insert_enemy8(enemies8,e,i); //add the enemy into the list
 	}
 
 	n9 = rand()%k; //number of enemies of type 9
 	for(int i=0;i<n9;i++){
-		Enemy9 e = Enemy9((2+rand()%(dim_y-4)),(2 + rand()%(dim_x-92)),'2',7,3); //create one enemy
+		Enemy9 e = Enemy9((2+rand()%(dim_y-4)),(iniz + rand()%(dim_x-fin)),'2',7,3); //create one enemy
 		enemies9 = head_insert_enemy9(enemies9,e,i); //add the enemy into the list
 	}
 

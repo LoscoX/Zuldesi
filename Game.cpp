@@ -196,10 +196,8 @@ void Game::displayLife(){ //display life and bullets
 	mvwprintw(board.board_win,24,63,"%d",player.bullets.getQnt());
 	if(player.bullets.getQnt()<100) mvwprintw(board.board_win,24,65," ");
 	if(player.bullets.getQnt()<10) mvwprintw(board.board_win,24,64," ");
-	if(map.enemies6!=NULL)mvwprintw(board.board_win,24,69,"%d",map.enemies6->enemy.ind);
-	if(map.enemies7!=NULL)mvwprintw(board.board_win,24,71,"%d",map.enemies7->enemy.ind);
-	if(map.enemies8!=NULL)mvwprintw(board.board_win,24,73,"%d",map.enemies8->enemy.ind);
-	if(map.enemies9!=NULL)mvwprintw(board.board_win,24,75,"%d",map.enemies9->enemy.ind);
+	if(map.enemies5!=NULL)mvwprintw(board.board_win,24,69,"%d",map.enemies5->enemy.getSign());
+	if(map.enemies7!=NULL)mvwprintw(board.board_win,24,73,"%d",map.enemies7->enemy.getSign());
 }
 
 void Game::displayCoins(){ //display coins
@@ -277,7 +275,7 @@ void Game::shooting(){
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy6Bullets(tmp,cont); //delete bullet
 				}
-				if(map.isSolid(tmp->xB,tmp->yB) || map.isSolid(tmp->xB+1,tmp->yB) || map.isSolid(tmp->xB-1,tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
+				if(map.isSolid(tmp->xB,tmp->yB)|| map.isSolid(tmp->xB+cont->enemy.getSign(),tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy6Bullets(tmp,cont); //delete bullet
 				}
@@ -304,8 +302,7 @@ void Game::shooting(){
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy7Bullets(tmp,cont2); //delete bullet
 				}
-				if(map.isSolid(tmp->xB,tmp->yB) == true || map.isSolid(tmp->xB+1,tmp->yB) || map.isSolid(tmp->xB-1,tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
-					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
+				if(map.isSolid(tmp->xB,tmp->yB) || map.isSolid(tmp->xB+cont2->enemy.getSign(),tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy7Bullets(tmp,cont2); //delete bullet
 				}
@@ -332,7 +329,7 @@ void Game::shooting(){
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy8Bullets(tmp,cont3); //delete bullet
 				}
-				if(map.isSolid(tmp->xB,tmp->yB) == true || map.isSolid(tmp->xB+1,tmp->yB) || map.isSolid(tmp->xB-1,tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
+				if(map.isSolid(tmp->xB,tmp->yB) || map.isSolid(tmp->xB+cont3->enemy.getSign(),tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy8Bullets(tmp,cont3); //delete bullet
 				}
@@ -359,7 +356,7 @@ void Game::shooting(){
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy9Bullets(tmp,cont4); //delete bullet
 				}
-				if(map.isSolid(tmp->xB,tmp->yB) || map.isSolid(tmp->xB+1,tmp->yB) || map.isSolid(tmp->xB-1,tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
+				if(map.isSolid(tmp->xB,tmp->yB)|| map.isSolid(tmp->xB+cont4->enemy.getSign(),tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy9Bullets(tmp,cont4); //delete bullet
 				}
@@ -677,6 +674,9 @@ void Game::mapMovement(){
 		}
 		Game::PlayerCanFly(choice); //check if you can fly
 	}
+	if(map.isDanger(player.getx()+xMin,player.gety()+1)){//check if there are spikes
+		player.injury();
+	}
 	PrintMap(); //map movement
 	//see player
 	player.display();
@@ -742,9 +742,6 @@ void Game::PlayerCanMove(int choice){ //Player can or cannot move
 				xMin++; //increment the variable
 				PrintMap(); //see map movement
 			}
-			else if(map.isDanger(player.getx()+xMin,player.gety())){//check if there are spikes
-				player.injury();
-			}
 			else{
 				while(!map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
 					Game::PlayerDown(); //go down
@@ -755,9 +752,6 @@ void Game::PlayerCanMove(int choice){ //Player can or cannot move
 			if(map.isSolid(player.getx()+xMin+player.getDir(),player.gety())){ //check it there has been collision
 				xMin++; //increment the variable
 				PrintMap(); // see map movement
-			}
-			else if(map.isDanger(player.getx()+xMin,player.gety()+1)){//check if there are spikes
-				player.injury();
 			}
 			else{
 				while(!map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
@@ -772,9 +766,6 @@ void Game::PlayerCanMove(int choice){ //Player can or cannot move
 				xMin--;
 				PrintMap(); //see map movement
 			}
-			else if(map.isDanger(player.getx()+xMin,player.gety()+1)){//check if there are spikes
-				player.injury();
-			}
 			else{
 				while(!map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
 					Game::PlayerDown(); //go down
@@ -785,9 +776,6 @@ void Game::PlayerCanMove(int choice){ //Player can or cannot move
 			if(map.isSolid(player.getx()+xMin+player.getDir(),player.gety())){ //check it there has been collision
 				xMin--;
 				PrintMap(); // see map movement
-			}
-			else if(map.isDanger(player.getx()+xMin,player.gety()+1)){//check if there are spikes
-				player.injury();
 			}
 			else{
 				while(!map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
@@ -823,9 +811,6 @@ void Game::PlayerCanMove(int choice){ //Player can or cannot move
 					Game::PlayerDown(); //go down
 				}
 			}
-			else if(map.isDanger(player.getx()+xMin,player.gety()+1)){//check if there are spikes
-				player.injury();
-			}
 		}
 		else{ //gun
 			if(map.isSolid(player.getx()+xMin+player.getDir(),player.gety())){ //check if the gun reaches one piece of one structure
@@ -852,9 +837,6 @@ void Game::PlayerCanMove(int choice){ //Player can or cannot move
 				while(!map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
 					Game::PlayerDown(); //go down
 				}
-			}
-			else if(map.isDanger(player.getx()+xMin,player.gety()+1)){//check if there are spikes
-				player.injury();
 			}
 		}
 		break;
@@ -925,6 +907,7 @@ void Game::Enemy4CanMove(listenm4 h){ //Enemies can or cannot move
 	}
 	else{
 		while(!map.isSolid(h->enemy.getx(),h->enemy.gety()+1)){ //check if you have something under your feet
+
 			h->enemy.EnemyGoDown(); //go down
 		}
 	}
@@ -932,7 +915,7 @@ void Game::Enemy4CanMove(listenm4 h){ //Enemies can or cannot move
 
 void Game::Enemy5CanMove(listenm5 h){ //Enemies can or cannot move
 	if(map.isSolid(h->enemy.getx(),h->enemy.gety())){ //check it there has been collision
-		h->enemy.updateCoordinates(-h->enemy.getSign(),0); //you have to go from you went
+		h->enemy.updateCoordinates(-(h->enemy.getSign()),0); //you have to go from you went
 		//stay there
 	}
 	else{
@@ -944,7 +927,7 @@ void Game::Enemy5CanMove(listenm5 h){ //Enemies can or cannot move
 
 void Game::Enemy6CanMove(listenm6 h){ //Enemies can or cannot move
 	if(map.isSolid(h->enemy.getx()+h->enemy.getSign(),h->enemy.gety())){ //check it there has been collision
-		h->enemy.updateCoordinates(-h->enemy.getSign(),0); //you have to go from you went
+		h->enemy.updateCoordinates(-(h->enemy.getSign()),0); //you have to go from you went
 		h->enemy.setSign(); //change the direction
 	}
 	else{
@@ -956,7 +939,7 @@ void Game::Enemy6CanMove(listenm6 h){ //Enemies can or cannot move
 
 void Game::Enemy7CanMove(listenm7 h){ //Enemies can or cannot move
 	if(map.isSolid(h->enemy.getx()+h->enemy.getSign(),h->enemy.gety())){ //check it there has been collision
-		h->enemy.updateCoordinates(-h->enemy.getSign(),0); //you have to go from you went
+		h->enemy.updateCoordinates(-(h->enemy.getSign()),0); //you have to go from you went
 		//stay there
 	}
 	else{
@@ -974,7 +957,7 @@ void Game::Enemy8CanMove(listenm8 h){ //Enemies can or cannot move
 
 void Game::Enemy9CanMove(listenm9 h){ //Enemies can or cannot move
 	if(map.isSolid(h->enemy.getx(),h->enemy.gety())){ //check if you have something under your feet or over you head
-		h->enemy.updateCoordinates(0,-h->enemy.getSign()); //you have to go from you went
+		h->enemy.updateCoordinates(0,-(h->enemy.getSign())); //you have to go from you went
 		h->enemy.setSign(); //change the vertical direction
 	}
 }

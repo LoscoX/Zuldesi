@@ -264,6 +264,7 @@ Enemy5::Enemy5() : Enemy0(){
 }
 
 void Enemy5::movement(int direction){
+	segno = direction;
 	Enemy0::updateCoordinates(direction, 0); //Delete previous character//direction = 1-->dx   direction = -1-->sx
 }
 
