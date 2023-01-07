@@ -1,2 +1,6 @@
 tmp
+.project
+build.sh
+.vscode
+log.txt
 project.exe

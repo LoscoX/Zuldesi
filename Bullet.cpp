@@ -7,16 +7,8 @@
 
 #include "Bullet.hpp"
 
-Bullet::Bullet(WINDOW * win){
-	blt = NULL;
-	curwin = win;
-	getmaxyx(curwin,yMax,xMax);
-}
-
 Bullet::Bullet(){
 	blt = NULL;
-	curwin = newwin(0,0,0,0);
-	getmaxyx(curwin,yMax,xMax);
 }
 
 bullt Bullet::head_insert(bullt h,int dir,int x,int y,int ind){ //add the bullet
@@ -57,14 +49,8 @@ bullt Bullet::obj_remove(bullt h,int e,bool head){ //remove the e bullet
 	return h;
 }
 
-bool Bullet::shoot(bullt blt2,bullt blt){ //describes the movement of the bullet
-	bool found = false;
-	if(blt2->xB >= 1 && blt2->xB <= xMax - 2) mvwaddch(curwin,blt2->yB,blt2->xB,' ');
+bullt Bullet::shoot(bullt blt2,bullt blt){ //describes the movement of the bullet
 	blt2->xB = blt2->xB + blt2->dir; //update the x of the bullet
-	if(blt2->xB < 1 || blt2->xB > xMax-2) found = true; //you reach the wall
-	else mvwaddch(curwin,blt2->yB,blt2->xB,'-'); //draw the bullet
-	return found;
+	blt->xB = blt->xB + blt->dir; //update the x of the bullet
+	return blt2;
 }
-
-
-
