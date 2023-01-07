@@ -7,9 +7,10 @@ using namespace std;
 Map::Map(int difficulty){
 
     //procedural generation
-    Segment seg = Segment("segments/segempty.txt");//fix before production
+	int numSeg = 0;
+    Segment seg = Segment("segments/segstart.txt");//fix before production
     segList = new segment_el;
-    segList->id = 0; //first segment (start)
+    segList->id = numSeg++; //first segment (start)
     segList->next = NULL;
     segList->seg = seg;
 
@@ -17,7 +18,7 @@ Map::Map(int difficulty){
 
     for(int i=0; i<difficulty; i++){
         seg_list_ptr tmp = new segment_el; //add new segment
-        tmp->id = i;
+        tmp->id = numSeg++;
         tmp->seg = Segment("segments/seg"+to_string(i)+".txt");
         tmp->next = NULL;
         segtmp->next = tmp;
@@ -26,25 +27,42 @@ Map::Map(int difficulty){
 
 	for(int i=0; i<4; i++){
         seg_list_ptr tmp = new segment_el; //add new segment
-        tmp->id = i;
+        tmp->id = numSeg++;
         tmp->seg = Segment("segments/segempty.txt");
         tmp->next = NULL;
         segtmp->next = tmp;
         segtmp = segtmp->next;
     }
 
+	seg_list_ptr tmp = new segment_el; //add new segment
+	tmp->id = numSeg++;
+	tmp->seg = Segment("segments/segend.txt");
+	tmp->next = NULL;
+	segtmp->next = tmp;
+	segtmp = segtmp->next;
+
     //set variable for the segments
-    dim_x = (difficulty+5)*25;
+    dim_x = numSeg*25;
     dim_y = 25;
     trigger_start = 20;
     trigger_end = dim_x-100;
+	int iniz_x = trigger_start+20;
+	int fin_x = trigger_end-15;
+	int iniz_y = 4;
+	int fin_y = 21;
 
 	coins = NULL; //initialize coins
 
 	nc = 10; //number of coins
 
 	for(int i=0;i<nc;i++){ //create coins with random position and add them to the list
-		coins = head_insert_coin(coins,i,(2 + rand()%(dim_x-92)),(2+rand()%(dim_y-4)));
+		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
+		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
+		while(isSolid(gen_x, gen_y)){
+			gen_x = iniz_x+rand()%(fin_x-iniz_x);
+			gen_y = iniz_y+rand()%(fin_y-iniz_y);
+		}
+		coins = head_insert_coin(coins,i,gen_x,gen_y);
 	}
 
 	//fall coins
@@ -62,67 +80,125 @@ Map::Map(int difficulty){
 	enemies8 = NULL; //initialize the list
 	enemies9 = NULL; //initialize the list
 
-	int k = 4; //max number of enemies
-	int iniz = 30;
-	int fin = 120;
+	int k = 5; //max number of enemies
 
 	n0 = rand()%k; //number of enemies of type 0
 	for(int i=0;i<n0;i++){
-		Enemy0 e = Enemy0((3+rand()%(dim_y-5)),(iniz + rand()%(dim_x-fin)),'0',9,1); //create one enemy
+		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
+		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
+		while(isSolid(gen_x, gen_y)){
+			gen_x = iniz_x+rand()%(fin_x-iniz_x);
+			gen_y = iniz_y+rand()%(fin_y-iniz_y);
+		}
+		Enemy0 e = Enemy0(gen_y, gen_x,'0',9,1); //create one enemy
 		enemies0 = head_insert_enemy0(enemies0,e,i); //add the enemy into the list
 	}
 
 	n1 = rand()%k; //number of enemies of type 1
 	for(int i=0;i<n1;i++){
-		Enemy1 e = Enemy1((3+rand()%(dim_y-5)),(iniz + rand()%(dim_x-fin)),'1',9,2); //create one enemy
+		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
+		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
+		while(isSolid(gen_x, gen_y)){
+			gen_x = iniz_x+rand()%(fin_x-iniz_x);
+			gen_y = iniz_y+rand()%(fin_y-iniz_y);
+		}
+		Enemy1 e = Enemy1(gen_y, gen_x,'1',9,2); //create one enemy
 		enemies1 = head_insert_enemy1(enemies1,e,i); //add the enemy into the list
 	}
 
 	n2 = rand()%k; //number of enemies of type 2
 	for(int i=0;i<n2;i++){
-		Enemy2 e = Enemy2((3+rand()%(dim_y-5)),(iniz + rand()%(dim_x-fin)),'2',15,3); //create one enemy
+		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
+		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
+		while(isSolid(gen_x, gen_y)){
+			gen_x = iniz_x+rand()%(fin_x-iniz_x);
+			gen_y = iniz_y+rand()%(fin_y-iniz_y);
+		}
+		Enemy2 e = Enemy2(gen_y, gen_x,'2',15,3); //create one enemy
 		enemies2 = head_insert_enemy2(enemies2,e,i); //add the enemy into the list
 	}
 
 	n3 = rand()%k; //number of enemies of type 3
 	for(int i=0;i<n3;i++){
-		Enemy3 e = Enemy3((3+rand()%(dim_y-5)),(iniz + rand()%(dim_x-fin)),'3',9,4); //create one enemy
+		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
+		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
+		while(isSolid(gen_x, gen_y)){
+			gen_x = iniz_x+rand()%(fin_x-iniz_x);
+			gen_y = iniz_y+rand()%(fin_y-iniz_y);
+		}
+		Enemy3 e = Enemy3(gen_y, gen_x,'3',9,4); //create one enemy
 		enemies3 = head_insert_enemy3(enemies3,e,i); //add the enemy into the list
 	}
 
 	n4 = rand()%k; //number of enemies of type 4
 	for(int i=0;i<n4;i++){
-		Enemy4 e = Enemy4((3+rand()%(dim_y-5)),(iniz + rand()%(dim_x-fin)),'4',7,5); //create one enemy
+		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
+		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
+		while(isSolid(gen_x, gen_y)){
+			gen_x = iniz_x+rand()%(fin_x-iniz_x);
+			gen_y = iniz_y+rand()%(fin_y-iniz_y);
+		}
+		Enemy4 e = Enemy4(gen_y, gen_x,'4',7,5); //create one enemy
 		enemies4 = head_insert_enemy4(enemies4,e,i); //add the enemy into the list
 	}
 
 	n5 = rand()%k; //number of enemies of type 5
 	for(int i=0;i<n5;i++){
-		Enemy5 e = Enemy5((3+rand()%(dim_y-5)),(iniz + rand()%(dim_x-fin)),'5',7,6); //create one enemy
+		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
+		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
+		while(isSolid(gen_x, gen_y)){
+			gen_x = iniz_x+rand()%(fin_x-iniz_x);
+			gen_y = iniz_y+rand()%(fin_y-iniz_y);
+		}
+		Enemy5 e = Enemy5(gen_y, gen_x,'5',7,6); //create one enemy
 		enemies5 = head_insert_enemy5(enemies5,e,i); //add the enemy into the list
 	}
 
 	n6 = rand()%k; //number of enemies of type 6
 	for(int i=0;i<n6;i++){
-		Enemy6 e = Enemy6((3+rand()%(dim_y-5)),(iniz + rand()%(dim_x-fin)),'0',7,1); //create one enemy
+		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
+		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
+		while(isSolid(gen_x, gen_y)){
+			gen_x = iniz_x+rand()%(fin_x-iniz_x);
+			gen_y = iniz_y+rand()%(fin_y-iniz_y);
+		}
+		Enemy6 e = Enemy6(gen_y, gen_x,'0',7,1); //create one enemy
 		enemies6 = head_insert_enemy6(enemies6,e,i); //add the enemy into the list
 	}
 
 	n7 = rand()%k; //number of enemies of type 7
 	for(int i=0;i<n7;i++){
-		Enemy7 e = Enemy7((3+rand()%(dim_y-5)),(iniz + rand()%(dim_x-fin)),'5',7,6); //create one enemy
+		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
+		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
+		while(isSolid(gen_x, gen_y)){
+			gen_x = iniz_x+rand()%(fin_x-iniz_x);
+			gen_y = iniz_y+rand()%(fin_y-iniz_y);
+		}
+		Enemy7 e = Enemy7(gen_y, gen_x,'5',7,6); //create one enemy
 		enemies7 = head_insert_enemy7(enemies7,e,i); //add the enemy into the list
 	}
 
 	n8 = rand()%k; //number of enemies of type 8
 	for(int i=0;i<n8;i++){
-		Enemy8 e = Enemy8((3+rand()%(dim_y-5)),(iniz + rand()%(dim_x-fin)),'8',7,7); //create one enemy
+		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
+		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
+		while(isSolid(gen_x, gen_y)){
+			gen_x = iniz_x+rand()%(fin_x-iniz_x);
+			gen_y = iniz_y+rand()%(fin_y-iniz_y);
+		}
+		Enemy8 e = Enemy8(gen_y, gen_x,'8',7,7); //create one enemy
 		enemies8 = head_insert_enemy8(enemies8,e,i); //add the enemy into the list
 	}
 
 	n9 = rand()%k; //number of enemies of type 9
 	for(int i=0;i<n9;i++){
-		Enemy9 e = Enemy9((3+rand()%(dim_y-5)),(iniz + rand()%(dim_x-fin)),'2',7,3); //create one enemy
+		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
+		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
+		while(isSolid(gen_x, gen_y)){
+			gen_x = iniz_x+rand()%(fin_x-iniz_x);
+			gen_y = iniz_y+rand()%(fin_y-iniz_y);
+		}
+		Enemy9 e = Enemy9(gen_y, gen_x,'2',7,3); //create one enemy
 		enemies9 = head_insert_enemy9(enemies9,e,i); //add the enemy into the list
 	}
 

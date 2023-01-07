@@ -291,11 +291,11 @@ Enemy6::Enemy6() : Enemy0(){
 void Enemy6::movement(){
 	conta++; //increment time for the shot
 	Enemy0::updateCoordinates(segno,0); //implement the movement
-	if(xLoc > xpern + cost){ //reach the max of radius
+	if(xLoc >= xpern + cost){ //reach the max of radius
 		xLoc = xpern + cost;
 		Enemy0::setSign();
 	}
-	else if(xLoc < xpern - cost){ //reach the min of radius
+	else if(xLoc <= xpern - cost){ //reach the min of radius
 		xLoc = xpern - cost;
 		Enemy0::setSign();
 	}

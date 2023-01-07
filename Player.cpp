@@ -17,7 +17,7 @@ Player::Player(WINDOW * win, int y, int x){
 	character[1] = '^';
 	character[2] = '|';
 	character[3] = '-';
-	life = 250;
+	life = 10000;
 	cash = 0;
 	dir = 1; //initial direction
 	bullet = Bullet(); //initialize the bullet
