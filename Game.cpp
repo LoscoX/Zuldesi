@@ -38,7 +38,6 @@ Game::Game(int height,int width){
 	difficulty = 10;
 	mapList = NULL;
 	nextMap(1, difficulty);
-	matrix = mapList->map.toString(); //create the matrix of char for the map (here you create both money and enemies)
 
 	xMin = 5; //start with the map
 	//print all map
@@ -78,12 +77,13 @@ void Game::nextMap(int dir, int difficulty = 0){//we call this when the player r
 		mapList->prev=NULL;
 		mapList->next=NULL;
 		mapList->map = Map(difficulty);
+		matrix = mapList->map.toString();
 	}
 	else{
 		if(dir == 1){//right
 			if(mapList->next == NULL){//generate next map
 				//call market function here and recalculate difficulty
-
+				
 				mapList->next = new map_el;
 				mapList->next->prev=mapList;
 				mapList=mapList->next;
@@ -91,10 +91,11 @@ void Game::nextMap(int dir, int difficulty = 0){//we call this when the player r
 				mapList->id=mapList->prev->id+1;
 				mapList->next=NULL;
 				mapList->map = Map(difficulty);
-				
+				matrix = mapList->map.toString();
 			}
 			else{//just move pointer to the next map
 				mapList=mapList->next;
+				matrix = mapList->map.toString();
 			}
 			xMin = 5;
 			time = 0;
@@ -104,6 +105,7 @@ void Game::nextMap(int dir, int difficulty = 0){//we call this when the player r
 				mapList=mapList->prev;
 				xMin = mapList->map.get_trigger_end()-(player.getx()+3);
 				time = 0;
+				matrix = mapList->map.toString();
 			}
 		}
 	}
@@ -166,6 +168,11 @@ void Game::updateState(){
 		matrix[player.gety()][xMin+player.getx()] = ' '; //update the map removing coin
 		player.updateCash(1); //increment cashes of player
 	}
+	mony m = mapList->map.coins;
+	while(m != NULL){
+		matrix[m->y][m->x] = '$';
+		m = m->next;
+	}
 
 	//handle shooting
 	Game::shooting();
@@ -174,7 +181,7 @@ void Game::updateState(){
 	if(time%1200 == 0) Game::enemyMovement(); //you want to slow down enemies
 	time++;
 
-	if(player.hp.getQnt() == 0) game_over = true; //Player death
+	if(player.hp.getQnt() <= 0) game_over = true; //Player death
 	if(player.getx()+xMin == mapList->map.get_trigger_end()){
 		nextMap(1, 10);
 	}
@@ -313,7 +320,7 @@ void Game::shooting(){
 		while(tmp!=NULL){ //you have to move all the bullets
 			mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
 			tmp = player.bullet.shoot(tmp,player.bullet.blt); //move bullets
-			if(tmp->xB+xMin>mapList->map.getDim_x() || tmp->xB+xMin<0){ //check if it has reached the walls
+			if(tmp->xB+xMin>(mapList->map.getDim_x()-5) || tmp->xB+xMin<5){ //check if it has reached the walls
 				tmp = Game::deletePlayerBullets(tmp); //delete bullet
 			}
 			else if(mapList->map.isSolid(tmp->xB+xMin,tmp->yB) || mapList->map.isSolid(tmp->xB+1+xMin,tmp->yB) || mapList->map.isSolid(tmp->xB-1+xMin,tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
@@ -337,7 +344,7 @@ void Game::shooting(){
 			while(tmp!=NULL){ //you have to move all the bullets
 				mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 				tmp = cont->enemy.bullet.shoot(tmp,cont->enemy.bullet.blt);
-				if(tmp->xB>mapList->map.getDim_x() || tmp->xB<0){ //check if reaches the wall
+				if(tmp->xB>(mapList->map.getDim_x()-5) || tmp->xB<5){ //check if reaches the wall
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy6Bullets(tmp,cont); //delete bullet
 				}
@@ -364,7 +371,7 @@ void Game::shooting(){
 			while(tmp!=NULL){ //you have to move all the bullets
 				mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 				tmp = cont2->enemy.bullet.shoot(tmp,cont2->enemy.bullet.blt); //move the bullet
-				if(tmp->xB>mapList->map.getDim_x() || tmp->xB<0){ //check if it reaches the wall
+				if(tmp->xB>(mapList->map.getDim_x()-5) || tmp->xB<5){//check if it reaches the wall
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy7Bullets(tmp,cont2); //delete bullet
 				}
@@ -391,7 +398,7 @@ void Game::shooting(){
 			while(tmp!=NULL){ //you have to move all the bullets
 				mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 				tmp = cont3->enemy.bullet.shoot(tmp,cont3->enemy.bullet.blt); //move the bullet
-				if(tmp->xB>mapList->map.getDim_x() || tmp->xB<0){ //check if it reaches the
+				if(tmp->xB>(mapList->map.getDim_x()-5) || tmp->xB<5){ //check if it reaches the
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy8Bullets(tmp,cont3); //delete bullet
 				}
@@ -418,7 +425,7 @@ void Game::shooting(){
 			while(tmp!=NULL){ //you have to move all the bullets
 				mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 				tmp = cont4->enemy.bullet.shoot(tmp,cont4->enemy.bullet.blt); //move the bullet
-				if(tmp->xB>mapList->map.getDim_x() || tmp->xB<0){ //check if it reaches the wall
+				if(tmp->xB>(mapList->map.getDim_x()-5) || tmp->xB<5){ //check if it reaches the wall
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy9Bullets(tmp,cont4); //delete bullet
 				}
