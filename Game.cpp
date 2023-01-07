@@ -10,21 +10,17 @@
 Game::Game(int height,int width){
 
 	start_color();
-	init_pair(1,COLOR_RED, COLOR_BLACK); //color enemy type 0/6
-	init_pair(2,COLOR_BLUE, COLOR_BLACK); //color enemy type 1
-	init_pair(3,COLOR_YELLOW,COLOR_BLACK); //color enemy type 2
-	init_pair(4,COLOR_GREEN,COLOR_BLACK); //color enemy type 3
-	init_pair(5,COLOR_MAGENTA,COLOR_BLACK); //color enemy type 4
-	init_pair(6,COLOR_CYAN,COLOR_BLACK); //color enemy type 5/7
-	init_pair(7,COLOR_WHITE,COLOR_BLACK); //color enemy type 8
+	init_pair(1,COLOR_RED, COLOR_BLACK);
+	init_pair(2,COLOR_GREEN,COLOR_BLACK);
+	init_pair(3,COLOR_YELLOW,COLOR_BLACK);
 
 	difficulty = 20; //difficult = 0 when you start the game
 
 	//Initialize Power-ups (quantity of the guns is fixed to 1-->you can have just one gun)
 	guns[0] = Powerup("Pistol", "you shoot one bullet", 1, 1, 1);
 	guns[1] = Powerup("Rifle", "you shoot two bullets", 1, 1, 1);
-	guns[2] = Powerup("Machine-gun", "you shoot three bullets", 1, 1, 1);
-	guns[3] = Powerup("Double-gun", "you shoot two bullets, one dx direction and one sx direction", 1, 1, 1);
+	guns[2] = Powerup("Machinegun", "you shoot three bullets", 1, 1, 1);
+	guns[3] = Powerup("Doublegun", "you shoot two bullets, one dx direction and one sx direction", 1, 1, 1);
 
     bonus[0] = Powerup("HP", "Additional life", 1, 1, 1); //quantity corresponds to the number of lives which you have bought
 	bonus[1] = Powerup("Shield", "A shield that blocks damage one time", 1, 1, 1);//quantity corresponds to the number of protection you have (max 2)
@@ -43,7 +39,7 @@ Game::Game(int height,int width){
 
 	matrix = map.toString(); //create the matrix of char for the map (here you create both money and enemies)
 
-	xMin = 0; //start with the map
+	xMin = 0; //start with the map //It's the visual variable(handle the point of camera)
 	//print all map
 	Game::PrintMap();
 
@@ -55,19 +51,19 @@ Game::Game(int height,int width){
 	//Game::market(); //starts market
 
 	//try power-ups
-	player.gun.name = guns[0].getName();
+	//player.gun.name = guns[0].getName();
 	//player.gun.name = guns[1].getName();
 	//player.gun.name = guns[2].getName();
-	//player.gun.name = guns[3].getName();
+	player.gun.name = guns[3].getName();
 
 	player.shield.setQnt(player.shield.getQnt() + bonus[1].getQnt());
 	player.hp.setQnt(player.hp.getQnt() + bonus[0].getQnt());
-	//player.jumping.setQnt(player.jumping.getQnt()+ bonus[2].getQnt());
+	player.jumping.setQnt(player.jumping.getQnt()+ bonus[2].getQnt());
 
 	player.armor.setQnt(player.armor.getQnt() + active[0].getQnt());
 	player.teleportation.setQnt(player.teleportation.getQnt() + active[1].getQnt());
-	//player.bullets.setQnt(player.bullets.getQnt() + active[2].getQnt());
-	//player.fly.setQnt(player.fly.getQnt() + active[3].getQnt());
+	player.bullets.setQnt(player.bullets.getQnt() + active[2].getQnt());
+	player.fly.setQnt(player.fly.getQnt() + active[3].getQnt());
 
 	game_over = false;
 }
@@ -115,6 +111,8 @@ void Game::drawPowerUp(Powerup pwp[]){ //Draw power-ups which are spawned
 
 void Game::updateState(){
 
+	//display title
+	Game::displayGame();
 	//display life
 	Game::displayLife();
 	//display coins
@@ -187,22 +185,44 @@ bool Game::isOver(){
 	return game_over;
 }
 
+void Game::displayGame(){
+	wattron(board.board_win,COLOR_PAIR(3)); //color
+	mvwprintw(board.board_win,1,39,"WELCOME TO THIS NEW FANTASTIC GAME");
+	wattroff(board.board_win,COLOR_PAIR(3)); //color
+}
+
 void Game::displayLife(){ //display life and bullets
-	mvwprintw(board.board_win,24,1,"Life: ");
-	mvwprintw(board.board_win,24,6,"%d",player.hp.getQnt());
-	if(player.hp.getQnt()<100) mvwprintw(board.board_win,24,8," ");
-	if(player.hp.getQnt()<10) mvwprintw(board.board_win,24,7," ");
-	mvwprintw(board.board_win,24,45,"Number of Bullets: ");
-	mvwprintw(board.board_win,24,63,"%d",player.bullets.getQnt());
-	if(player.bullets.getQnt()<100) mvwprintw(board.board_win,24,65," ");
-	if(player.bullets.getQnt()<10) mvwprintw(board.board_win,24,64," ");
-	if(map.enemies5!=NULL)mvwprintw(board.board_win,24,69,"%d",map.enemies5->enemy.getSign());
-	if(map.enemies7!=NULL)mvwprintw(board.board_win,24,73,"%d",map.enemies7->enemy.getSign());
+	wattron(board.board_win,COLOR_PAIR(1)); //color
+	mvwprintw(board.board_win,25,1,"Life: ");
+	wattroff(board.board_win,COLOR_PAIR(1)); //color
+
+	wattron(board.board_win,COLOR_PAIR(2)); //color
+	mvwprintw(board.board_win,25,7,"%d",player.hp.getQnt());
+	if(player.hp.getQnt()<100) mvwprintw(board.board_win,25,9," ");
+	if(player.hp.getQnt()<10) mvwprintw(board.board_win,25,8," ");
+	wattroff(board.board_win,COLOR_PAIR(2)); //color
+
+	wattron(board.board_win,COLOR_PAIR(1)); //color
+	mvwprintw(board.board_win,25,45,"Number of Bullets: ");
+	wattroff(board.board_win,COLOR_PAIR(1)); //color
+
+	wattron(board.board_win,COLOR_PAIR(2)); //color
+	mvwprintw(board.board_win,25,64,"%d",player.bullets.getQnt());
+	if(player.bullets.getQnt()<100) mvwprintw(board.board_win,25,66," ");
+	if(player.bullets.getQnt()<10) mvwprintw(board.board_win,25,65," ");
+	wattroff(board.board_win,COLOR_PAIR(2)); //color
+	mvwprintw(board.board_win,25,77,"%d",player.gety());
+
 }
 
 void Game::displayCoins(){ //display coins
-	mvwprintw(board.board_win,24,101,"Money: ");
-	mvwprintw(board.board_win,24,107,"%d",player.getCoins());
+	wattron(board.board_win,COLOR_PAIR(1)); //color
+	mvwprintw(board.board_win,25,100,"Money: ");
+	wattroff(board.board_win,COLOR_PAIR(1));
+
+	wattron(board.board_win,COLOR_PAIR(2)); //color
+	mvwprintw(board.board_win,25,107,"%d",player.getCoins());
+	wattroff(board.board_win,COLOR_PAIR(2));
 }
 
 bullt Game::deletePlayerBullets(bullt tmp){ //delete Player's bullets
@@ -275,7 +295,7 @@ void Game::shooting(){
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy6Bullets(tmp,cont); //delete bullet
 				}
-				if(map.isSolid(tmp->xB,tmp->yB)|| map.isSolid(tmp->xB+cont->enemy.getSign(),tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
+				else if(map.isSolid(tmp->xB,tmp->yB)|| map.isSolid(tmp->xB+cont->enemy.getSign(),tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy6Bullets(tmp,cont); //delete bullet
 				}
@@ -302,11 +322,11 @@ void Game::shooting(){
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy7Bullets(tmp,cont2); //delete bullet
 				}
-				if(map.isSolid(tmp->xB,tmp->yB) || map.isSolid(tmp->xB+cont2->enemy.getSign(),tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
+				else if(map.isSolid(tmp->xB,tmp->yB) || map.isSolid(tmp->xB+cont2->enemy.getSign(),tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy7Bullets(tmp,cont2); //delete bullet
 				}
-				if(Game::interactionBullet(tmp)){
+				else if(Game::interactionBullet(tmp)){
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy7Bullets(tmp,cont2); //delete bullet
 				}
@@ -329,7 +349,7 @@ void Game::shooting(){
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy8Bullets(tmp,cont3); //delete bullet
 				}
-				if(map.isSolid(tmp->xB,tmp->yB) || map.isSolid(tmp->xB+cont3->enemy.getSign(),tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
+				else if(map.isSolid(tmp->xB,tmp->yB) || map.isSolid(tmp->xB+cont3->enemy.getSign(),tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy8Bullets(tmp,cont3); //delete bullet
 				}
@@ -356,7 +376,7 @@ void Game::shooting(){
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy9Bullets(tmp,cont4); //delete bullet
 				}
-				if(map.isSolid(tmp->xB,tmp->yB)|| map.isSolid(tmp->xB+cont4->enemy.getSign(),tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
+				else if(map.isSolid(tmp->xB,tmp->yB)|| map.isSolid(tmp->xB+cont4->enemy.getSign(),tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy9Bullets(tmp,cont4); //delete bullet
 				}
@@ -634,7 +654,6 @@ void Game::mapMovement(){
 					break;
 			}
 			Game::PlayerCanMove(choice); //check if you can move
-			//Game::StructureUpdate();;
 		}
 		else{
 			player.jump();
@@ -707,24 +726,24 @@ void Game::PlayerCanFly(int choice){ //Player can or cannot fly
 		case KEY_RIGHT: //you went to dx
 			if(player.gun.getName()=="none"){ //no gun
 				if(map.isSolid(player.getx()+xMin,player.gety())){ //check it there has been collision
-					xMin++; //increment the variable
+					xMin--; //increment the variable
 					PrintMap(); //see map movement
 				}
 			}
 			else{ //gun
 				if(map.isSolid(player.getx()+xMin+player.getDir(),player.gety())){ //check it there has been collision
-					xMin++; //increment the variable
+					xMin--; //increment the variable
 					PrintMap(); //see map movement
 				}
 			}
 			break;
 		case KEY_UP: //you went to up
-			if(map.isSolid(player.getx()+xMin,player.gety())){ //check it there has been collision
+			if(map.isSolid(player.getx()+xMin,player.gety()-1)){ //check it there has been collision
 				player.godown(); //move player
 			}
 			break;
 		case KEY_DOWN: //you went to down
-			if(map.isSolid(player.getx()+xMin,player.gety())){ //check it there has been collision
+			if(map.isSolid(player.getx()+xMin,player.gety()+1)){ //check it there has been collision
 				player.goup(); //move player
 			}
 			break;
@@ -1038,17 +1057,18 @@ void Game::enemyMovement(){	//Enemies movement
 		tmp6 = tmp6->next; //go to the next enemy
 	}
 
-	listenm7 tmp7 = map.enemies7;  //type7
+	listenm7 tmp7 = map.enemies7;  //type8
 	while(tmp7!=NULL){
 		matrix[tmp7->enemy.gety()][tmp7->enemy.getx()] = ' '; //delete enemy
 		matrix[tmp7->enemy.gety()][tmp7->enemy.getx()+tmp7->enemy.getSign()] = ' '; //delete gun
 		dir = Game::directionSmartEnemy7(tmp7->enemy);
-		if(abs(player.getx()+xMin - tmp7->enemy.getx()) <=30 && player.gety()==tmp7->enemy.gety()){ //player is sufficiently near to enemy type7
+		if((abs(player.getx()+xMin - tmp7->enemy.getx()) <= 20) && (player.gety() == tmp7->enemy.gety())){ //player is sufficiently near to enemy type7
 			tmp7->enemy.movement(dir); //move one enemy
 		}
+		Game::Enemy7CanMove(tmp7);
 		matrix[tmp7->enemy.gety()][tmp7->enemy.getx()] = tmp7->enemy.getChar(); //print enemy again
 		matrix[tmp7->enemy.gety()][tmp7->enemy.getx()+tmp7->enemy.getSign()] = '-'; //print gun again
-		Game::Enemy7CanMove(tmp7); //interaction with the structure
+		Game::interaction(tmp7->enemy);
 		tmp7 = tmp7->next; //go to the next enemy
 	}
 

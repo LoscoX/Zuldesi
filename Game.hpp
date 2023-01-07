@@ -60,6 +60,7 @@ public:
 
 	void displayLife(); //Display life
 	void displayCoins(); //Display wallet
+	void displayGame(); //Display Title
 	void shooting(); //handle the shooting
 	void enemyMovement(); //enemies movement
 
