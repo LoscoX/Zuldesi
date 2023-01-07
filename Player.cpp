@@ -43,7 +43,7 @@ Player::Player(WINDOW * win, int y, int x){
 	ACTIVE_ARMOR = false; //no armor when you start
 	ARMOR_ACTIVE_DURATION = 0; //no armor when you start
 	FLY_ACTIVE_DURATION = 0; //no fly when you start
-	FLY_DURATION = 5000; //duration of the fly
+	FLY_DURATION = 500; //duration of the fly
 	ACTIVE_FLY = false; //no fly when you start
 };
 
@@ -96,6 +96,7 @@ void Player::godown(){ //go down
 	if(shield.getQnt()==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //old gun
 	if(gun.getName()!="none") mvwaddch(curwin,yLoc,xLoc+getDir(),' '); //delete gun
 	yLoc = yLoc + 1; //you are falling
+	if (yLoc>yMax-2) yLoc = yMax-2;
 }
 
 void Player::goup(){ //go up
@@ -126,7 +127,10 @@ int Player::getmv(){ //move the character with gun by user
 	}
 	if(ACTIVE_FLY){ //check if you have actived your fly
 		if(FLY_ACTIVE_DURATION>0)FLY_ACTIVE_DURATION--; //if you have fly actived, you have to decrement the time life of fly
-		else ACTIVE_FLY = false; //Your fly finishes its life
+		else{
+			ACTIVE_FLY = false; //Your fly finishes its life
+			while(yLoc<yMax-2)godown(); //fall when you end your fly
+		}
 	}
 	int choice = wgetch(curwin);
 	switch (choice){
@@ -223,6 +227,7 @@ int Player::airshoot(){ //during jump movement or down movement, you can just sh
 
 void Player::display(){ //display the character
 	if(hp.getQnt()>1){
+		wattron(curwin,COLOR_PAIR(3)); //color
 		mvwaddch(curwin,yLoc,xLoc,character[0]); //see the player
 		if(ACTIVE_ARMOR==true){
 			mvwaddch(curwin,yLoc,xLoc,'O'); //see armor
@@ -230,6 +235,7 @@ void Player::display(){ //display the character
 		if(shield.getQnt()>0) mvwaddch(curwin,yLoc,xLoc-getDir(),character[2]); //see the shield
 		if(shield.getQnt()==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //delete old gun
 		if(gun.getName()!="none") mvwaddch(curwin,yLoc,xLoc+getDir(),character[3]); //see the gun
+		wattroff(curwin,COLOR_PAIR(3)); //color
 	}
 	else{ //if you have one life, you become red
 		wattron(curwin,COLOR_PAIR(1)); //color
