@@ -19,6 +19,15 @@ const int NUM_GUNS = 4; //max number of powerup type gun
 const int NUM_BONUS = 3; //max number of powerup type bonus
 const int NUM_ACTIVE = 4; //max number of powerup type activable
 
+struct map_el{
+	int id;
+	Map map;
+	map_el* next;
+	map_el* prev;
+};
+
+typedef map_el* map_list;
+
 class Game{
 public:
 	int difficulty; //difficulty of the level. It depends on the number of powerup you have. It handles the generation of the map
@@ -28,6 +37,10 @@ public:
 	Powerup active[NUM_ACTIVE]; //activable powerup
 	Game(int height,int width);
 	int xMin;
+
+	map_list mapList;
+	Map restartMap(int difficulty);
+	void nextMap(int dir, int difficulty);
 
 	void PrintMap(); //Print map
 

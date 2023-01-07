@@ -106,7 +106,8 @@ class Map{
         int getDim_x(); //take dimension x
         int getDim_y(); //take dimension y
         string* toString(); //return the matrix of the map
-
+		int get_trigger_start();
+		int get_trigger_end();
         //coins
     	mony head_insert_coin(mony h,int val,int x,int y); //insert one coin in the list
     	bool updateCoins(int x,int y); //check if one coin has to be removed

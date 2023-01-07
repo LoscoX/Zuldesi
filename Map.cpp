@@ -7,7 +7,7 @@ using namespace std;
 Map::Map(int difficulty){
 
     //procedural generation
-    Segment seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/seg0.txt");//fix before production
+    Segment seg = Segment("segments/segempty.txt");//fix before production
     segList = new segment_el;
     segList->id = 0; //first segment (start)
     segList->next = NULL;
@@ -15,20 +15,29 @@ Map::Map(int difficulty){
 
     seg_list_ptr segtmp = segList;
 
-    for(int i=1; i<difficulty; i++){
+    for(int i=0; i<difficulty; i++){
         seg_list_ptr tmp = new segment_el; //add new segment
         tmp->id = i;
-        tmp->seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/seg"+to_string(i)+".txt");
+        tmp->seg = Segment("segments/seg"+to_string(i)+".txt");
+        tmp->next = NULL;
+        segtmp->next = tmp;
+        segtmp = segtmp->next;
+    }
+
+	for(int i=0; i<4; i++){
+        seg_list_ptr tmp = new segment_el; //add new segment
+        tmp->id = i;
+        tmp->seg = Segment("segments/segempty.txt");
         tmp->next = NULL;
         segtmp->next = tmp;
         segtmp = segtmp->next;
     }
 
     //set variable for the segments
-    dim_x = difficulty*25;
+    dim_x = (difficulty+5)*25;
     dim_y = 25;
-    trigger_start = 0;
-    trigger_end = 0;
+    trigger_start = 20;
+    trigger_end = dim_x-100;
 
 	coins = NULL; //initialize coins
 
@@ -119,6 +128,14 @@ Map::Map(int difficulty){
 
 }
 
+int Map::get_trigger_start(){
+	return trigger_start;
+}
+
+int Map::get_trigger_end(){
+	return trigger_end;;
+}
+
 Map::Map(){} //deafult constructor
 
 bool Map::isSolid(int x, int y){ //check if the block is solid
@@ -184,6 +201,9 @@ string* Map::toString(){ //build matrix
 
     //create enemies
     mat = initializeEnemies(mat);
+
+	mat[22][trigger_end] = 'X';
+	mat[22][trigger_start] = 'X';
 
     return mat;
 }
