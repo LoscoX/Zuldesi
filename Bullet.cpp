@@ -49,6 +49,8 @@ bullt Bullet::obj_remove(bullt h,int e,bool head){ //remove the e bullet
 	return h;
 }
 
-void Bullet::shoot(bullt blt2,bullt blt){ //describes the movement of the bullet
+bullt Bullet::shoot(bullt blt2,bullt blt){ //describes the movement of the bullet
 	blt2->xB = blt2->xB + blt2->dir; //update the x of the bullet
+	blt->xB = blt->xB + blt->dir; //update the x of the bullet
+	return blt2;
 }

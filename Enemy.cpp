@@ -298,7 +298,7 @@ void Enemy6::movement(){
 		xLoc = xpern - cost;
 		Enemy0::setSign();
 	}
-	if(conta==10){ //every 10 seconds, the enemy fires
+	if(conta==10){ //every 10 milliseconds, the enemy fires
 		bullet.blt = bullet.head_insert(bullet.blt,segno,xLoc,yLoc,ind); //add the bullet
 		ind = ind + 1; //we want different indexes for the different bullets
 		conta = 0;

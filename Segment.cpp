@@ -22,11 +22,5 @@ Segment::Segment(string path){ //create the segment
 }
 
 string* Segment::getMatrix(){
-    return this->matrix;
-	/*string* mat;
-	for(int i=0;i<MATRIX_SIZE_X;i++){
-		strcpy(mat[i],matrix[i]);
-	}
-	return mat;
-	*/
+    return matrix;
 }

@@ -53,7 +53,7 @@ Map::Map(int difficulty){
 	enemies8 = NULL; //initialize the list
 	enemies9 = NULL; //initialize the list
 
-	int k = 2; //max number of enemies
+	int k = 4; //max number of enemies
 
 	n0 = rand()%k; //number of enemies of type 0
 	for(int i=0;i<n0;i++){

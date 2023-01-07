@@ -18,13 +18,13 @@ Game::Game(int height,int width){
 	init_pair(6,COLOR_CYAN,COLOR_BLACK); //color enemy type 5/7
 	init_pair(7,COLOR_WHITE,COLOR_BLACK); //color enemy type 8
 
-	difficulty = 0; //diffcult = 0 when you start the game
+	difficulty = 20; //difficult = 0 when you start the game
 
-	//Initialize Powerups (quantity of the guns is fixed to 1-->you can have just one gun)
+	//Initialize Power-ups (quantity of the guns is fixed to 1-->you can have just one gun)
 	guns[0] = Powerup("Pistol", "you shoot one bullet", 1, 1, 1);
 	guns[1] = Powerup("Rifle", "you shoot two bullets", 1, 1, 1);
-	guns[2] = Powerup("Machinegun", "you shoot three bullets", 1, 1, 1);
-	guns[3] = Powerup("Doublegun", "you shoot two bullets, one dx direction and one sx direction", 1, 1, 1);
+	guns[2] = Powerup("Machine-gun", "you shoot three bullets", 1, 1, 1);
+	guns[3] = Powerup("Double-gun", "you shoot two bullets, one dx direction and one sx direction", 1, 1, 1);
 
     bonus[0] = Powerup("HP", "Additional life", 1, 1, 1); //quantity corresponds to the number of lives which you have bought
 	bonus[1] = Powerup("Shield", "A shield that blocks damage one time", 1, 1, 1);//quantity corresponds to the number of protection you have (max 2)
@@ -39,7 +39,7 @@ Game::Game(int height,int width){
 	board.initialize(0,0); //initialize the board in 0,0
 	WINDOW* win = board.board_win;
 
-	map = Map(10); //create the map
+	map = Map(difficulty); //create the map
 
 	matrix = map.toString(); //create the matrix of char for the map (here you create both money and enemies)
 
@@ -54,7 +54,7 @@ Game::Game(int height,int width){
 
 	//Game::market(); //starts market
 
-	//try powerups
+	//try power-ups
 	player.gun.name = guns[0].getName();
 	//player.gun.name = guns[1].getName();
 	//player.gun.name = guns[2].getName();
@@ -81,18 +81,18 @@ void Game::PrintMap(){ //print your map
 }
 
 void Game::market(){
-	//Generate randomally 3 powerups
+	//Generate randomly 3 power-ups
 	int a = rand()%NUM_GUNS;
 	int b = rand()%NUM_BONUS;
 	int c = rand()%NUM_ACTIVE;
 	Powerup pu_market[3] = {guns[a], bonus[b], active[c]};
-	//call graphic lib to load market level passing the 3 powerups selected for sale
+	//call graphic lib to load market level passing the 3 power-ups selected for sale
 	Game::drawPowerUp(pu_market);
 
 	//Game::updatePowerup(Powerup pwp);
 
 	//once we exit the market level
-	//update difficulty based on powerups
+	//update difficulty based on power-ups
 	int diff = player.gun.getDifficulty();
 	diff += player.hp.getQnt() * player.hp.getDifficulty();
 	diff += player.shield.getQnt() * player.shield.getDifficulty();
@@ -107,7 +107,7 @@ void Game::market(){
 
 //}
 
-void Game::drawPowerUp(Powerup pwp[]){ //Draw powerups which are spawned
+void Game::drawPowerUp(Powerup pwp[]){ //Draw power-ups which are spawned
 	mvwprintw(board.board_win,20,28,pwp[0].getName().c_str());
 	mvwprintw(board.board_win,20,52,pwp[1].getName().c_str());
 	mvwprintw(board.board_win,20,80,pwp[2].getName().c_str());
@@ -121,7 +121,7 @@ void Game::updateState(){
 	Game::displayCoins();
 
 	//Map movement
-	if(time%600 == 0)Game::mapMovement(); //We move the map on orrizzontal directionand the player only on vertical direction
+	if(time%600 == 0)Game::mapMovement(); //We move the map on horizontal direction and the player only on vertical direction
 
 	if(map.updateCoins(xMin+player.getx(), player.gety())){
 		matrix[player.gety()][xMin+player.getx()] = ' '; //update the map removing coin
@@ -145,6 +145,7 @@ void Game::updateState(){
 void Game::interaction(Enemy0 e){ //interaction between enemies and player
 	if(abs(player.getx()+xMin - e.getx())<=1 && (player.gety() - e.gety())<=1 && (player.gety() - e.gety())>=0){
 		player.injury(); //if you are in a neighborhood of the enemy, you lose one life
+
 	}
 }
 
@@ -195,6 +196,10 @@ void Game::displayLife(){ //display life and bullets
 	mvwprintw(board.board_win,24,63,"%d",player.bullets.getQnt());
 	if(player.bullets.getQnt()<100) mvwprintw(board.board_win,24,65," ");
 	if(player.bullets.getQnt()<10) mvwprintw(board.board_win,24,64," ");
+	if(map.enemies6!=NULL)mvwprintw(board.board_win,24,69,"%d",map.enemies6->enemy.ind);
+	if(map.enemies7!=NULL)mvwprintw(board.board_win,24,71,"%d",map.enemies7->enemy.ind);
+	if(map.enemies8!=NULL)mvwprintw(board.board_win,24,73,"%d",map.enemies8->enemy.ind);
+	if(map.enemies9!=NULL)mvwprintw(board.board_win,24,75,"%d",map.enemies9->enemy.ind);
 }
 
 void Game::displayCoins(){ //display coins
@@ -240,17 +245,18 @@ bullt Game::deleteEnemy9Bullets(bullt tmp,listenm9 e){ //delete Enemy9's bullets
 void Game::shooting(){
 	//gun player
 	bullt tmp = player.bullet.blt;
-	if(time%500==0){ //slow down also the speed of bullets
+	if(time%400==0){ //slow down also the speed of bullets
 		while(tmp!=NULL){ //you have to move all the bullets
-			player.bullet.shoot(tmp,player.bullet.blt); //move bullets
-			if(tmp->xB>map.getDim_x() || tmp->xB<0){ //check if it has reached the walls
+			mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
+			tmp = player.bullet.shoot(tmp,player.bullet.blt); //move bullets
+			if(tmp->xB+xMin>map.getDim_x() || tmp->xB+xMin<0){ //check if it has reached the walls
 				tmp = Game::deletePlayerBullets(tmp); //delete bullet
 			}
-			else if(map.isSolid(tmp->xB,tmp->yB) || map.isSolid(tmp->xB+1,tmp->yB) || map.isSolid(tmp->xB-1,tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
+			else if(map.isSolid(tmp->xB+xMin,tmp->yB) || map.isSolid(tmp->xB+1+xMin,tmp->yB) || map.isSolid(tmp->xB-1+xMin,tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
 				mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
 				tmp = Game::deletePlayerBullets(tmp); //delete bullet
 			}
-			else if(Game::enemydeath(tmp) == true){
+			else if(Game::enemydeath(tmp)){
 				mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
 				tmp = Game::deletePlayerBullets(tmp); //delete bullet
 			}
@@ -265,20 +271,22 @@ void Game::shooting(){
 		while(cont!=NULL){ //There are more enemies type6 than one
 			tmp = cont->enemy.bullet.blt;
 			while(tmp!=NULL){ //you have to move all the bullets
-				cont->enemy.bullet.shoot(tmp,cont->enemy.bullet.blt);
+				mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
+				tmp = cont->enemy.bullet.shoot(tmp,cont->enemy.bullet.blt);
 				if(tmp->xB>map.getDim_x() || tmp->xB<0){ //check if reaches the wall
+					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy6Bullets(tmp,cont); //delete bullet
 				}
-				else if(map.isSolid(tmp->xB,tmp->yB) == true || map.isSolid(tmp->xB+1,tmp->yB) || map.isSolid(tmp->xB-1,tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
-					mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
+				if(map.isSolid(tmp->xB,tmp->yB) || map.isSolid(tmp->xB+1,tmp->yB) || map.isSolid(tmp->xB-1,tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
+					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy6Bullets(tmp,cont); //delete bullet
 				}
-				else if(Game::interactionBullet(tmp) == true){
-					mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
+				else if(Game::interactionBullet(tmp)){
+					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy6Bullets(tmp,cont); //delete bullet
 				}
 				else{
-					mvwaddch(board.board_win,tmp->yB,tmp->xB,'*'); //draw bullet
+					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,'*'); //draw bullet
 					tmp = tmp->next;
 				}
 			}
@@ -290,20 +298,23 @@ void Game::shooting(){
 		while(cont2!=NULL){ //There are more enemies type7 than one
 			tmp = cont2->enemy.bullet.blt;
 			while(tmp!=NULL){ //you have to move all the bullets
-				cont2->enemy.bullet.shoot(tmp,cont2->enemy.bullet.blt); //move the bullet
+				mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
+				tmp = cont2->enemy.bullet.shoot(tmp,cont2->enemy.bullet.blt); //move the bullet
 				if(tmp->xB>map.getDim_x() || tmp->xB<0){ //check if it reaches the wall
+					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy7Bullets(tmp,cont2); //delete bullet
 				}
-				else if(map.isSolid(tmp->xB,tmp->yB) == true || map.isSolid(tmp->xB+1,tmp->yB) || map.isSolid(tmp->xB-1,tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
-					mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
+				if(map.isSolid(tmp->xB,tmp->yB) == true || map.isSolid(tmp->xB+1,tmp->yB) || map.isSolid(tmp->xB-1,tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
+					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
+					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy7Bullets(tmp,cont2); //delete bullet
 				}
-				else if(Game::interactionBullet(tmp) == true){
-					mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
+				if(Game::interactionBullet(tmp)){
+					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy7Bullets(tmp,cont2); //delete bullet
 				}
 				else{
-					mvwaddch(board.board_win,tmp->yB,tmp->xB,'*'); //draw bullet
+					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,'*'); //draw bullet
 					tmp = tmp->next;
 				}
 			}
@@ -315,20 +326,22 @@ void Game::shooting(){
 		while(cont3!=NULL){ //There are more enemies type8 than one
 			tmp = cont3->enemy.bullet.blt;
 			while(tmp!=NULL){ //you have to move all the bullets
-				cont3->enemy.bullet.shoot(tmp,cont3->enemy.bullet.blt); //move the bullet
-				if(tmp->xB>map.getDim_x() || tmp->xB<0){ //check if it reaches the wall
+				mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
+				tmp = cont3->enemy.bullet.shoot(tmp,cont3->enemy.bullet.blt); //move the bullet
+				if(tmp->xB>map.getDim_x() || tmp->xB<0){ //check if it reaches the
+					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy8Bullets(tmp,cont3); //delete bullet
 				}
-				else if(map.isSolid(tmp->xB,tmp->yB) == true || map.isSolid(tmp->xB+1,tmp->yB) || map.isSolid(tmp->xB-1,tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
-					mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
+				if(map.isSolid(tmp->xB,tmp->yB) == true || map.isSolid(tmp->xB+1,tmp->yB) || map.isSolid(tmp->xB-1,tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
+					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy8Bullets(tmp,cont3); //delete bullet
 				}
-				else if(Game::interactionBullet(tmp) == true){
-					mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
+				else if(Game::interactionBullet(tmp)){
+					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy8Bullets(tmp,cont3); //delete bullet
 				}
 				else{
-					mvwaddch(board.board_win,tmp->yB,tmp->xB,'*'); //draw bullet
+					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,'*'); //draw bullet
 					tmp = tmp->next;
 				}
 			}
@@ -340,19 +353,24 @@ void Game::shooting(){
 		while(cont4!=NULL){ //There are more enemies type9 than one
 			tmp = cont4->enemy.bullet.blt;
 			while(tmp!=NULL){ //you have to move all the bullets
-				cont4->enemy.bullet.shoot(tmp,cont4->enemy.bullet.blt); //move the bullet
+				mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
+				tmp = cont4->enemy.bullet.shoot(tmp,cont4->enemy.bullet.blt); //move the bullet
 				if(tmp->xB>map.getDim_x() || tmp->xB<0){ //check if it reaches the wall
+					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy9Bullets(tmp,cont4); //delete bullet
 				}
-				else if(map.isSolid(tmp->xB,tmp->yB) == true || map.isSolid(tmp->xB+1,tmp->yB) || map.isSolid(tmp->xB-1,tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
-					mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
+				if(map.isSolid(tmp->xB,tmp->yB) || map.isSolid(tmp->xB+1,tmp->yB) || map.isSolid(tmp->xB-1,tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
+					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy9Bullets(tmp,cont4); //delete bullet
 				}
-				else if(Game::interactionBullet(tmp) == true){
-					mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
+				else if(Game::interactionBullet(tmp)){
+					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy9Bullets(tmp,cont4); //delete bullet
 				}
-				else tmp = tmp->next;
+				else{
+					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,'*'); //draw bullet
+					tmp = tmp->next;
+				}
 			}
 			cont4 = cont4->next; //change enemy
 		}
@@ -366,7 +384,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 	bool found = false;
 	int codice; //variable where we can save the code of one enemy
 	while(tmp0!=NULL && !found){
-		if(abs(tmp->xB - tmp0->enemy.getx())<=1 && abs(tmp->yB - tmp0->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
+		if(abs(tmp->xB+xMin - tmp0->enemy.getx())<=1 && abs(tmp->yB - tmp0->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp0->enemy.injury(); //injury for the enemy
 			found = true; //you have removed this bullet, so you can stop the cycle
 			if(tmp0->enemy.getLife() <= 0){ //Enemy life = 0
@@ -383,7 +401,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 	//check enemy1
 	listenm1 tmp1 = map.enemies1;
 	while(tmp1!=NULL && !found){
-		if(abs(tmp->xB - tmp1->enemy.getx())<=1 && abs(tmp->yB - tmp1->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
+		if(abs(tmp->xB+xMin - tmp1->enemy.getx())<=1 && abs(tmp->yB - tmp1->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp1->enemy.injury(); //injury for the enemy
 			found = true; //you have removed this bullet, so you can stop the cycle
 			if(tmp1->enemy.getLife() <= 0){ //Enemy life = 0
@@ -400,7 +418,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 	//check enemy2
 	listenm2 tmp2 = map.enemies2;
 	while(tmp2!=NULL && !found){
-		if(abs(tmp->xB - tmp2->enemy.getx())<=1 && abs(tmp->yB - tmp2->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
+		if(abs(tmp->xB+xMin - tmp2->enemy.getx())<=1 && abs(tmp->yB - tmp2->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp2->enemy.injury(); //injury for the enemy
 			found = true; //you have removed this bullet, so you can stop the cycle
 			if(tmp2->enemy.getLife() <= 0){ //Enemy life = 0
@@ -417,7 +435,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 	//check enemy3
 	listenm3 tmp3 = map.enemies3;
 	while(tmp3!=NULL && !found){
-		if(abs(tmp->xB - tmp3->enemy.getx())<=1 && abs(tmp->yB - tmp3->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
+		if(abs(tmp->xB+xMin - tmp3->enemy.getx())<=1 && abs(tmp->yB - tmp3->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp3->enemy.injury(); //injury for the enemy
 			found = true; //you have removed this bullet, so you can stop the cycle
 			if(tmp3->enemy.getLife() <= 0){ //Enemy life = 0
@@ -434,7 +452,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 	//check enemy4
 	listenm4 tmp4 = map.enemies4;
 	while(tmp4!=NULL && !found){
-		if(abs(tmp->xB - tmp4->enemy.getx())<=1 && abs(tmp->yB - tmp4->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
+		if(abs(tmp->xB+xMin - tmp4->enemy.getx())<=1 && abs(tmp->yB - tmp4->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp4->enemy.injury(); //injury for the enemy
 			found = true; //you have removed this bullet, so you can stop the cycle
 			if(tmp4->enemy.getLife() <= 0){ //Enemy life = 0
@@ -451,7 +469,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 	//check enemy5
 	listenm5 tmp5 = map.enemies5;
 	while(tmp5!=NULL && !found){
-		if(abs(tmp->xB - tmp5->enemy.getx())<=1 && abs(tmp->yB - tmp5->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
+		if(abs(tmp->xB+xMin - tmp5->enemy.getx())<=1 && abs(tmp->yB - tmp5->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp5->enemy.injury(); //injury for the enemy
 			found = true; //you have removed this bullet, so you can stop the cycle
 			if(tmp5->enemy.getLife() <= 0){ //Enemy life = 0
@@ -469,7 +487,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 	//check enemy6
 	listenm6 tmp6 = map.enemies6;
 	while(tmp6!=NULL && !found){
-		if(abs(tmp->xB - tmp6->enemy.getx())<=1 && abs(tmp->yB - tmp6->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
+		if(abs(tmp->xB+xMin - tmp6->enemy.getx())<=1 && abs(tmp->yB - tmp6->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp6->enemy.injury(); //injury for the enemy
 			found = true; //you have removed this bullet, so you can stop the cycle
 			if(tmp6->enemy.getLife() <= 0){ //Enemy life = 0
@@ -495,7 +513,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 	//check enemy7
 	listenm7 tmp7 = map.enemies7;
 	while(tmp7!=NULL && !found){
-		if(abs(tmp->xB - tmp7->enemy.getx())<=1 && abs(tmp->yB - tmp7->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
+		if(abs(tmp->xB+xMin - tmp7->enemy.getx())<=1 && abs(tmp->yB - tmp7->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp7->enemy.injury(); //injury for the enemy
 			found = true; //you have removed this bullet, so you can stop the cycle
 			if(tmp7->enemy.getLife() <= 0){ //Enemy life = 0
@@ -521,7 +539,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 	//check enemy8
 	listenm8 tmp8 = map.enemies8;
 	while(tmp8!=NULL && !found){
-		if(abs(tmp->xB - tmp8->enemy.getx())<=1 && abs(tmp->yB - tmp8->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
+		if(abs(tmp->xB+xMin - tmp8->enemy.getx())<=1 && abs(tmp->yB - tmp8->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp8->enemy.injury(); //injury for the enemy
 			found = true; //you have removed this bullet, so you can stop the cycle
 			if(tmp8->enemy.getLife() <= 0){ //Enemy life = 0
@@ -547,7 +565,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 	//check enemy9
 	listenm9 tmp9 = map.enemies9;
 	while(tmp9!=NULL && !found){
-		if(abs(tmp->xB - tmp9->enemy.getx())<=1 && abs(tmp->yB - tmp9->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
+		if(abs(tmp->xB+xMin - tmp9->enemy.getx())<=1 && abs(tmp->yB - tmp9->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp9->enemy.injury(); //injury for the enemy
 			found = true; //you have removed this bullet, so you can stop the cycle
 			if(tmp9->enemy.getLife() <= 0){ //Enemy life = 0
@@ -634,7 +652,6 @@ void Game::mapMovement(){
 			Game::PlayerCanMove(KEY_UP); //check if you can move (you are jumping)
 			player.display();
 			player.airshoot(); //if you want shoot you have to press h
-			//Game::StructureUpdate();;
 		}
 	}
 	else{
@@ -659,7 +676,6 @@ void Game::mapMovement(){
 				break;
 		}
 		Game::PlayerCanFly(choice); //check if you can fly
-		//Game::StructureUpdate();
 	}
 	PrintMap(); //map movement
 	//see player
@@ -740,7 +756,7 @@ void Game::PlayerCanMove(int choice){ //Player can or cannot move
 				xMin++; //increment the variable
 				PrintMap(); // see map movement
 			}
-			else if(map.isDanger(player.getx()+xMin,player.gety())){//check if there are spikes
+			else if(map.isDanger(player.getx()+xMin,player.gety()+1)){//check if there are spikes
 				player.injury();
 			}
 			else{
@@ -756,7 +772,7 @@ void Game::PlayerCanMove(int choice){ //Player can or cannot move
 				xMin--;
 				PrintMap(); //see map movement
 			}
-			else if(map.isDanger(player.getx()+xMin,player.gety())){//check if there are spikes
+			else if(map.isDanger(player.getx()+xMin,player.gety()+1)){//check if there are spikes
 				player.injury();
 			}
 			else{
@@ -770,7 +786,7 @@ void Game::PlayerCanMove(int choice){ //Player can or cannot move
 				xMin--;
 				PrintMap(); // see map movement
 			}
-			else if(map.isDanger(player.getx()+xMin,player.gety())){//check if there are spikes
+			else if(map.isDanger(player.getx()+xMin,player.gety()+1)){//check if there are spikes
 				player.injury();
 			}
 			else{
@@ -807,7 +823,7 @@ void Game::PlayerCanMove(int choice){ //Player can or cannot move
 					Game::PlayerDown(); //go down
 				}
 			}
-			else if(map.isDanger(player.getx()+xMin,player.gety())){//check if there are spikes
+			else if(map.isDanger(player.getx()+xMin,player.gety()+1)){//check if there are spikes
 				player.injury();
 			}
 		}
@@ -837,7 +853,7 @@ void Game::PlayerCanMove(int choice){ //Player can or cannot move
 					Game::PlayerDown(); //go down
 				}
 			}
-			else if(map.isDanger(player.getx()+xMin,player.gety())){//check if there are spikes
+			else if(map.isDanger(player.getx()+xMin,player.gety()+1)){//check if there are spikes
 				player.injury();
 			}
 		}
@@ -865,9 +881,9 @@ void Game::Enemy1CanMove(listenm1 h){ //Enemies can or cannot move
 			h->enemy.updateCoordinates(0,-h->enemy.getUp()); //you have to go from you went
 			h->enemy.setUp(); //change the vertical direction
 		}
-		else{ //orrizontal collision
+		else{ //horizontal collision
 			h->enemy.updateCoordinates(-h->enemy.getSign(),0); //you have to go from you went
-			h->enemy.setSign(); //change the orrizontal direction
+			h->enemy.setSign(); //change the horizontal direction
 		}
 	}
 }
@@ -1030,9 +1046,11 @@ void Game::enemyMovement(){	//Enemies movement
 	listenm6 tmp6 = map.enemies6;  //type6
 	while(tmp6!=NULL){
 		matrix[tmp6->enemy.gety()][tmp6->enemy.getx()] = ' '; //delete enemy
+		matrix[tmp6->enemy.gety()][tmp6->enemy.getx()+tmp6->enemy.getSign()] = ' '; //delete gun
 		tmp6->enemy.movement(); //move one enemy
 		Game::Enemy6CanMove(tmp6); //interaction with the structure
 		matrix[tmp6->enemy.gety()][tmp6->enemy.getx()] = tmp6->enemy.getChar(); //print enemy again
+		matrix[tmp6->enemy.gety()][tmp6->enemy.getx()+tmp6->enemy.getSign()] = '-'; //print gun again
 		Game::interaction(tmp6->enemy);
 		tmp6 = tmp6->next; //go to the next enemy
 	}
@@ -1040,11 +1058,13 @@ void Game::enemyMovement(){	//Enemies movement
 	listenm7 tmp7 = map.enemies7;  //type7
 	while(tmp7!=NULL){
 		matrix[tmp7->enemy.gety()][tmp7->enemy.getx()] = ' '; //delete enemy
+		matrix[tmp7->enemy.gety()][tmp7->enemy.getx()+tmp7->enemy.getSign()] = ' '; //delete gun
 		dir = Game::directionSmartEnemy7(tmp7->enemy);
 		if(abs(player.getx()+xMin - tmp7->enemy.getx()) <=30 && player.gety()==tmp7->enemy.gety()){ //player is sufficiently near to enemy type7
 			tmp7->enemy.movement(dir); //move one enemy
 		}
 		matrix[tmp7->enemy.gety()][tmp7->enemy.getx()] = tmp7->enemy.getChar(); //print enemy again
+		matrix[tmp7->enemy.gety()][tmp7->enemy.getx()+tmp7->enemy.getSign()] = '-'; //print gun again
 		Game::Enemy7CanMove(tmp7); //interaction with the structure
 		tmp7 = tmp7->next; //go to the next enemy
 	}
@@ -1052,12 +1072,14 @@ void Game::enemyMovement(){	//Enemies movement
 	listenm8 tmp8 = map.enemies8;  //type8
 	while(tmp8!=NULL){
 		matrix[tmp8->enemy.gety()][tmp8->enemy.getx()] = ' '; //delete enemy
+		matrix[tmp8->enemy.gety()][tmp8->enemy.getx()+tmp8->enemy.getSign()] = ' '; //delete gun
 		dir = Game::directionSmartEnemy8(tmp8->enemy);
 		if((abs(player.getx()+xMin - tmp8->enemy.getx()) <= 20) && (player.gety() == tmp8->enemy.gety())){ //player is sufficiently near to enemy type8
 			tmp8->enemy.movement(dir); //move one enemy
 		}
 		Game::Enemy8CanMove(tmp8);
 		matrix[tmp8->enemy.gety()][tmp8->enemy.getx()] = tmp8->enemy.getChar(); //print enemy again
+		matrix[tmp8->enemy.gety()][tmp8->enemy.getx()+tmp8->enemy.getSign()] = '-'; //print gun again
 		Game::interaction(tmp8->enemy);
 		tmp8 = tmp8->next; //go to the next enemy
 	}
@@ -1065,9 +1087,13 @@ void Game::enemyMovement(){	//Enemies movement
 	listenm9 tmp9 = map.enemies9;  //type9
 	while(tmp9!=NULL){
 		matrix[tmp9->enemy.gety()][tmp9->enemy.getx()] = ' '; //delete enemy
+		matrix[tmp9->enemy.gety()][tmp9->enemy.getx()+1] = ' '; //delete gun
+		matrix[tmp9->enemy.gety()][tmp9->enemy.getx()-1] = ' '; //delete gun
 		tmp9->enemy.movement(); //move one enemy
 		Game::Enemy9CanMove(tmp9); //interaction with the structure
 		matrix[tmp9->enemy.gety()][tmp9->enemy.getx()] = tmp9->enemy.getChar(); //print enemy again
+		matrix[tmp9->enemy.gety()][tmp9->enemy.getx()+1] = '-'; //print gun again
+		matrix[tmp9->enemy.gety()][tmp9->enemy.getx()-1] = '-'; //print gun again
 		Game::interaction(tmp9->enemy);
 		tmp9 = tmp9->next; //go to the next enemy
 	}
