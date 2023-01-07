@@ -6,6 +6,7 @@
  */
 
 #include "Game.hpp"
+#include <fstream>
 
 Game::Game(int height,int width){
 
@@ -18,7 +19,6 @@ Game::Game(int height,int width){
 	init_pair(6,COLOR_CYAN,COLOR_BLACK); //color enemy type 5/7
 	init_pair(7,COLOR_WHITE,COLOR_BLACK); //color enemy type 8
 
-	difficulty = 20; //difficult = 0 when you start the game
 
 	//Initialize Power-ups (quantity of the guns is fixed to 1-->you can have just one gun)
 	guns[0] = Powerup("Pistol", "you shoot one bullet", 1, 1, 1);
@@ -39,11 +39,12 @@ Game::Game(int height,int width){
 	board.initialize(0,0); //initialize the board in 0,0
 	WINDOW* win = board.board_win;
 
-	map = Map(difficulty); //create the map
+	difficulty = 10;
+	mapList = NULL;
+	nextMap(1, difficulty);
+	matrix = mapList->map.toString(); //create the matrix of char for the map (here you create both money and enemies)
 
-	matrix = map.toString(); //create the matrix of char for the map (here you create both money and enemies)
-
-	xMin = 0; //start with the map
+	xMin = 5; //start with the map
 	//print all map
 	Game::PrintMap();
 
@@ -72,9 +73,49 @@ Game::Game(int height,int width){
 	game_over = false;
 }
 
+//dir decides the direction, 1 = right (generate next map/go to the next map already existing)
+//0 = go the the previous map
+void Game::nextMap(int dir, int difficulty = 0){//we call this when the player reaches a trigger
+	if(mapList == NULL){//first map generation
+		mapList = new map_el;
+		mapList->id=0;
+		mapList->prev=NULL;
+		mapList->next=NULL;
+		mapList->map = Map(difficulty);
+	}
+	else{
+		if(dir == 1){//right
+			if(mapList->next == NULL){//generate next map
+				//call market function here and recalculate difficulty
+
+				mapList->next = new map_el;
+				mapList->next->prev=mapList;
+				mapList=mapList->next;
+
+				mapList->id=mapList->prev->id+1;
+				mapList->next=NULL;
+				mapList->map = Map(difficulty);
+				
+			}
+			else{//just move pointer to the next map
+				mapList=mapList->next;
+			}
+			xMin = 5;
+			time = 0;
+		}
+		else if(dir == 0){//left
+			if(mapList->prev != NULL){//if this is not the first map
+				mapList=mapList->prev;
+				xMin = mapList->map.get_trigger_end()-(player.getx()+3);
+				time = 0;
+			}
+		}
+	}
+}
+
 void Game::PrintMap(){ //print your map
-	for(int i=0;i<map.getDim_y();i++){
-		for(int j=xMin;j<map.getDim_x()&&j<xMin+110;j++){
+	for(int i=0;i<mapList->map.getDim_y();i++){
+		for(int j=xMin;j<mapList->map.getDim_x()&&j<xMin+110;j++){
 			mvwaddch(board.board_win,i,j-xMin,matrix[i][j]);
 		}
 	}
@@ -123,7 +164,7 @@ void Game::updateState(){
 	//Map movement
 	if(time%600 == 0)Game::mapMovement(); //We move the map on horizontal direction and the player only on vertical direction
 
-	if(map.updateCoins(xMin+player.getx(), player.gety())){
+	if(mapList->map.updateCoins(xMin+player.getx(), player.gety())){
 		matrix[player.gety()][xMin+player.getx()] = ' '; //update the map removing coin
 		player.updateCash(1); //increment cashes of player
 	}
@@ -136,6 +177,12 @@ void Game::updateState(){
 	time++;
 
 	if(player.hp.getQnt() == 0) game_over = true; //Player death
+	if(player.getx()+xMin == mapList->map.get_trigger_end()){
+		nextMap(1, 10);
+	}
+	else if(player.getx()+xMin == mapList->map.get_trigger_start()){
+		nextMap(0);
+	}
 
 	//Update board
 	Game::UpdateBoard();
@@ -196,8 +243,7 @@ void Game::displayLife(){ //display life and bullets
 	mvwprintw(board.board_win,24,63,"%d",player.bullets.getQnt());
 	if(player.bullets.getQnt()<100) mvwprintw(board.board_win,24,65," ");
 	if(player.bullets.getQnt()<10) mvwprintw(board.board_win,24,64," ");
-	if(map.enemies5!=NULL)mvwprintw(board.board_win,24,69,"%d",map.enemies5->enemy.getSign());
-	if(map.enemies7!=NULL)mvwprintw(board.board_win,24,73,"%d",map.enemies7->enemy.getSign());
+	mvwprintw(board.board_win,24,69,"%d",mapList->id);
 }
 
 void Game::displayCoins(){ //display coins
@@ -247,10 +293,10 @@ void Game::shooting(){
 		while(tmp!=NULL){ //you have to move all the bullets
 			mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
 			tmp = player.bullet.shoot(tmp,player.bullet.blt); //move bullets
-			if(tmp->xB+xMin>map.getDim_x() || tmp->xB+xMin<0){ //check if it has reached the walls
+			if(tmp->xB+xMin>mapList->map.getDim_x() || tmp->xB+xMin<0){ //check if it has reached the walls
 				tmp = Game::deletePlayerBullets(tmp); //delete bullet
 			}
-			else if(map.isSolid(tmp->xB+xMin,tmp->yB) || map.isSolid(tmp->xB+1+xMin,tmp->yB) || map.isSolid(tmp->xB-1+xMin,tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
+			else if(mapList->map.isSolid(tmp->xB+xMin,tmp->yB) || mapList->map.isSolid(tmp->xB+1+xMin,tmp->yB) || mapList->map.isSolid(tmp->xB-1+xMin,tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
 				mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
 				tmp = Game::deletePlayerBullets(tmp); //delete bullet
 			}
@@ -265,17 +311,17 @@ void Game::shooting(){
 		}
 
 		//gun enemy type6
-		listenm6 cont = map.enemies6;
+		listenm6 cont = mapList->map.enemies6;
 		while(cont!=NULL){ //There are more enemies type6 than one
 			tmp = cont->enemy.bullet.blt;
 			while(tmp!=NULL){ //you have to move all the bullets
 				mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 				tmp = cont->enemy.bullet.shoot(tmp,cont->enemy.bullet.blt);
-				if(tmp->xB>map.getDim_x() || tmp->xB<0){ //check if reaches the wall
+				if(tmp->xB>mapList->map.getDim_x() || tmp->xB<0){ //check if reaches the wall
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy6Bullets(tmp,cont); //delete bullet
 				}
-				if(map.isSolid(tmp->xB,tmp->yB)|| map.isSolid(tmp->xB+cont->enemy.getSign(),tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
+				if(mapList->map.isSolid(tmp->xB,tmp->yB)|| mapList->map.isSolid(tmp->xB+cont->enemy.getSign(),tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy6Bullets(tmp,cont); //delete bullet
 				}
@@ -292,17 +338,17 @@ void Game::shooting(){
 		}
 
 		//gun enemy type7
-		listenm7 cont2 = map.enemies7;
+		listenm7 cont2 = mapList->map.enemies7;
 		while(cont2!=NULL){ //There are more enemies type7 than one
 			tmp = cont2->enemy.bullet.blt;
 			while(tmp!=NULL){ //you have to move all the bullets
 				mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 				tmp = cont2->enemy.bullet.shoot(tmp,cont2->enemy.bullet.blt); //move the bullet
-				if(tmp->xB>map.getDim_x() || tmp->xB<0){ //check if it reaches the wall
+				if(tmp->xB>mapList->map.getDim_x() || tmp->xB<0){ //check if it reaches the wall
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy7Bullets(tmp,cont2); //delete bullet
 				}
-				if(map.isSolid(tmp->xB,tmp->yB) || map.isSolid(tmp->xB+cont2->enemy.getSign(),tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
+				if(mapList->map.isSolid(tmp->xB,tmp->yB) || mapList->map.isSolid(tmp->xB+cont2->enemy.getSign(),tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy7Bullets(tmp,cont2); //delete bullet
 				}
@@ -319,17 +365,17 @@ void Game::shooting(){
 		}
 
 		//gun enemy type8
-		listenm8 cont3 = map.enemies8;
+		listenm8 cont3 = mapList->map.enemies8;
 		while(cont3!=NULL){ //There are more enemies type8 than one
 			tmp = cont3->enemy.bullet.blt;
 			while(tmp!=NULL){ //you have to move all the bullets
 				mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 				tmp = cont3->enemy.bullet.shoot(tmp,cont3->enemy.bullet.blt); //move the bullet
-				if(tmp->xB>map.getDim_x() || tmp->xB<0){ //check if it reaches the
+				if(tmp->xB>mapList->map.getDim_x() || tmp->xB<0){ //check if it reaches the
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy8Bullets(tmp,cont3); //delete bullet
 				}
-				if(map.isSolid(tmp->xB,tmp->yB) || map.isSolid(tmp->xB+cont3->enemy.getSign(),tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
+				if(mapList->map.isSolid(tmp->xB,tmp->yB) || mapList->map.isSolid(tmp->xB+cont3->enemy.getSign(),tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy8Bullets(tmp,cont3); //delete bullet
 				}
@@ -346,17 +392,17 @@ void Game::shooting(){
 		}
 
 		//gun enemy type9
-		listenm9 cont4 = map.enemies9;
+		listenm9 cont4 = mapList->map.enemies9;
 		while(cont4!=NULL){ //There are more enemies type9 than one
 			tmp = cont4->enemy.bullet.blt;
 			while(tmp!=NULL){ //you have to move all the bullets
 				mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 				tmp = cont4->enemy.bullet.shoot(tmp,cont4->enemy.bullet.blt); //move the bullet
-				if(tmp->xB>map.getDim_x() || tmp->xB<0){ //check if it reaches the wall
+				if(tmp->xB>mapList->map.getDim_x() || tmp->xB<0){ //check if it reaches the wall
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy9Bullets(tmp,cont4); //delete bullet
 				}
-				if(map.isSolid(tmp->xB,tmp->yB)|| map.isSolid(tmp->xB+cont4->enemy.getSign(),tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
+				if(mapList->map.isSolid(tmp->xB,tmp->yB)|| mapList->map.isSolid(tmp->xB+cont4->enemy.getSign(),tmp->yB)){ //you have had a collision with a structure (the range avoids the collision next to the wall)
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy9Bullets(tmp,cont4); //delete bullet
 				}
@@ -377,7 +423,7 @@ void Game::shooting(){
 
 bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 	//check enemy0
-	listenm0 tmp0 = map.enemies0;
+	listenm0 tmp0 = mapList->map.enemies0;
 	bool found = false;
 	int codice; //variable where we can save the code of one enemy
 	while(tmp0!=NULL && !found){
@@ -387,8 +433,8 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 			if(tmp0->enemy.getLife() <= 0){ //Enemy life = 0
 				matrix[tmp0->enemy.gety()][tmp0->enemy.getx()] = ' '; //delete graphically the enemy
 				codice = tmp0->val; //save the code of the enemy
-				tmp0 = map.obj_remove_enemy0(tmp0, codice,false); //if it is died, you have to remove from the list
-				map.enemies0 = map.obj_remove_enemy0(map.enemies0, codice,true); //if it is died, you have to remove from the main list
+				tmp0 = mapList->map.obj_remove_enemy0(tmp0, codice,false); //if it is died, you have to remove from the list
+				mapList->map.enemies0 = mapList->map.obj_remove_enemy0(mapList->map.enemies0, codice,true); //if it is died, you have to remove from the main list
 			}
 			else tmp0 = tmp0->next;
 		}
@@ -396,7 +442,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 	}
 
 	//check enemy1
-	listenm1 tmp1 = map.enemies1;
+	listenm1 tmp1 = mapList->map.enemies1;
 	while(tmp1!=NULL && !found){
 		if(abs(tmp->xB+xMin - tmp1->enemy.getx())<=1 && abs(tmp->yB - tmp1->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp1->enemy.injury(); //injury for the enemy
@@ -404,8 +450,8 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 			if(tmp1->enemy.getLife() <= 0){ //Enemy life = 0
 				matrix[tmp1->enemy.gety()][tmp1->enemy.getx()] = ' '; //delete graphically the enemy
 				codice = tmp1->val; //save the code of the enemy
-				tmp1 = map.obj_remove_enemy1(tmp1, codice,false); //if it is died, you have to remove from the list
-				map.enemies1 = map.obj_remove_enemy1(map.enemies1, codice,true); //if it is died, you have to remove from the main list
+				tmp1 = mapList->map.obj_remove_enemy1(tmp1, codice,false); //if it is died, you have to remove from the list
+				mapList->map.enemies1 = mapList->map.obj_remove_enemy1(mapList->map.enemies1, codice,true); //if it is died, you have to remove from the main list
 			}
 			else tmp1 = tmp1->next;
 		}
@@ -413,7 +459,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 	}
 
 	//check enemy2
-	listenm2 tmp2 = map.enemies2;
+	listenm2 tmp2 = mapList->map.enemies2;
 	while(tmp2!=NULL && !found){
 		if(abs(tmp->xB+xMin - tmp2->enemy.getx())<=1 && abs(tmp->yB - tmp2->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp2->enemy.injury(); //injury for the enemy
@@ -421,8 +467,8 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 			if(tmp2->enemy.getLife() <= 0){ //Enemy life = 0
 				matrix[tmp2->enemy.gety()][tmp2->enemy.getx()] = ' '; //delete graphically the enemy
 				codice = tmp2->val; //save the code of the enemy
-				tmp2 = map.obj_remove_enemy2(tmp2, codice,false); //if it is died, you have to remove from the list
-				map.enemies2 = map.obj_remove_enemy2(map.enemies2, codice,true); //if it is died, you have to remove from the main list
+				tmp2 = mapList->map.obj_remove_enemy2(tmp2, codice,false); //if it is died, you have to remove from the list
+				mapList->map.enemies2 = mapList->map.obj_remove_enemy2(mapList->map.enemies2, codice,true); //if it is died, you have to remove from the main list
 			}
 			else tmp2 = tmp2->next;
 		}
@@ -430,7 +476,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 	}
 
 	//check enemy3
-	listenm3 tmp3 = map.enemies3;
+	listenm3 tmp3 = mapList->map.enemies3;
 	while(tmp3!=NULL && !found){
 		if(abs(tmp->xB+xMin - tmp3->enemy.getx())<=1 && abs(tmp->yB - tmp3->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp3->enemy.injury(); //injury for the enemy
@@ -438,8 +484,8 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 			if(tmp3->enemy.getLife() <= 0){ //Enemy life = 0
 				matrix[tmp3->enemy.gety()][tmp3->enemy.getx()] = ' '; //delete graphically the enemy
 				codice = tmp3->val; //save the code of the enemy
-				tmp3 = map.obj_remove_enemy3(tmp3, codice,false); //if it is died, you have to remove from the list
-				map.enemies3 = map.obj_remove_enemy3(map.enemies3, codice,true); //if it is died, you have to remove from the main list
+				tmp3 = mapList->map.obj_remove_enemy3(tmp3, codice,false); //if it is died, you have to remove from the list
+				mapList->map.enemies3 = mapList->map.obj_remove_enemy3(mapList->map.enemies3, codice,true); //if it is died, you have to remove from the main list
 			}
 			else tmp3 = tmp3->next;
 		}
@@ -447,7 +493,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 	}
 
 	//check enemy4
-	listenm4 tmp4 = map.enemies4;
+	listenm4 tmp4 = mapList->map.enemies4;
 	while(tmp4!=NULL && !found){
 		if(abs(tmp->xB+xMin - tmp4->enemy.getx())<=1 && abs(tmp->yB - tmp4->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp4->enemy.injury(); //injury for the enemy
@@ -455,8 +501,8 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 			if(tmp4->enemy.getLife() <= 0){ //Enemy life = 0
 				matrix[tmp4->enemy.gety()][tmp4->enemy.getx()] = ' '; //delete graphically the enemy
 				codice = tmp4->val; //save the code of the enemy
-				tmp4 = map.obj_remove_enemy4(tmp4, codice,false); //if it is died, you have to remove from the list
-				map.enemies4 = map.obj_remove_enemy4(map.enemies4, codice,true); //if it is died, you have to remove from the main list
+				tmp4 = mapList->map.obj_remove_enemy4(tmp4, codice,false); //if it is died, you have to remove from the list
+				mapList->map.enemies4 = mapList->map.obj_remove_enemy4(mapList->map.enemies4, codice,true); //if it is died, you have to remove from the main list
 			}
 			else tmp4 = tmp4->next;
 		}
@@ -464,7 +510,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 	}
 
 	//check enemy5
-	listenm5 tmp5 = map.enemies5;
+	listenm5 tmp5 = mapList->map.enemies5;
 	while(tmp5!=NULL && !found){
 		if(abs(tmp->xB+xMin - tmp5->enemy.getx())<=1 && abs(tmp->yB - tmp5->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp5->enemy.injury(); //injury for the enemy
@@ -472,8 +518,8 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 			if(tmp5->enemy.getLife() <= 0){ //Enemy life = 0
 				matrix[tmp5->enemy.gety()][tmp5->enemy.getx()] = ' '; //delete graphically the enemy
 				codice = tmp5->val; //save the code of the enemy
-				tmp5 = map.obj_remove_enemy5(tmp5, codice,false); //if it is died, you have to remove from the list
-				map.enemies5 = map.obj_remove_enemy5(map.enemies5, codice,true); //if it is died, you have to remove from the main list
+				tmp5 = mapList->map.obj_remove_enemy5(tmp5, codice,false); //if it is died, you have to remove from the list
+				mapList->map.enemies5 = mapList->map.obj_remove_enemy5(mapList->map.enemies5, codice,true); //if it is died, you have to remove from the main list
 			}
 			else tmp5 = tmp5->next;
 		}
@@ -482,7 +528,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 
 	bullt temp; //we need it to raise all remaining bullets
 	//check enemy6
-	listenm6 tmp6 = map.enemies6;
+	listenm6 tmp6 = mapList->map.enemies6;
 	while(tmp6!=NULL && !found){
 		if(abs(tmp->xB+xMin - tmp6->enemy.getx())<=1 && abs(tmp->yB - tmp6->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp6->enemy.injury(); //injury for the enemy
@@ -499,8 +545,8 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 					temp = deleteEnemy6Bullets(temp,tmp6); //delete bullet
 				}
 				codice = tmp6->val; //save the code of the enemy
-				tmp6 = map.obj_remove_enemy6(tmp6, codice,false); //if it is died, you have to remove from the list
-				map.enemies6 = map.obj_remove_enemy6(map.enemies6, codice,true); //if it is died, you have to remove from the main list
+				tmp6 = mapList->map.obj_remove_enemy6(tmp6, codice,false); //if it is died, you have to remove from the list
+				mapList->map.enemies6 = mapList->map.obj_remove_enemy6(mapList->map.enemies6, codice,true); //if it is died, you have to remove from the main list
 			}
 			else tmp6 = tmp6->next;
 		}
@@ -508,7 +554,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 	}
 
 	//check enemy7
-	listenm7 tmp7 = map.enemies7;
+	listenm7 tmp7 = mapList->map.enemies7;
 	while(tmp7!=NULL && !found){
 		if(abs(tmp->xB+xMin - tmp7->enemy.getx())<=1 && abs(tmp->yB - tmp7->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp7->enemy.injury(); //injury for the enemy
@@ -525,8 +571,8 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 					temp = deleteEnemy7Bullets(temp,tmp7); //delete bullet
 				}
 				codice = tmp7->val; //save the code of the enemy
-				tmp7 = map.obj_remove_enemy7(tmp7, codice,false); //if it is died, you have to remove from the list
-				map.enemies7 = map.obj_remove_enemy7(map.enemies7, codice,true); //if it is died, you have to remove from the main list
+				tmp7 = mapList->map.obj_remove_enemy7(tmp7, codice,false); //if it is died, you have to remove from the list
+				mapList->map.enemies7 = mapList->map.obj_remove_enemy7(mapList->map.enemies7, codice,true); //if it is died, you have to remove from the main list
 			}
 			else tmp7 = tmp7->next;
 		}
@@ -534,7 +580,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 	}
 
 	//check enemy8
-	listenm8 tmp8 = map.enemies8;
+	listenm8 tmp8 = mapList->map.enemies8;
 	while(tmp8!=NULL && !found){
 		if(abs(tmp->xB+xMin - tmp8->enemy.getx())<=1 && abs(tmp->yB - tmp8->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp8->enemy.injury(); //injury for the enemy
@@ -551,8 +597,8 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 					temp = deleteEnemy8Bullets(temp,tmp8); //delete bullet
 				}
 				codice = tmp8->val; //save the code of the enemy
-				tmp8 = map.obj_remove_enemy8(tmp8, codice,false); //if it is died, you have to remove from the list
-				map.enemies8 = map.obj_remove_enemy8(map.enemies8, codice,true); //if it is died, you have to remove from the main list
+				tmp8 = mapList->map.obj_remove_enemy8(tmp8, codice,false); //if it is died, you have to remove from the list
+				mapList->map.enemies8 = mapList->map.obj_remove_enemy8(mapList->map.enemies8, codice,true); //if it is died, you have to remove from the main list
 			}
 			else tmp8 = tmp8->next;
 		}
@@ -560,7 +606,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 	}
 
 	//check enemy9
-	listenm9 tmp9 = map.enemies9;
+	listenm9 tmp9 = mapList->map.enemies9;
 	while(tmp9!=NULL && !found){
 		if(abs(tmp->xB+xMin - tmp9->enemy.getx())<=1 && abs(tmp->yB - tmp9->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp9->enemy.injury(); //injury for the enemy
@@ -577,8 +623,8 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 					temp = deleteEnemy9Bullets(temp,tmp9); //delete bullet
 				}
 				codice = tmp9->val; //save the code of the enemy
-				tmp9 = map.obj_remove_enemy9(tmp9, codice,false); //if it is died, you have to remove from the list
-				map.enemies9 = map.obj_remove_enemy9(map.enemies9, codice,true); //if it is died, you have to remove from the main list
+				tmp9 = mapList->map.obj_remove_enemy9(tmp9, codice,false); //if it is died, you have to remove from the list
+				mapList->map.enemies9 = mapList->map.obj_remove_enemy9(mapList->map.enemies9, codice,true); //if it is died, you have to remove from the main list
 			}
 			else tmp9 = tmp9->next;
 		}
@@ -603,12 +649,12 @@ void Game::mapMovement(){
 				case KEY_RIGHT:
 					player.setDir(1); //direction of the player
 					xMin++; //increment the variable
-					if(xMin>map.getDim_x()-90) xMin--; //avoid exit
+					if(xMin>mapList->map.getDim_x()-90) xMin--; //avoid exit
 					break;
 				case KEY_UP:
 					if(player.getDir()==1){ //the jump depends on previous player direction
 						xMin++; //increment the variable
-						if(xMin>map.getDim_x()-90) xMin--; //avoid exit
+						if(xMin>mapList->map.getDim_x()-90) xMin--; //avoid exit
 					}
 					else{
 						xMin--; //decrement the variable
@@ -620,7 +666,7 @@ void Game::mapMovement(){
 						if(player.getDir()==1) //the jump depends on previous player direction
 							for(int i=0;i<player.TELEPORT_DISTANCE[player.teleportation.getQnt()-1];i++){
 								xMin++; //increment the variable
-								if(xMin>map.getDim_x()-90) xMin--; //avoid exit
+								if(xMin>mapList->map.getDim_x()-90) xMin--; //avoid exit
 							}
 						else
 							for(int i=0;i<player.TELEPORT_DISTANCE[player.teleportation.getQnt()-1];i++){
@@ -640,7 +686,7 @@ void Game::mapMovement(){
 			player.jump();
 			if(player.getDir()==1){ //the jump depends on previous player direction
 				xMin++;
-				if(xMin>map.getDim_x()-90) xMin--; //avoid exit
+				if(xMin>mapList->map.getDim_x()-90) xMin--; //avoid exit
 			}
 			else{
 				xMin--;
@@ -661,7 +707,7 @@ void Game::mapMovement(){
 			case KEY_RIGHT:
 				player.setDir(1); //direction of the player
 				xMin++; //increment the variable
-				if(xMin>map.getDim_x()-90) xMin--; //avoid exit
+				if(xMin>mapList->map.getDim_x()-90) xMin--; //avoid exit
 				break;
 			case KEY_UP:
 				player.goup(); //go up
@@ -674,7 +720,7 @@ void Game::mapMovement(){
 		}
 		Game::PlayerCanFly(choice); //check if you can fly
 	}
-	if(map.isDanger(player.getx()+xMin,player.gety()+1)){//check if there are spikes
+	if(mapList->map.isDanger(player.getx()+xMin,player.gety()+1)){//check if there are spikes
 		player.injury();
 	}
 	PrintMap(); //map movement
@@ -692,13 +738,13 @@ void Game::PlayerCanFly(int choice){ //Player can or cannot fly
 	switch(choice){
 		case KEY_LEFT: //you went to sx
 			if(player.gun.getName()=="none"){ //no gun
-				if(map.isSolid(player.getx()+xMin,player.gety())){ //check it there has been collision
+				if(mapList->map.isSolid(player.getx()+xMin,player.gety())){ //check it there has been collision
 					xMin++; //increment the variable
 					PrintMap(); //see map movement
 				}
 			}
 			else{ //gun
-				if(map.isSolid(player.getx()+xMin+player.getDir(),player.gety())){ //check it there has been collision
+				if(mapList->map.isSolid(player.getx()+xMin+player.getDir(),player.gety())){ //check it there has been collision
 					xMin++; //increment the variable
 					PrintMap(); //see map movement
 				}
@@ -706,25 +752,25 @@ void Game::PlayerCanFly(int choice){ //Player can or cannot fly
 			break;
 		case KEY_RIGHT: //you went to dx
 			if(player.gun.getName()=="none"){ //no gun
-				if(map.isSolid(player.getx()+xMin,player.gety())){ //check it there has been collision
+				if(mapList->map.isSolid(player.getx()+xMin,player.gety())){ //check it there has been collision
 					xMin++; //increment the variable
 					PrintMap(); //see map movement
 				}
 			}
 			else{ //gun
-				if(map.isSolid(player.getx()+xMin+player.getDir(),player.gety())){ //check it there has been collision
+				if(mapList->map.isSolid(player.getx()+xMin+player.getDir(),player.gety())){ //check it there has been collision
 					xMin++; //increment the variable
 					PrintMap(); //see map movement
 				}
 			}
 			break;
 		case KEY_UP: //you went to up
-			if(map.isSolid(player.getx()+xMin,player.gety())){ //check it there has been collision
+			if(mapList->map.isSolid(player.getx()+xMin,player.gety())){ //check it there has been collision
 				player.godown(); //move player
 			}
 			break;
 		case KEY_DOWN: //you went to down
-			if(map.isSolid(player.getx()+xMin,player.gety())){ //check it there has been collision
+			if(mapList->map.isSolid(player.getx()+xMin,player.gety())){ //check it there has been collision
 				player.goup(); //move player
 			}
 			break;
@@ -738,23 +784,23 @@ void Game::PlayerCanMove(int choice){ //Player can or cannot move
 	switch(choice){
 	case KEY_LEFT: //you went to sx
 		if(player.gun.getName()=="none"){ //no gun
-			if(map.isSolid(player.getx()+xMin,player.gety())){ //check it there has been collision
+			if(mapList->map.isSolid(player.getx()+xMin,player.gety())){ //check it there has been collision
 				xMin++; //increment the variable
 				PrintMap(); //see map movement
 			}
 			else{
-				while(!map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
+				while(!mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
 					Game::PlayerDown(); //go down
 				}
 			}
 		}
 		else{ //gun
-			if(map.isSolid(player.getx()+xMin+player.getDir(),player.gety())){ //check it there has been collision
+			if(mapList->map.isSolid(player.getx()+xMin+player.getDir(),player.gety())){ //check it there has been collision
 				xMin++; //increment the variable
 				PrintMap(); // see map movement
 			}
 			else{
-				while(!map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
+				while(!mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
 					Game::PlayerDown(); //go down
 				}
 			}
@@ -762,23 +808,23 @@ void Game::PlayerCanMove(int choice){ //Player can or cannot move
 		break;
 	case KEY_RIGHT: //you went to dx
 		if(player.gun.getName()=="none"){ //no gun
-			if(map.isSolid(player.getx()+xMin,player.gety())){ //check it there has been collision
+			if(mapList->map.isSolid(player.getx()+xMin,player.gety())){ //check it there has been collision
 				xMin--;
 				PrintMap(); //see map movement
 			}
 			else{
-				while(!map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
+				while(!mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
 					Game::PlayerDown(); //go down
 				}
 			}
 		}
 		else{ //gun
-			if(map.isSolid(player.getx()+xMin+player.getDir(),player.gety())){ //check it there has been collision
+			if(mapList->map.isSolid(player.getx()+xMin+player.getDir(),player.gety())){ //check it there has been collision
 				xMin--;
 				PrintMap(); // see map movement
 			}
 			else{
-				while(!map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
+				while(!mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
 					Game::PlayerDown(); //go down
 				}
 			}
@@ -786,7 +832,7 @@ void Game::PlayerCanMove(int choice){ //Player can or cannot move
 		break;
 	case KEY_UP: //you went up
 		if(player.gun.getName()=="none"){ //no gun
-			if(map.isSolid(player.getx()+xMin,player.gety())){ //check if you reach one piece of one structure
+			if(mapList->map.isSolid(player.getx()+xMin,player.gety())){ //check if you reach one piece of one structure
 				if(player.getDir()==1){ //you have to go where you went(it depends on the direction)
 					xMin--;
 					PrintMap(); //see map movement
@@ -796,24 +842,24 @@ void Game::PlayerCanMove(int choice){ //Player can or cannot move
 					PrintMap(); //see map movement
 				}
 				player.SetJump(); //for the next jump
-				while(!map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
+				while(!mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
 					Game::PlayerDown(); //go down
 				}
 			}
-			else if(map.isSolid(player.getx()+xMin,player.gety()-1) || map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet or over you head
+			else if(mapList->map.isSolid(player.getx()+xMin,player.gety()-1) || mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet or over you head
 				player.SetJump(); //for the next jump
-				while(!map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
+				while(!mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
 					Game::PlayerDown(); //go down
 				}
 			}
 			else if(player.activejump == false){
-				while(!map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
+				while(!mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
 					Game::PlayerDown(); //go down
 				}
 			}
 		}
 		else{ //gun
-			if(map.isSolid(player.getx()+xMin+player.getDir(),player.gety())){ //check if the gun reaches one piece of one structure
+			if(mapList->map.isSolid(player.getx()+xMin+player.getDir(),player.gety())){ //check if the gun reaches one piece of one structure
 				if(player.getDir()==1){ //you have to go where you went(it depends on the direction)
 					xMin--;
 					PrintMap(); //see map movement
@@ -823,18 +869,18 @@ void Game::PlayerCanMove(int choice){ //Player can or cannot move
 					PrintMap(); //see -map movement
 				}
 				player.SetJump(); //for the next jump
-				while(!map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
+				while(!mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
 					Game::PlayerDown(); //go down
 				}
 			}
-			else if(map.isSolid(player.getx()+xMin,player.gety()-1) || map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet or over you head
+			else if(mapList->map.isSolid(player.getx()+xMin,player.gety()-1) || mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet or over you head
 				player.SetJump(); //for the next jump
-				while(!map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
+				while(!mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
 					Game::PlayerDown(); //go down
 				}
 			}
 			else if(player.activejump == false){
-				while(!map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
+				while(!mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
 					Game::PlayerDown(); //go down
 				}
 			}
@@ -846,19 +892,19 @@ void Game::PlayerCanMove(int choice){ //Player can or cannot move
 }
 
 void Game::Enemy0CanMove(listenm0 h){ //Enemies can or cannot move
-	if(map.isSolid(h->enemy.getx(),h->enemy.gety())){ //check it there has been collision
+	if(mapList->map.isSolid(h->enemy.getx(),h->enemy.gety())){ //check it there has been collision
 		h->enemy.updateCoordinates(-h->enemy.getSign(),0); //you have to go from you went
 		h->enemy.setSign(); //change the direction
 	}
 	else{
-		while(!map.isSolid(h->enemy.getx(),h->enemy.gety()+1)){ //check if you have something under your feet
+		while(!mapList->map.isSolid(h->enemy.getx(),h->enemy.gety()+1)){ //check if you have something under your feet
 			h->enemy.EnemyGoDown(); //go down
 		}
 	}
 }
 
 void Game::Enemy1CanMove(listenm1 h){ //Enemies can or cannot move
-	if(map.isSolid(h->enemy.getx(),h->enemy.gety())){ //check it there has been collision
+	if(mapList->map.isSolid(h->enemy.getx(),h->enemy.gety())){ //check it there has been collision
 		if(h->enemy.ReachAngles()){ //vertical collision
 			h->enemy.updateCoordinates(0,-h->enemy.getUp()); //you have to go from you went
 			h->enemy.setUp(); //change the vertical direction
@@ -871,42 +917,42 @@ void Game::Enemy1CanMove(listenm1 h){ //Enemies can or cannot move
 }
 
 void Game::Enemy2CanMove(listenm2 h){ //Enemies can or cannot move
-	if(map.isSolid(h->enemy.getx(),h->enemy.gety())){ //check if you have something under your feet or over you head
+	if(mapList->map.isSolid(h->enemy.getx(),h->enemy.gety())){ //check if you have something under your feet or over you head
 		h->enemy.updateCoordinates(0,-h->enemy.getSign()); //you have to go from you went
 		h->enemy.setSign(); //change the vertical direction
 	}
 }
 
 void Game::Enemy3CanMove(listenm3 h){ //Enemies can or cannot move
-	if(map.isSolid(h->enemy.getx(),h->enemy.gety())){ //check if reach one piece of one structure
+	if(mapList->map.isSolid(h->enemy.getx(),h->enemy.gety())){ //check if reach one piece of one structure
 		h->enemy.updateCoordinates(-h->enemy.getSign(),-1); //you have to go where you went(it depends on the direction)
 		h->enemy.SetJump(); //for the next jump
-		while(!map.isSolid(h->enemy.getx(),h->enemy.gety()+1)){ //check if you have something under your feet
+		while(!mapList->map.isSolid(h->enemy.getx(),h->enemy.gety()+1)){ //check if you have something under your feet
 			h->enemy.EnemyGoDown(); //go down
 		}
 	}
-	else if(map.isSolid(h->enemy.getx(),h->enemy.gety()-1) || map.isSolid(h->enemy.getx(),h->enemy.gety()+1)){ //check if you have something under your feet or over you head
+	else if(mapList->map.isSolid(h->enemy.getx(),h->enemy.gety()-1) || mapList->map.isSolid(h->enemy.getx(),h->enemy.gety()+1)){ //check if you have something under your feet or over you head
 		h->enemy.SetJump(); //for the next jump
-		while(!map.isSolid(h->enemy.getx(),h->enemy.gety()+1)){ //check if you have something under your feet
+		while(!mapList->map.isSolid(h->enemy.getx(),h->enemy.gety()+1)){ //check if you have something under your feet
 			h->enemy.EnemyGoDown(); //go down
 		}
 	}
-	else if(h->enemy.GetConta()==0 && !map.isSolid(h->enemy.getx(),h->enemy.gety()+1)){
+	else if(h->enemy.GetConta()==0 && !mapList->map.isSolid(h->enemy.getx(),h->enemy.gety()+1)){
 		h->enemy.SetJump(); //for the next jump
-		while(!map.isSolid(h->enemy.getx(),h->enemy.gety()+1)){ //check if you have something under your feet
+		while(!mapList->map.isSolid(h->enemy.getx(),h->enemy.gety()+1)){ //check if you have something under your feet
 			h->enemy.EnemyGoDown(); //go down
 		}
 	}
 }
 
 void Game::Enemy4CanMove(listenm4 h){ //Enemies can or cannot move
-	if(map.isSolid(h->enemy.getx(),h->enemy.gety())){ //check it there has been collision
-		while(map.isSolid(h->enemy.getx(),h->enemy.gety())){ //until your teleport is ok you have to change the position
+	if(mapList->map.isSolid(h->enemy.getx(),h->enemy.gety())){ //check it there has been collision
+		while(mapList->map.isSolid(h->enemy.getx(),h->enemy.gety())){ //until your teleport is ok you have to change the position
 			h->enemy.movement();
 		}
 	}
 	else{
-		while(!map.isSolid(h->enemy.getx(),h->enemy.gety()+1)){ //check if you have something under your feet
+		while(!mapList->map.isSolid(h->enemy.getx(),h->enemy.gety()+1)){ //check if you have something under your feet
 
 			h->enemy.EnemyGoDown(); //go down
 		}
@@ -914,56 +960,56 @@ void Game::Enemy4CanMove(listenm4 h){ //Enemies can or cannot move
 }
 
 void Game::Enemy5CanMove(listenm5 h){ //Enemies can or cannot move
-	if(map.isSolid(h->enemy.getx(),h->enemy.gety())){ //check it there has been collision
+	if(mapList->map.isSolid(h->enemy.getx(),h->enemy.gety())){ //check it there has been collision
 		h->enemy.updateCoordinates(-(h->enemy.getSign()),0); //you have to go from you went
 		//stay there
 	}
 	else{
-		while(!map.isSolid(h->enemy.getx(),h->enemy.gety()+1)){ //check if you have something under your feet
+		while(!mapList->map.isSolid(h->enemy.getx(),h->enemy.gety()+1)){ //check if you have something under your feet
 			h->enemy.EnemyGoDown(); //go down
 		}
 	}
 }
 
 void Game::Enemy6CanMove(listenm6 h){ //Enemies can or cannot move
-	if(map.isSolid(h->enemy.getx()+h->enemy.getSign(),h->enemy.gety())){ //check it there has been collision
+	if(mapList->map.isSolid(h->enemy.getx()+h->enemy.getSign(),h->enemy.gety())){ //check it there has been collision
 		h->enemy.updateCoordinates(-(h->enemy.getSign()),0); //you have to go from you went
 		h->enemy.setSign(); //change the direction
 	}
 	else{
-		while(!map.isSolid(h->enemy.getx(),h->enemy.gety()+1)){ //check if you have something under your feet
+		while(!mapList->map.isSolid(h->enemy.getx(),h->enemy.gety()+1)){ //check if you have something under your feet
 			h->enemy.EnemyGoDown(); //go down
 		}
 	}
 }
 
 void Game::Enemy7CanMove(listenm7 h){ //Enemies can or cannot move
-	if(map.isSolid(h->enemy.getx()+h->enemy.getSign(),h->enemy.gety())){ //check it there has been collision
+	if(mapList->map.isSolid(h->enemy.getx()+h->enemy.getSign(),h->enemy.gety())){ //check it there has been collision
 		h->enemy.updateCoordinates(-(h->enemy.getSign()),0); //you have to go from you went
 		//stay there
 	}
 	else{
-		while(!map.isSolid(h->enemy.getx(),h->enemy.gety()+1)){ //check if you have something under your feet
+		while(!mapList->map.isSolid(h->enemy.getx(),h->enemy.gety()+1)){ //check if you have something under your feet
 			h->enemy.EnemyGoDown(); //go down
 		}
 	}
 }
 
 void Game::Enemy8CanMove(listenm8 h){ //Enemies can or cannot move
-	while(!map.isSolid(h->enemy.getx(),h->enemy.gety()+1)){ //check if you have something under your feet
+	while(!mapList->map.isSolid(h->enemy.getx(),h->enemy.gety()+1)){ //check if you have something under your feet
 		h->enemy.EnemyGoDown(); //go down
 	}
 }
 
 void Game::Enemy9CanMove(listenm9 h){ //Enemies can or cannot move
-	if(map.isSolid(h->enemy.getx(),h->enemy.gety())){ //check if you have something under your feet or over you head
+	if(mapList->map.isSolid(h->enemy.getx(),h->enemy.gety())){ //check if you have something under your feet or over you head
 		h->enemy.updateCoordinates(0,-(h->enemy.getSign())); //you have to go from you went
 		h->enemy.setSign(); //change the vertical direction
 	}
 }
 
 void Game::enemyMovement(){	//Enemies movement
-	listenm0 tmp = map.enemies0; //type0
+	listenm0 tmp = mapList->map.enemies0; //type0
 	while(tmp!=NULL){
 		matrix[tmp->enemy.gety()][tmp->enemy.getx()] = ' '; //delete enemy
 		tmp->enemy.movement(); //move one enemy
@@ -972,7 +1018,7 @@ void Game::enemyMovement(){	//Enemies movement
 		Game::interaction(tmp->enemy); //check the interaction between one enemy and the player
 		tmp = tmp->next; //go to the next enemy
 	}
-	listenm1 tmp1 = map.enemies1; //type1
+	listenm1 tmp1 = mapList->map.enemies1; //type1
 	while(tmp1!=NULL){
 		matrix[tmp1->enemy.gety()][tmp1->enemy.getx()] = ' '; //delete enemy
 		tmp1->enemy.movement(); //move one enemy
@@ -982,7 +1028,7 @@ void Game::enemyMovement(){	//Enemies movement
 		tmp1 = tmp1->next; //go to the next enemy
 	}
 
-	listenm2 tmp2 = map.enemies2; //type2
+	listenm2 tmp2 = mapList->map.enemies2; //type2
 	while(tmp2!=NULL){
 		matrix[tmp2->enemy.gety()][tmp2->enemy.getx()] = ' '; //delete enemy
 		tmp2->enemy.movement(); //move one enemy
@@ -992,7 +1038,7 @@ void Game::enemyMovement(){	//Enemies movement
 		tmp2 = tmp2->next; //go to the next enemy
 	}
 
-	listenm3 tmp3 = map.enemies3; //type3
+	listenm3 tmp3 = mapList->map.enemies3; //type3
 	while(tmp3!=NULL){
 		matrix[tmp3->enemy.gety()][tmp3->enemy.getx()] = ' '; //delete enemy
 		tmp3->enemy.movement(); //move one enemy
@@ -1002,7 +1048,7 @@ void Game::enemyMovement(){	//Enemies movement
 		tmp3 = tmp3->next; //go to the next enemy
 	}
 
-	listenm4 tmp4 = map.enemies4; //type4
+	listenm4 tmp4 = mapList->map.enemies4; //type4
 	while(tmp4!=NULL){
 		matrix[tmp4->enemy.gety()][tmp4->enemy.getx()] = ' '; //delete enemy
 		tmp4->enemy.movement(); //move one enemy
@@ -1013,7 +1059,7 @@ void Game::enemyMovement(){	//Enemies movement
 	}
 
 	int dir;
-	listenm5 tmp5 = map.enemies5; //type5
+	listenm5 tmp5 = mapList->map.enemies5; //type5
 	while(tmp5!=NULL){
 		matrix[tmp5->enemy.gety()][tmp5->enemy.getx()] = ' '; //delete enemy
 		dir = Game::directionSmartEnemy5(tmp5->enemy);
@@ -1026,7 +1072,7 @@ void Game::enemyMovement(){	//Enemies movement
 		tmp5 = tmp5->next; //go to the next enemy
 	}
 
-	listenm6 tmp6 = map.enemies6;  //type6
+	listenm6 tmp6 = mapList->map.enemies6;  //type6
 	while(tmp6!=NULL){
 		matrix[tmp6->enemy.gety()][tmp6->enemy.getx()] = ' '; //delete enemy
 		matrix[tmp6->enemy.gety()][tmp6->enemy.getx()+tmp6->enemy.getSign()] = ' '; //delete gun
@@ -1038,7 +1084,7 @@ void Game::enemyMovement(){	//Enemies movement
 		tmp6 = tmp6->next; //go to the next enemy
 	}
 
-	listenm7 tmp7 = map.enemies7;  //type7
+	listenm7 tmp7 = mapList->map.enemies7;  //type7
 	while(tmp7!=NULL){
 		matrix[tmp7->enemy.gety()][tmp7->enemy.getx()] = ' '; //delete enemy
 		matrix[tmp7->enemy.gety()][tmp7->enemy.getx()+tmp7->enemy.getSign()] = ' '; //delete gun
@@ -1052,7 +1098,7 @@ void Game::enemyMovement(){	//Enemies movement
 		tmp7 = tmp7->next; //go to the next enemy
 	}
 
-	listenm8 tmp8 = map.enemies8;  //type8
+	listenm8 tmp8 = mapList->map.enemies8;  //type8
 	while(tmp8!=NULL){
 		matrix[tmp8->enemy.gety()][tmp8->enemy.getx()] = ' '; //delete enemy
 		matrix[tmp8->enemy.gety()][tmp8->enemy.getx()+tmp8->enemy.getSign()] = ' '; //delete gun
@@ -1067,7 +1113,7 @@ void Game::enemyMovement(){	//Enemies movement
 		tmp8 = tmp8->next; //go to the next enemy
 	}
 
-	listenm9 tmp9 = map.enemies9;  //type9
+	listenm9 tmp9 = mapList->map.enemies9;  //type9
 	while(tmp9!=NULL){
 		matrix[tmp9->enemy.gety()][tmp9->enemy.getx()] = ' '; //delete enemy
 		matrix[tmp9->enemy.gety()][tmp9->enemy.getx()+1] = ' '; //delete gun
