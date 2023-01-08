@@ -382,6 +382,10 @@ mony Map::FallCoins(mony h){ //avoid coins in the air
 	return h;
 }
 
+int Map::rand_segment_selection() {
+    return rand()%20;
+}
+
 //list of function for enemies
 
 listenm0 Map::head_insert_enemy0(listenm0 h,Enemy0 e, int val){ //add one enemy type0 to the list
@@ -719,7 +723,7 @@ listenm8 Map::obj_remove_enemy8(listenm8 h,int cod,bool head){ //remove the enem
 listenm9 Map::obj_remove_enemy9(listenm9 h,int cod,bool head){ //remove the enemy type7 with this cod
 	if (h==NULL) return h;
 	else if(h->val == cod){ //if the enemy is in the top of the list
-		if(head == true){ //we need because we have a problem if we delete the list and use again the element pointed by the list
+		if(head){ //we need because we have a problem if we delete the list and use again the element pointed by the list
 			listenm9 tmp = h;
 			h = h->next;  //ok also if h has one element
 			delete tmp;

@@ -102,9 +102,9 @@ class Map{
         int gen_x, gen_y; //variables for the generation of enemies and coins
     public:
         Map();
-        Map(int difficulty); //map depends of difficulty
-        bool isSolid(int x, int y); //check if your movement is ok with the respsect of structures of map
-        bool isDanger(int x,int y); //check if your movement is danger
+        Map(int difficulty); //map depends on difficulty
+        bool isSolid(int x, int y); //check if your movement is ok within the respect of structures of map
+        bool isDanger(int x,int y); //check if your movement is dangerous
         int getDim_x(); //take dimension x
         int getDim_y(); //take dimension y
         string* toString(); //return the matrix of the map
@@ -112,6 +112,7 @@ class Map{
 		int get_trigger_end(); //take trigger end
 		int get_trigger_market(); //take trigger market
 		void generationRandom(int iniz_x,int iniz_y,int fin_x,int fin_y); //generate two admissible coordinates
+        int rand_segment_selection(); //select randomically a segment to generate
 
         //coins
     	mony head_insert_coin(mony h,int val,int x,int y); //insert one coin in the list
@@ -131,7 +132,7 @@ class Map{
     	listenm6 enemies6; //list of enemies type 6
     	listenm7 enemies7; //list of enemies type 7
     	listenm8 enemies8; //list of enemies type 8
-    	listenm9 enemies9; //list of enemies type 8
+    	listenm9 enemies9; //list of enemies type 9
 
     	listenm0 head_insert_enemy0(listenm0 h,Enemy0 e, int val); //add one enemy type0
     	listenm1 head_insert_enemy1(listenm1 h,Enemy1 e, int val); //add one enemy type1
@@ -155,7 +156,7 @@ class Map{
     	listenm8 obj_remove_enemy8(listenm8 h,int cod,bool head); //delete one enemy type8 (head == true, clean memory when delete an element in the head, otherwise not)
     	listenm9 obj_remove_enemy9(listenm9 h,int cod,bool head); //delete one enemy type9 (head == true, clean memory when delete an element in the head, otherwise not)
 
-    	string* initializeEnemies(string* mat); //initalize enemies
+    	string* initializeEnemies(string* mat); //initialize enemies
 
     	mony coins; //coins
 };
