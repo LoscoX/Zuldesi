@@ -29,7 +29,6 @@ Player::Player(WINDOW * win, int y, int x){
 	segno = -1; //segno for parabola
 	conta = 1;
 	jump_height = 5; //max height of the jump
-	onplatform = false; //you are not on a platform
 	NUM_BULLETS = 0; //number of bullets
 	NUM_EXPLO_BULLETS = 0; //number of exploding bullets
 	//powerup
@@ -349,3 +348,64 @@ void Player::setDir(int dir)
 void Player::setLife(int life){
 	this->life = life;
 }
+
+Bullet Player::getBullet(){
+	return bullet;; //bullets
+}
+Bullet Player::getExploBullet(){
+	return explo_bullet; //explosive bullets
+}
+bool Player::getActiveFly(){
+	return ACTIVE_FLY; //take active fly variable
+}
+bool Player::getActiveJump(){
+	return activejump; //take active jump variable
+}
+int Player::getTELEPORT_DISTANCE(int i){
+	return TELEPORT_DISTANCE[i];
+}
+
+//Power up
+
+//get Powerups
+Powerup Player::getGun(){
+	return gun;
+}
+Powerup Player::getShield(){
+	return shield;;
+}
+Powerup Player::getHP(){
+	return hp;;
+}
+Powerup Player::getArmor(){
+	return armor;
+}
+Powerup Player::getTeleportation(){
+	return teleportation; //teleport
+}
+Powerup Player::getBullets(){
+	return bullets; //bullets
+}
+Powerup Player::getJumping(){
+	return jumping; //jump
+}
+Powerup Player::getFly(){
+	return fly; //fly
+}
+Powerup Player::getExplo_bullets(){
+	return explo_bullets; //explosive bullets
+}
+/*
+//set Powerups
+Powerup Player::setGun(Powerup g){
+	;
+}
+Powerup Player::setShield(Powerup s);
+Powerup Player::setHP(Powerup h);
+Powerup Player::setArmor(Powerup a);
+Powerup Player::setTeleportation(Powerup t); //teleport
+Powerup Player::setBullets(Powerup b); //bullets
+Powerup Player::setJumping(Powerup j); //jump
+Powerup Player::setFly(Powerup f); //fly
+Powerup Player::setExplo_bullets(Powerup e); //explosive bullets
+*/

@@ -75,7 +75,7 @@ Map::Map(int difficulty){
     dim_y = 25;
     trigger_start = 20; //to back to the previous map
     trigger_end = dim_x-300; //to end the map and pass to market
-    trigger_market = dim_x-110; //to end market and start a new map
+    trigger_market = dim_x-120; //to end market and start a new map
 
     //to generate coins and enemies
 	int iniz_x = trigger_start+20;
@@ -120,7 +120,7 @@ Map::Map(int difficulty){
 	for(int i=0;i<n0;i++){
 		//avoid enemy type0 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
-		Enemy0 e = Enemy0(gen_y, gen_x,'0',9,1); //create one enemy
+		Enemy0 e = Enemy0(gen_y, gen_x,'0',9); //create one enemy
 		enemies0 = head_insert_enemy0(enemies0,e,i); //add the enemy into the list
 	}
 
@@ -128,7 +128,7 @@ Map::Map(int difficulty){
 	for(int i=0;i<n1;i++){
 		//avoid enemy type1 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
-		Enemy1 e = Enemy1(gen_y, gen_x,'1',9,2); //create one enemy
+		Enemy1 e = Enemy1(gen_y, gen_x,'1',9); //create one enemy
 		enemies1 = head_insert_enemy1(enemies1,e,i); //add the enemy into the list
 	}
 
@@ -139,7 +139,7 @@ Map::Map(int difficulty){
 	for(int i=0;i<n2;i++){
 		//avoid enemy type2 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
-		Enemy2 e = Enemy2(gen_y, gen_x,'2',15,3); //create one enemy
+		Enemy2 e = Enemy2(gen_y, gen_x,'2',15); //create one enemy
 		enemies2 = head_insert_enemy2(enemies2,e,i); //add the enemy into the list
 	}
 
@@ -147,7 +147,7 @@ Map::Map(int difficulty){
 	for(int i=0;i<n3;i++){
 		//avoid enemy type3 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
-		Enemy3 e = Enemy3(gen_y, gen_x,'3',9,4); //create one enemy
+		Enemy3 e = Enemy3(gen_y, gen_x,'3',9); //create one enemy
 		enemies3 = head_insert_enemy3(enemies3,e,i); //add the enemy into the list
 	}
 
@@ -156,7 +156,7 @@ Map::Map(int difficulty){
 	for(int i=0;i<n4;i++){
 		//avoid enemy type4 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
-		Enemy4 e = Enemy4(gen_y, gen_x,'4',7,5); //create one enemy
+		Enemy4 e = Enemy4(gen_y, gen_x,'4',7); //create one enemy
 		enemies4 = head_insert_enemy4(enemies4,e,i); //add the enemy into the list
 	}
 
@@ -165,7 +165,7 @@ Map::Map(int difficulty){
 	for(int i=0;i<n5;i++){
 		//avoid enemy type5 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
-		Enemy5 e = Enemy5(gen_y, gen_x,'5',7,6); //create one enemy
+		Enemy5 e = Enemy5(gen_y, gen_x,'5',7); //create one enemy
 		enemies5 = head_insert_enemy5(enemies5,e,i); //add the enemy into the list
 	}
 
@@ -177,7 +177,7 @@ Map::Map(int difficulty){
 	for(int i=0;i<n6;i++){
 		//avoid enemy type6 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
-		Enemy6 e = Enemy6(gen_y, gen_x,'0',7,1); //create one enemy
+		Enemy6 e = Enemy6(gen_y, gen_x,'0',7); //create one enemy
 		enemies6 = head_insert_enemy6(enemies6,e,i); //add the enemy into the list
 	}
 
@@ -185,7 +185,7 @@ Map::Map(int difficulty){
 	for(int i=0;i<n7;i++){
 		//avoid enemy type7 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
-		Enemy7 e = Enemy7(gen_y, gen_x,'5',7,6); //create one enemy
+		Enemy7 e = Enemy7(gen_y, gen_x,'5',7); //create one enemy
 		enemies7 = head_insert_enemy7(enemies7,e,i); //add the enemy into the list
 	}
 
@@ -197,7 +197,7 @@ Map::Map(int difficulty){
 	for(int i=0;i<n8;i++){
 		//avoid enemy type8 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
-		Enemy8 e = Enemy8(gen_y, gen_x,'8',7,7); //create one enemy
+		Enemy8 e = Enemy8(gen_y, gen_x,'8',7); //create one enemy
 		enemies8 = head_insert_enemy8(enemies8,e,i); //add the enemy into the list
 	}
 
@@ -209,7 +209,7 @@ Map::Map(int difficulty){
 	for(int i=0;i<n9;i++){
 		//avoid enemy type9 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
-		Enemy9 e = Enemy9(gen_y, gen_x,'2',7,3); //create one enemy
+		Enemy9 e = Enemy9(gen_y, gen_x,'2',7); //create one enemy
 		enemies9 = head_insert_enemy9(enemies9,e,i); //add the enemy into the list
 	}
 

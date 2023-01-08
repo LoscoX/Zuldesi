@@ -15,7 +15,7 @@
 #include "Powerup.hpp"
 
 class Player{
-private:
+protected:
 	char character[4]; //icon of the player
 	WINDOW * curwin;
 	int life; //life
@@ -27,11 +27,10 @@ private:
 	int jump_height;
 	void mvleft();
 	void mvright();
-public:
 	bool activejump; //if it is true, you are jumping
 	int conta;
-	bool onplatform; //if the player is on a platform
 	int segno;
+
 	//powerup
 	Powerup gun; //type of gun
 	Powerup shield; //shield
@@ -42,6 +41,8 @@ public:
 	Powerup jumping; //jump
 	Powerup fly; //fly
 	Powerup explo_bullets; //explosive bullets
+
+	//costant for Powerup
 	int ARMOR_DURATION[3]; //duration of the armor
 	int TELEPORT_DISTANCE[3]; //distance of teleport
 	bool ACTIVE_ARMOR; //you active or not armor
@@ -52,6 +53,12 @@ public:
 	int FLY_ACTIVE_DURATION; //time duration of actived fly
 	bool ACTIVE_FLY; //you activd or not fly
 
+	//gun magazine
+	Bullet bullet; //bullets magazine
+	Bullet explo_bullet; //explosive bullets magazine
+	int ind; //index for the list of bullets
+	int ind2; //index for the list of explosive bullets
+public:
 	Player();
 	Player(WINDOW * win, int y, int x);
 
@@ -61,11 +68,6 @@ public:
 	void godown(); //fall
 	void teleport(); //teleport
 	void goup(); //go up
-
-	Bullet bullet; //bullets magazine
-	Bullet explo_bullet; //explosive bullets magazine
-	int ind; //index for the list of bullets
-	int ind2; //index for the list of explosive bullets
 
 	void display(); //see the player
 	void initialize(); //start the player
@@ -86,4 +88,23 @@ public:
 	void updateCoordinates(int x,int y); //Update your x and y when you went in a not-possible place
 	void setDir(int dir); //change direction
 	void setLife(int val); //change life
+
+	//bullets
+	Bullet getBullet(); //bullets
+	Bullet getExploBullet(); //explosive bullets
+
+	//get Powerups
+	Powerup getGun(); //gun
+	Powerup getShield(); //shield
+	Powerup getHP(); //HP
+	Powerup getArmor(); //Armor
+	Powerup getTeleportation(); //teleport
+	Powerup getBullets(); //bullets
+	Powerup getJumping(); //jump
+	Powerup getFly(); //fly
+	Powerup getExplo_bullets(); //explosive bullets
+
+	bool getActiveFly(); //take active fly variable
+	bool getActiveJump(); //take active jump variable
+	int getTELEPORT_DISTANCE(int i); //take the variable i of the vector TELEPORT_DISTANCE
 };

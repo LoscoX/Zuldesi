@@ -117,6 +117,10 @@ protected:
 	int xMin; //variable for the position of camera
 
 	int HEIGHT_MARKET; //height of market powerups
+	//costants for drawing
+	int draw_cost1;
+	int draw_cost2;
+	int draw_cost3;
 
 	bool Market_Active; //you are in the market
 	bool Market_Build; //you have to build the market

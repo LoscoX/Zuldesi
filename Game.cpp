@@ -25,6 +25,9 @@ Game::Game(int height,int width){
 	WINDOW* win = board.board_win;
 
 	HEIGHT_MARKET = 15; //height of powerups
+	draw_cost1 = 213;
+	draw_cost2 = 220;
+	draw_cost3 = 145;
 	Market_Active = false; //you are not in the market when you start
 	Market_Build = false;
 	//bought nothing
@@ -75,7 +78,7 @@ void Game::updateState(){
 	Game::UpdateBoard();
 
 	//end of the game
-	if(player.hp.getQnt() <= 0) game_over = true; //Player death
+	if(player.getHP().getQnt() <= 0) game_over = true; //Player death
 
 }
 
@@ -212,52 +215,52 @@ void Game::market(){
 
 	//check if the player buy some powerups
 	//first powerup
-	if(player.getx()+xMin>=mapList->map.getDim_x()-210 && player.getx()+xMin<=mapList->map.getDim_x()-200 && player.gety()<=HEIGHT_MARKET+1 && player.gety()>=HEIGHT_MARKET-1){
+	if(player.getx()+xMin>=mapList->map.getDim_x()-draw_cost1 && player.getx()+xMin<=mapList->map.getDim_x()-(draw_cost1+10)){
 		if(player.getCoins()-spawn_powerup[0].price>=0 && !bought1){ //you have enough money
-			if(strcmp(player.gun.name.c_str(),spawn_powerup[0].getName().c_str())!=0){ //you don't already have this gun
+			if(strcmp(player.getGun().name.c_str(),spawn_powerup[0].getName().c_str())!=0){ //you don't already have this gun
 				player.updateCash(-spawn_powerup[0].price); //update cash of player
-				player.gun.name = spawn_powerup[0].getName(); //update powerups of player
+				player.getGun().name = spawn_powerup[0].getName(); //update powerups of player
 				bought1 = true;
 			}
 		}
 	}
 	//second powerup
-	if(player.getx()+xMin>=mapList->map.getDim_x()-183 && player.getx()+xMin<=mapList->map.getDim_x()-170 && player.gety()<=HEIGHT_MARKET+1 && player.gety()>=HEIGHT_MARKET-1){
+	if(player.getx()+xMin>=mapList->map.getDim_x()-draw_cost2 && player.getx()+xMin<=mapList->map.getDim_x()-(draw_cost2+10)){
 		if(player.getCoins()-spawn_powerup[1].price>=0 && !bought2){ //you have enough money
 			player.updateCash(-spawn_powerup[1].price); //update cash of player
 			bought2 = true;
 			//update powerups of player
 			if(strcmp(spawn_powerup[1].getName().c_str(),"HP") == 0){ //HP
-				player.hp.setQnt(player.hp.getQnt() + spawn_powerup[1].getQnt());
+				player.getHP().setQnt(player.getHP().getQnt() + spawn_powerup[1].getQnt());
 			}
 			else if(strcmp(spawn_powerup[1].getName().c_str(),"Shield") == 0){ //Shield
-				player.shield.setQnt(player.shield.getQnt() + spawn_powerup[1].getQnt());
+				player.getShield().setQnt(player.getShield().getQnt() + spawn_powerup[1].getQnt());
 			}
 			else if(strcmp(spawn_powerup[1].getName().c_str(),"Jump") == 0){ //Jump
-				player.jumping.setQnt(player.jumping.getQnt()+ spawn_powerup[1].getQnt());
+				player.getJumping().setQnt(player.getJumping().getQnt()+ spawn_powerup[1].getQnt());
 			}
 			else if(strcmp(spawn_powerup[1].getName().c_str(),"Bullets") == 0){ //Bullets
-				player.bullets.setQnt(player.bullets.getQnt()+ spawn_powerup[1].getQnt());
+				player.getBullets().setQnt(player.getBullets().getQnt()+ spawn_powerup[1].getQnt());
 			}
 			else if(strcmp(spawn_powerup[1].getName().c_str(),"Explo_Bullets") == 0){ //Explosive bullets
-				player.explo_bullets.setQnt(player.explo_bullets.getQnt()+ spawn_powerup[1].getQnt());
+				player.getExplo_bullets().setQnt(player.getExplo_bullets().getQnt()+ spawn_powerup[1].getQnt());
 			}
 		}
 	}
 	//third powerup
-	if(player.getx()+xMin>=mapList->map.getDim_x()-150 && player.getx()+xMin<=mapList->map.getDim_x()-140 && player.gety()<=HEIGHT_MARKET+1 && player.gety()>=HEIGHT_MARKET-1){
+	if(player.getx()+xMin>=mapList->map.getDim_x()-(draw_cost3) && player.getx()+xMin<=mapList->map.getDim_x()-(draw_cost3+10)){
 		if(player.getCoins()-spawn_powerup[2].price>=0 && !bought3){ //you have enough money
 			player.updateCash(-spawn_powerup[1].price); //update cash of player
 			bought3 = true;
 			//update powerups of player
 			if(strcmp(spawn_powerup[2].getName().c_str(),"Teleport") == 0){ //Teleport
-				player.teleportation.setQnt(player.teleportation.getQnt() + spawn_powerup[2].getQnt());
+				player.getTeleportation().setQnt(player.getTeleportation().getQnt() + spawn_powerup[2].getQnt());
 			}
 			else if(strcmp(spawn_powerup[2].getName().c_str(),"Armor") == 0){ //Armor
-				player.armor.setQnt(player.armor.getQnt() + spawn_powerup[2].getQnt());
+				player.getArmor().setQnt(player.getArmor().getQnt() + spawn_powerup[2].getQnt());
 			}
 			else if(strcmp(spawn_powerup[2].getName().c_str(),"Fly") == 0){ //Fly
-				player.fly.setQnt(player.fly.getQnt()+ spawn_powerup[2].getQnt());
+				player.getFly().setQnt(player.getFly().getQnt()+ spawn_powerup[2].getQnt());
 			}
 		}
 	}
@@ -296,17 +299,17 @@ void Game::drawPowerUp(Powerup pwp[]){ //Draw power-ups which are spawned
 	//FIRST powerup
 	int s0 = strlen(pwp[0].getName().c_str());
 	for(int i=0;i<s0;i++){
-		matrix[HEIGHT_MARKET][mapList->map.getDim_x()-210+i] = pwp[0].getName().c_str()[i];
+		matrix[HEIGHT_MARKET][mapList->map.getDim_x()-draw_cost1+i] = pwp[0].getName().c_str()[i];
 	}
 	//SECOND powerup
 	int s1 = strlen(pwp[1].getName().c_str());
 	for(int i=0;i<s1;i++){
-		matrix[HEIGHT_MARKET][mapList->map.getDim_x()-183+i] = pwp[1].getName().c_str()[i];
+		matrix[HEIGHT_MARKET][mapList->map.getDim_x()-draw_cost2+i] = pwp[1].getName().c_str()[i];
 	}
 	//THIRD powerup
 	int s2 = strlen(pwp[2].getName().c_str());
 	for(int i=0;i<s2;i++){
-		matrix[HEIGHT_MARKET][mapList->map.getDim_x()-150+i] = pwp[2].getName().c_str()[i];
+		matrix[HEIGHT_MARKET][mapList->map.getDim_x()-draw_cost3+i] = pwp[2].getName().c_str()[i];
 	}
 }
 
@@ -314,31 +317,31 @@ void Game::deletePowerup(Powerup pwp[]){
 	//FIRST powerup
 	int s0 = strlen(pwp[0].getName().c_str());
 	for(int i=0;i<s0;i++){
-		matrix[HEIGHT_MARKET][mapList->map.getDim_x()-210+i] = ' ';
+		matrix[HEIGHT_MARKET][mapList->map.getDim_x()-draw_cost1+i] = ' ';
 	}
 	//SECOND powerup
 	int s1 = strlen(pwp[1].getName().c_str());
 	for(int i=0;i<s1;i++){
-		matrix[HEIGHT_MARKET][mapList->map.getDim_x()-183+i] = ' ';
+		matrix[HEIGHT_MARKET][mapList->map.getDim_x()-draw_cost2+i] = ' ';
 	}
 	//THIRD powerup
 	int s2 = strlen(pwp[2].getName().c_str());
 	for(int i=0;i<s2;i++){
-		matrix[HEIGHT_MARKET][mapList->map.getDim_x()-150+i] = ' ';
+		matrix[HEIGHT_MARKET][mapList->map.getDim_x()-draw_cost3+i] = ' ';
 	}
 }
 
 void Game::updateDifficulty(){
 	//once we exit the market level we update difficulty based on power-ups
-	int diff = player.gun.getDifficulty();
-	diff += (player.hp.getQnt()-player.getLife()) * player.hp.getDifficulty(); //you start with a life
-	diff += player.shield.getQnt() * player.shield.getDifficulty();
-	diff += ((player.jumping.getQnt()-5)/2)* player.jumping.getDifficulty(); //you buy 2 jumping each time
-	diff += player.armor.getQnt() * player.armor.getDifficulty();
-	diff += player.teleportation.getQnt() * player.teleportation.getDifficulty();
-	diff += player.fly.getQnt() * player.fly.getDifficulty();
-	diff += player.bullets.getQnt()/100 * player.bullets.getDifficulty(); //you buy 100 bullets each time
-	diff += player.explo_bullets.getQnt() * player.explo_bullets.getDifficulty(); //you buy 100 bullets each time
+	int diff = player.getGun().getDifficulty();
+	diff += (player.getHP().getQnt()-player.getLife()) * player.getHP().getDifficulty(); //you start with a life
+	diff += player.getShield().getQnt() * player.getShield().getDifficulty();
+	diff += ((player.getJumping().getQnt()-5)/2)* player.getJumping().getDifficulty(); //you buy 2 jumping each time
+	diff += player.getArmor().getQnt() * player.getArmor().getDifficulty();
+	diff += player.getTeleportation().getQnt() * player.getTeleportation().getDifficulty();
+	diff += player.getFly().getQnt() * player.getFly().getDifficulty();
+	diff += player.getBullets().getQnt()/100 * player.getBullets().getDifficulty(); //you buy 100 bullets each time
+	diff += player.getExplo_bullets().getQnt() * player.getExplo_bullets().getDifficulty(); //you buy 100 bullets each time
 	difficulty = diff;
 }
 
@@ -360,9 +363,9 @@ void Game::displayLife(){ //display life and bullets
 	wattroff(board.board_win,COLOR_PAIR(1)); //color
 
 	wattron(board.board_win,COLOR_PAIR(2)); //color
-	mvwprintw(board.board_win,25,6,"%d",player.hp.getQnt());
-	if(player.hp.getQnt()<100) mvwprintw(board.board_win,25,8," ");
-	if(player.hp.getQnt()<10) mvwprintw(board.board_win,25,7," ");
+	mvwprintw(board.board_win,25,6,"%d",player.getHP().getQnt());
+	if(player.getHP().getQnt()<100) mvwprintw(board.board_win,25,8," ");
+	if(player.getHP().getQnt()<10) mvwprintw(board.board_win,25,7," ");
 	wattroff(board.board_win,COLOR_PAIR(2)); //color
 	mvwprintw(board.board_win,25,13,"%d",difficulty);
 }
@@ -379,7 +382,7 @@ void Game::displayPowerup(){
 	wattroff(board.board_win,COLOR_PAIR(1)); //color
 
 	wattron(board.board_win,COLOR_PAIR(2)); //color
-	mvwprintw(board.board_win,27,5,player.gun.getName().c_str());
+	mvwprintw(board.board_win,27,5,player.getGun().getName().c_str());
 	wattroff(board.board_win,COLOR_PAIR(2)); //color
 
 	//armor
@@ -388,7 +391,7 @@ void Game::displayPowerup(){
 	wattroff(board.board_win,COLOR_PAIR(1)); //color
 
 	wattron(board.board_win,COLOR_PAIR(2)); //color
-	mvwprintw(board.board_win,27,23,"%d",player.armor.getQnt());
+	mvwprintw(board.board_win,27,23,"%d",player.getArmor().getQnt());
 	wattroff(board.board_win,COLOR_PAIR(2)); //color
 
 	//shield
@@ -397,7 +400,7 @@ void Game::displayPowerup(){
 	wattroff(board.board_win,COLOR_PAIR(1)); //color
 
 	wattron(board.board_win,COLOR_PAIR(2)); //color
-	mvwprintw(board.board_win,27,37,"%d",player.shield.getQnt());
+	mvwprintw(board.board_win,27,37,"%d",player.getShield().getQnt());
 	wattroff(board.board_win,COLOR_PAIR(2)); //color
 
 	//teleportation
@@ -406,7 +409,7 @@ void Game::displayPowerup(){
 	wattroff(board.board_win,COLOR_PAIR(1)); //color
 
 	wattron(board.board_win,COLOR_PAIR(2)); //color
-	mvwprintw(board.board_win,27,54,"%d",player.teleportation.getQnt());
+	mvwprintw(board.board_win,27,54,"%d",player.getTeleportation().getQnt());
 	wattroff(board.board_win,COLOR_PAIR(2)); //color
 
 	//fly
@@ -415,7 +418,7 @@ void Game::displayPowerup(){
 	wattroff(board.board_win,COLOR_PAIR(1)); //color
 
 	wattron(board.board_win,COLOR_PAIR(2)); //color
-	mvwprintw(board.board_win,27,67,"%d",player.fly.getQnt());
+	mvwprintw(board.board_win,27,67,"%d",player.getFly().getQnt());
 	wattroff(board.board_win,COLOR_PAIR(2)); //color
 
 	//jumping
@@ -425,7 +428,7 @@ void Game::displayPowerup(){
 
 	wattron(board.board_win,COLOR_PAIR(2)); //color
 	mvwprintw(board.board_win,27,83,"+");
-	mvwprintw(board.board_win,27,84,"%d",(player.jumping.getQnt() - 5)/2);
+	mvwprintw(board.board_win,27,84,"%d",(player.getJumping().getQnt() - 5)/2);
 	wattroff(board.board_win,COLOR_PAIR(2)); //color
 
 	//explosive bullets
@@ -434,7 +437,7 @@ void Game::displayPowerup(){
 	wattroff(board.board_win,COLOR_PAIR(1)); //color
 
 	wattron(board.board_win,COLOR_PAIR(2)); //color
-	mvwprintw(board.board_win,27,107,"%d",player.explo_bullets.getQnt());
+	mvwprintw(board.board_win,27,107,"%d",player.getExplo_bullets().getQnt());
 	wattroff(board.board_win,COLOR_PAIR(2)); //color
 }
 
@@ -444,9 +447,9 @@ void Game::displayBullets(){
 	wattroff(board.board_win,COLOR_PAIR(1)); //color
 
 	wattron(board.board_win,COLOR_PAIR(2)); //color
-	mvwprintw(board.board_win,25,48,"%d",player.bullets.getQnt());
-	if(player.bullets.getQnt()<100) mvwprintw(board.board_win,25,50," ");
-	if(player.bullets.getQnt()<10) mvwprintw(board.board_win,25,49," ");
+	mvwprintw(board.board_win,25,48,"%d",player.getBullets().getQnt());
+	if(player.getBullets().getQnt()<100) mvwprintw(board.board_win,25,50," ");
+	if(player.getBullets().getQnt()<10) mvwprintw(board.board_win,25,49," ");
 	wattroff(board.board_win,COLOR_PAIR(2)); //color
 }
 
@@ -474,43 +477,49 @@ void Game::displayCoins(){ //display coins
 
 bullt Game::deletePlayerBullets(bullt tmp){ //delete Player's bullets
 	int codice = tmp->cod; //save the code of the bullet
-	tmp = player.bullet.obj_remove(tmp,codice,false); //remove from the list (don't clean the memory)
-	player.bullet.blt = player.bullet.obj_remove(player.bullet.blt,codice,true); //remove from the main list (clean the memory);
+	Bullet bullet = player.getBullet();
+	tmp = bullet.obj_remove(tmp,codice,false); //remove from the list (don't clean the memory)
+	bullet.blt = bullet.obj_remove(bullet.blt,codice,true); //remove from the main list (clean the memory);
 	return tmp;
 }
 
 bullt Game::deletePlayerExplosiveBullets(bullt tmp){ //delete Player's bullets
 	int codice = tmp->cod; //save the code of the bullet
-	tmp = player.explo_bullet.obj_remove(tmp,codice,false); //remove from the list (don't clean the memory)
-	player.explo_bullet.blt = player.explo_bullet.obj_remove(player.explo_bullet.blt,codice,true); //remove from the main list (clean the memory);
+	Bullet bullet = player.getExploBullet();
+	tmp = bullet.obj_remove(tmp,codice,false); //remove from the list (don't clean the memory)
+	bullet.blt = bullet.obj_remove(bullet.blt,codice,true); //remove from the main list (clean the memory);
 	return tmp;
 }
 
 bullt Game::deleteEnemy6Bullets(bullt tmp,listenm6 e){ //delete Enemy6's bullets
 	int codice = tmp->cod; //save the code of the bullet
-	tmp = e->enemy.bullet.obj_remove(tmp,codice,false); //remove from the list (don't clean the memory)
-	e->enemy.bullet.blt = e->enemy.bullet.obj_remove(e->enemy.bullet.blt,codice,true); //remove from the main list (clean the memory);
+	Bullet bullet = e->enemy.getBullet();
+	tmp = bullet.obj_remove(tmp,codice,false); //remove from the list (don't clean the memory)
+	bullet.blt = bullet.obj_remove(bullet.blt,codice,true); //remove from the main list (clean the memory);
 	return tmp;
 }
 
 bullt Game::deleteEnemy7Bullets(bullt tmp,listenm7 e){ //delete Enemy7's bullets
 	int codice = tmp->cod; //save the code of the bullet
-	tmp = e->enemy.bullet.obj_remove(tmp,codice,false); //remove from the list (don't clean the memory)
-	e->enemy.bullet.blt = e->enemy.bullet.obj_remove(e->enemy.bullet.blt,codice,true); //remove from the main list (clean the memory);
+	Bullet bullet = e->enemy.getBullet();
+	tmp = bullet.obj_remove(tmp,codice,false); //remove from the list (don't clean the memory)
+	bullet.blt = bullet.obj_remove(bullet.blt,codice,true); //remove from the main list (clean the memory);
 	return tmp;
 }
 
 bullt Game::deleteEnemy8Bullets(bullt tmp,listenm8 e){ //delete Enemy8's bullets
 	int codice = tmp->cod; //save the code of the bullet
-	tmp = e->enemy.bullet.obj_remove(tmp,codice,false); //remove from the list (don't clean the memory)
-	e->enemy.bullet.blt = e->enemy.bullet.obj_remove(e->enemy.bullet.blt,codice,true); //remove from the main list (clean the memory);
+	Bullet bullet = e->enemy.getBullet();
+	tmp = bullet.obj_remove(tmp,codice,false); //remove from the list (don't clean the memory)
+	bullet.blt = bullet.obj_remove(bullet.blt,codice,true); //remove from the main list (clean the memory);
 	return tmp;
 }
 
 bullt Game::deleteEnemy9Bullets(bullt tmp,listenm9 e){ //delete Enemy9's bullets
 	int codice = tmp->cod; //save the code of the bullet
-	tmp = e->enemy.bullet.obj_remove(tmp,codice,false); //remove from the list (don't clean the memory)
-	e->enemy.bullet.blt = e->enemy.bullet.obj_remove(e->enemy.bullet.blt,codice,true); //remove from the main list (clean the memory);
+	Bullet bullet = e->enemy.getBullet();
+	tmp = bullet.obj_remove(tmp,codice,false); //remove from the list (don't clean the memory)
+	bullet.blt = bullet.obj_remove(bullet.blt,codice,true); //remove from the main list (clean the memory);
 	return tmp;
 }
 
@@ -533,10 +542,11 @@ void Game::shooting(){
 	bullt tmp;
 	if(time%400==0){ //slow down also the speed of bullets
 		//Bullets player
-		tmp = player.bullet.blt;
+		tmp = player.getBullet().blt;
 		while(tmp!=NULL){ //you have to move all the bullets
 			mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
-			tmp = player.bullet.shoot(tmp,player.bullet.blt); //move bullets
+			Bullet bullet = player.getBullet();
+			tmp = bullet.shoot(tmp,bullet.blt); //move bullets
 			if(tmp->xB+xMin>(mapList->map.getDim_x()-5) || tmp->xB+xMin<5){ //check if it has reached the walls
 				tmp = Game::deletePlayerBullets(tmp); //delete bullet
 			}
@@ -555,10 +565,11 @@ void Game::shooting(){
 		}
 
 		//Explosive bullets player
-		tmp = player.explo_bullet.blt;
+		tmp = player.getExploBullet().blt;
 		while(tmp!=NULL){ //you have to move all the bullets
 			mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
-			tmp = player.explo_bullet.shoot(tmp,player.explo_bullet.blt); //move bullets
+			Bullet bullet = player.getExploBullet();
+			tmp = bullet.shoot(tmp,bullet.blt); //move bullets
 			if(tmp->xB+xMin>(mapList->map.getDim_x()-5) || tmp->xB+xMin<5){ //check if it has reached the walls
 				tmp = Game::deletePlayerExplosiveBullets(tmp); //delete bullet
 			}
@@ -579,10 +590,11 @@ void Game::shooting(){
 		//gun enemy type6
 		listenm6 cont = mapList->map.enemies6;
 		while(cont!=NULL){ //There are more enemies type6 than one
-			tmp = cont->enemy.bullet.blt;
+			Bullet bullet = cont->enemy.getBullet();
+			tmp = bullet.blt;
 			while(tmp!=NULL){ //you have to move all the bullets
 				mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
-				tmp = cont->enemy.bullet.shoot(tmp,cont->enemy.bullet.blt);
+				tmp = bullet.shoot(tmp,bullet.blt);
 				if(tmp->xB>(mapList->map.getDim_x()-5) || tmp->xB<5){ //check if reaches the wall
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy6Bullets(tmp,cont); //delete bullet
@@ -606,10 +618,11 @@ void Game::shooting(){
 		//gun enemy type7
 		listenm7 cont2 = mapList->map.enemies7;
 		while(cont2!=NULL){ //There are more enemies type7 than one
-			tmp = cont2->enemy.bullet.blt;
+			Bullet bullet = cont2->enemy.getBullet();
+			tmp = bullet.blt;
 			while(tmp!=NULL){ //you have to move all the bullets
 				mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
-				tmp = cont2->enemy.bullet.shoot(tmp,cont2->enemy.bullet.blt); //move the bullet
+				tmp = bullet.shoot(tmp,bullet.blt); //move the bullet
 				if(tmp->xB>(mapList->map.getDim_x()-5) || tmp->xB<5){//check if it reaches the wall
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy7Bullets(tmp,cont2); //delete bullet
@@ -633,10 +646,11 @@ void Game::shooting(){
 		//gun enemy type8
 		listenm8 cont3 = mapList->map.enemies8;
 		while(cont3!=NULL){ //There are more enemies type8 than one
-			tmp = cont3->enemy.bullet.blt;
+			Bullet bullet = cont3->enemy.getBullet();
+			tmp = bullet.blt;
 			while(tmp!=NULL){ //you have to move all the bullets
 				mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
-				tmp = cont3->enemy.bullet.shoot(tmp,cont3->enemy.bullet.blt); //move the bullet
+				tmp = bullet.shoot(tmp,bullet.blt); //move the bullet
 				if(tmp->xB>(mapList->map.getDim_x()-5) || tmp->xB<5){ //check if it reaches the
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy8Bullets(tmp,cont3); //delete bullet
@@ -660,10 +674,11 @@ void Game::shooting(){
 		//gun enemy type9
 		listenm9 cont4 = mapList->map.enemies9;
 		while(cont4!=NULL){ //There are more enemies type9 than one
-			tmp = cont4->enemy.bullet.blt;
+			Bullet bullet = cont4->enemy.getBullet();
+			tmp = bullet.blt;
 			while(tmp!=NULL){ //you have to move all the bullets
 				mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
-				tmp = cont4->enemy.bullet.shoot(tmp,cont4->enemy.bullet.blt); //move the bullet
+				tmp = bullet.shoot(tmp,bullet.blt); //move the bullet
 				if(tmp->xB>(mapList->map.getDim_x()-5) || tmp->xB<5){ //check if it reaches the wall
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy9Bullets(tmp,cont4); //delete bullet
@@ -812,7 +827,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 				if(tmp6->enemy.getSign()==1)matrix[tmp6->enemy.gety()][tmp6->enemy.getx()+1] = ' ';
 				else matrix[tmp6->enemy.gety()][tmp6->enemy.getx()-1] = ' '; //delete graphically the enemy
 				//delete all remaining bullets
-				temp = tmp6->enemy.bullet.blt;
+				temp = tmp6->enemy.getBullet().blt;
 				while(temp!=NULL){
 					mvwaddch(board.board_win,temp->yB,temp->xB,' '); //delete graphically the bullet
 					temp = deleteEnemy6Bullets(temp,tmp6); //delete bullet
@@ -839,7 +854,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 				if(tmp7->enemy.getSign()==1)matrix[tmp7->enemy.gety()][tmp7->enemy.getx()+1] = ' ';
 				else matrix[tmp7->enemy.gety()][tmp7->enemy.getx()-1] = ' ';
 				//delete all remaining bullets
-				temp = tmp7->enemy.bullet.blt;
+				temp = tmp7->enemy.getBullet().blt;
 				while(temp!=NULL){
 					mvwaddch(board.board_win,temp->yB,temp->xB,' '); //delete graphically the bullet
 					temp = deleteEnemy7Bullets(temp,tmp7); //delete bullet
@@ -866,7 +881,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 				if(tmp8->enemy.getSign()==1)matrix[tmp8->enemy.gety()][tmp8->enemy.getx()+1] = ' ';
 				else matrix[tmp8->enemy.gety()][tmp8->enemy.getx()-1] = ' ';
 				//delete all remaining bullets
-				temp = tmp8->enemy.bullet.blt;
+				temp = tmp8->enemy.getBullet().blt;
 				while(temp!=NULL){
 					mvwaddch(board.board_win,temp->yB,temp->xB,' '); //delete graphically the bullet
 					temp = deleteEnemy8Bullets(temp,tmp8); //delete bullet
@@ -893,7 +908,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 				matrix[tmp9->enemy.gety()][tmp9->enemy.getx()+1] = ' ';
 				matrix[tmp9->enemy.gety()][tmp9->enemy.getx()-1] = ' ';
 				//delete all remaining bullets
-				temp = tmp9->enemy.bullet.blt;
+				temp = tmp9->enemy.getBullet().blt;
 				while(temp!=NULL){
 					mvwaddch(board.board_win,temp->yB,temp->xB,' '); //delete graphically the bullet
 					temp = deleteEnemy9Bullets(temp,tmp9); //delete bullet
@@ -1016,7 +1031,7 @@ bool Game::enemydeath2(bullt tmp){ //check if one explosive bullet touch one of 
 			if(tmp6->enemy.getSign()==1)matrix[tmp6->enemy.gety()][tmp6->enemy.getx()+1] = ' ';
 			else matrix[tmp6->enemy.gety()][tmp6->enemy.getx()-1] = ' '; //delete graphically the enemy
 			//delete all remaining bullets
-			temp = tmp6->enemy.bullet.blt;
+			temp = tmp6->enemy.getBullet().blt;
 			while(temp!=NULL){
 				mvwaddch(board.board_win,temp->yB,temp->xB,' '); //delete graphically the bullet
 				temp = deleteEnemy6Bullets(temp,tmp6); //delete bullet
@@ -1040,7 +1055,7 @@ bool Game::enemydeath2(bullt tmp){ //check if one explosive bullet touch one of 
 			if(tmp7->enemy.getSign()==1)matrix[tmp7->enemy.gety()][tmp7->enemy.getx()+1] = ' ';
 			else matrix[tmp7->enemy.gety()][tmp7->enemy.getx()-1] = ' ';
 			//delete all remaining bullets
-			temp = tmp7->enemy.bullet.blt;
+			temp = tmp7->enemy.getBullet().blt;
 			while(temp!=NULL){
 				mvwaddch(board.board_win,temp->yB,temp->xB,' '); //delete graphically the bullet
 				temp = deleteEnemy7Bullets(temp,tmp7); //delete bullet
@@ -1064,7 +1079,7 @@ bool Game::enemydeath2(bullt tmp){ //check if one explosive bullet touch one of 
 			if(tmp8->enemy.getSign()==1)matrix[tmp8->enemy.gety()][tmp8->enemy.getx()+1] = ' ';
 			else matrix[tmp8->enemy.gety()][tmp8->enemy.getx()-1] = ' ';
 			//delete all remaining bullets
-			temp = tmp8->enemy.bullet.blt;
+			temp = tmp8->enemy.getBullet().blt;
 			while(temp!=NULL){
 				mvwaddch(board.board_win,temp->yB,temp->xB,' '); //delete graphically the bullet
 				temp = deleteEnemy8Bullets(temp,tmp8); //delete bullet
@@ -1088,7 +1103,7 @@ bool Game::enemydeath2(bullt tmp){ //check if one explosive bullet touch one of 
 			matrix[tmp9->enemy.gety()][tmp9->enemy.getx()+1] = ' ';
 			matrix[tmp9->enemy.gety()][tmp9->enemy.getx()-1] = ' ';
 			//delete all remaining bullets
-			temp = tmp9->enemy.bullet.blt;
+			temp = tmp9->enemy.getBullet().blt;
 			while(temp!=NULL){
 				mvwaddch(board.board_win,temp->yB,temp->xB,' '); //delete graphically the bullet
 				temp = deleteEnemy9Bullets(temp,tmp9); //delete bullet
@@ -1126,8 +1141,8 @@ int Game::directionSmartEnemy8(Enemy8 e){ //handle the direction of the smart en
 void Game::mapMovement(){
 	int choice;
 	choice = player.getmv(); //save the movement
-	if(!player.ACTIVE_FLY){
-		if(!player.activejump){ //you are not jumping
+	if(!player.getActiveFly()){
+		if(!player.getActiveJump()){ //you are not jumping
 			switch (choice)
 			{
 				case KEY_LEFT:
@@ -1151,18 +1166,18 @@ void Game::mapMovement(){
 					}
 					break;
 				case 't': //teleport
-					if(player.teleportation.getQnt()>0){ //check if the player has teleport
+					if(player.getTeleportation().getQnt()>0){ //check if the player has teleport
 						if(player.getDir()==1) //the jump depends on previous player direction
-							for(int i=0;i<player.TELEPORT_DISTANCE[player.teleportation.getQnt()-1];i++){
+							for(int i=0;i<player.getTELEPORT_DISTANCE(player.getTeleportation().getQnt()-1);i++){
 								xMin++; //increment the variable
 								if(xMin>mapList->map.getDim_x()-90) xMin--; //avoid exit
 							}
 						else
-							for(int i=0;i<player.TELEPORT_DISTANCE[player.teleportation.getQnt()-1];i++){
+							for(int i=0;i<player.getTELEPORT_DISTANCE(player.getTeleportation().getQnt()-1);i++){
 								xMin--; //decrement the variable
 								if(xMin<0) xMin = 0; //avoid exit
 							}
-						player.teleportation.setQnt(0); //delete teleports you have
+						player.getTeleportation().setQnt(0); //delete teleports you have
 					}
 					break;
 				default:
@@ -1219,7 +1234,7 @@ void Game::PlayerDown(){
 void Game::PlayerCanFly(int choice){ //Player can or cannot fly
 	switch(choice){
 		case KEY_LEFT: //you went to sx
-			if(player.gun.getName()=="None"){ //no gun
+			if(strcmp(player.getGun().getName().c_str(),"None")==0){ //no gun
 				if(mapList->map.isSolid(player.getx()+xMin,player.gety())){ //check it there has been collision
 					xMin++; //increment the variable
 					PrintMap(); //see map movement
@@ -1233,7 +1248,7 @@ void Game::PlayerCanFly(int choice){ //Player can or cannot fly
 			}
 			break;
 		case KEY_RIGHT: //you went to dx
-			if(player.gun.getName()=="None"){ //no gun
+			if(strcmp(player.getGun().getName().c_str(),"None")==0){ //no gun
 				if(mapList->map.isSolid(player.getx()+xMin,player.gety())){ //check it there has been collision
 					xMin--; //increment the variable
 					PrintMap(); //see map movement
@@ -1265,7 +1280,7 @@ void Game::PlayerCanMove(int choice){ //Player can or cannot move
 	//bool down;
 	switch(choice){
 	case KEY_LEFT: //you went to sx
-		if(player.gun.getName()=="None"){ //no gun
+		if(strcmp(player.getGun().getName().c_str(),"None")==0){ //no gun
 			if(mapList->map.isSolid(player.getx()+xMin,player.gety())){ //check it there has been collision
 				xMin++; //increment the variable
 				PrintMap(); //see map movement
@@ -1289,7 +1304,7 @@ void Game::PlayerCanMove(int choice){ //Player can or cannot move
 		}
 		break;
 	case KEY_RIGHT: //you went to dx
-		if(player.gun.getName()=="None"){ //no gun
+		if(strcmp(player.getGun().getName().c_str(),"None")==0){ //no gun
 			if(mapList->map.isSolid(player.getx()+xMin,player.gety())){ //check it there has been collision
 				xMin--;
 				PrintMap(); //see map movement
@@ -1313,7 +1328,7 @@ void Game::PlayerCanMove(int choice){ //Player can or cannot move
 		}
 		break;
 	case KEY_UP: //you went up
-		if(player.gun.getName()=="None"){ //no gun
+		if(strcmp(player.getGun().getName().c_str(),"None")==0){ //no gun
 			if(mapList->map.isSolid(player.getx()+xMin,player.gety())){ //check if you reach one piece of one structure
 				if(player.getDir()==1){ //you have to go where you went(it depends on the direction)
 					xMin--;
@@ -1334,7 +1349,7 @@ void Game::PlayerCanMove(int choice){ //Player can or cannot move
 					Game::PlayerDown(); //go down
 				}
 			}
-			else if(player.activejump == false){
+			else if(player.getActiveJump() == false){
 				while(!mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
 					Game::PlayerDown(); //go down
 				}
@@ -1361,7 +1376,7 @@ void Game::PlayerCanMove(int choice){ //Player can or cannot move
 					Game::PlayerDown(); //go down
 				}
 			}
-			else if(player.activejump == false){
+			else if(player.getActiveJump() == false){
 				while(!mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
 					Game::PlayerDown(); //go down
 				}
