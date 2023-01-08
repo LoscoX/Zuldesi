@@ -96,7 +96,8 @@ class Map{
 		int n0,n1,n2,n3,n4,n5,n6,n7,n8,n9; //number of enemies
 		int nc; //number of coins
         int dim_x, dim_y; //dimension of the map
-        int trigger_start, trigger_end; //trigger points (for the market level)
+        int trigger_start, trigger_end; //trigger points (to pass from one map to another one)
+        int trigger_market; //(for the market level)
         seg_list_ptr segList; //list of segments
     public:
         Map();
@@ -106,8 +107,10 @@ class Map{
         int getDim_x(); //take dimension x
         int getDim_y(); //take dimension y
         string* toString(); //return the matrix of the map
-		int get_trigger_start();
-		int get_trigger_end();
+		int get_trigger_start(); //take trigger start
+		int get_trigger_end(); //take trigger end
+		int get_trigger_market(); //take trigger market
+
         //coins
     	mony head_insert_coin(mony h,int val,int x,int y); //insert one coin in the list
     	bool updateCoins(int x,int y); //check if one coin has to be removed
@@ -152,5 +155,5 @@ class Map{
 
     	string* initializeEnemies(string* mat); //initalize enemies
 
-    	mony coins;
+    	mony coins; //coins
 };

@@ -9,6 +9,7 @@
 
 
 /*List of enemies
+Every enemy, when it dies, it gives to player a number of points proportional to number of life of enemy
 No gun type
 	0- sin movement (life = 5). There is a costant (mv) which determines the radius of the oscillation
 	1- sin movement with lift (life = 7). There is a constant (mv) which determines the height for the lifting
@@ -19,7 +20,7 @@ No gun type
 Gun type (If you touch them, nothing happens)
 	6- It's the enemy type0 but with gun
 	7- It's the enemy type5 but with gun
-	8- Enemy can't move but he can shoot, when the player reaches a specific place
+	8- Enemy can't move but he can shoot, when the player reaches a specific place (life 5)
 	9- Is's the enemy type2 but with two guns
 */
 

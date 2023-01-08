@@ -8,7 +8,7 @@ Map::Map(int difficulty){
 
     //procedural generation
 	int numSeg = 0;
-    Segment seg = Segment("segments/segstart.txt");//fix before production
+    Segment seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/segstart.txt");//fix before production
     segList = new segment_el;
     segList->id = numSeg++; //first segment (start)
     segList->next = NULL;
@@ -16,10 +16,10 @@ Map::Map(int difficulty){
 
     seg_list_ptr segtmp = segList;
 
-    for(int i=0; i<difficulty; i++){
+    for(int i=0; i<3; i++){ //fixed number of segments
         seg_list_ptr tmp = new segment_el; //add new segment
         tmp->id = numSeg++;
-        tmp->seg = Segment("segments/seg"+to_string(i)+".txt");
+        tmp->seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/seg"+to_string(i)+".txt"); //map segments
         tmp->next = NULL;
         segtmp->next = tmp;
         segtmp = segtmp->next;
@@ -28,24 +28,56 @@ Map::Map(int difficulty){
 	for(int i=0; i<4; i++){
         seg_list_ptr tmp = new segment_el; //add new segment
         tmp->id = numSeg++;
-        tmp->seg = Segment("segments/segempty.txt");
+        tmp->seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/segempty.txt"); //empty segments
         tmp->next = NULL;
         segtmp->next = tmp;
         segtmp = segtmp->next;
     }
 
+	//wall at the end
 	seg_list_ptr tmp = new segment_el; //add new segment
 	tmp->id = numSeg++;
-	tmp->seg = Segment("segments/segend.txt");
+	tmp->seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/segend.txt");
 	tmp->next = NULL;
 	segtmp->next = tmp;
 	segtmp = segtmp->next;
 
+	//Market
+	for (int i=0; i<4; i++){
+		seg_list_ptr tmp = new segment_el; //add new segment
+		tmp->id = numSeg++;
+		tmp->seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/segmarket"+to_string(i)+".txt"); //market segments
+		tmp->next = NULL;
+		segtmp->next = tmp;
+		segtmp = segtmp->next;
+	}
+
+	//wall at the end
+	tmp = new segment_el; //add new segment
+	tmp->id = numSeg++;
+	tmp->seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/segend.txt");
+	tmp->next = NULL;
+	segtmp->next = tmp;
+	segtmp = segtmp->next;
+
+	for(int i=0; i<4; i++){
+        seg_list_ptr tmp = new segment_el; //add new segment
+        tmp->id = numSeg++;
+        tmp->seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/segempty.txt"); //empty segments
+        tmp->next = NULL;
+        segtmp->next = tmp;
+        segtmp = segtmp->next;
+    }
+
+
     //set variable for the segments
     dim_x = numSeg*25;
     dim_y = 25;
-    trigger_start = 20;
-    trigger_end = dim_x-100;
+    trigger_start = 20; //to back to the previous map
+    trigger_end = dim_x-300; //to end the map and pass to market
+    trigger_market = dim_x-110; //to end market and start a new map
+
+    //to generate coins and enemies
 	int iniz_x = trigger_start+20;
 	int fin_x = trigger_end-15;
 	int iniz_y = 4;
@@ -56,6 +88,7 @@ Map::Map(int difficulty){
 	nc = 10; //number of coins
 
 	for(int i=0;i<nc;i++){ //create coins with random position and add them to the list
+		//avoid coins inside a structure
 		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
 		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
 		while(isSolid(gen_x, gen_y)){
@@ -80,10 +113,11 @@ Map::Map(int difficulty){
 	enemies8 = NULL; //initialize the list
 	enemies9 = NULL; //initialize the list
 
-	int k = 5; //max number of enemies
+	int k = difficulty; //max number of enemies without gun
 
-	n0 = rand()%k; //number of enemies of type 0
+	n0 = k; //number of enemies of type 0
 	for(int i=0;i<n0;i++){
+		//avoid enemy type0 inside a structure
 		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
 		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
 		while(isSolid(gen_x, gen_y)){
@@ -94,8 +128,9 @@ Map::Map(int difficulty){
 		enemies0 = head_insert_enemy0(enemies0,e,i); //add the enemy into the list
 	}
 
-	n1 = rand()%k; //number of enemies of type 1
+	n1 = k; //number of enemies of type 1
 	for(int i=0;i<n1;i++){
+		//avoid enemy type1 inside a structure
 		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
 		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
 		while(isSolid(gen_x, gen_y)){
@@ -106,8 +141,9 @@ Map::Map(int difficulty){
 		enemies1 = head_insert_enemy1(enemies1,e,i); //add the enemy into the list
 	}
 
-	n2 = rand()%k; //number of enemies of type 2
+	n2 = k; //number of enemies of type 2
 	for(int i=0;i<n2;i++){
+		//avoid enemy type2 inside a structure
 		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
 		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
 		while(isSolid(gen_x, gen_y)){
@@ -118,8 +154,9 @@ Map::Map(int difficulty){
 		enemies2 = head_insert_enemy2(enemies2,e,i); //add the enemy into the list
 	}
 
-	n3 = rand()%k; //number of enemies of type 3
+	n3 = k; //number of enemies of type 3
 	for(int i=0;i<n3;i++){
+		//avoid enemy type3 inside a structure
 		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
 		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
 		while(isSolid(gen_x, gen_y)){
@@ -130,8 +167,9 @@ Map::Map(int difficulty){
 		enemies3 = head_insert_enemy3(enemies3,e,i); //add the enemy into the list
 	}
 
-	n4 = rand()%k; //number of enemies of type 4
+	n4 = k; //number of enemies of type 4
 	for(int i=0;i<n4;i++){
+		//avoid enemy type4 inside a structure
 		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
 		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
 		while(isSolid(gen_x, gen_y)){
@@ -142,8 +180,9 @@ Map::Map(int difficulty){
 		enemies4 = head_insert_enemy4(enemies4,e,i); //add the enemy into the list
 	}
 
-	n5 = rand()%k; //number of enemies of type 5
+	n5 = k; //number of enemies of type 5
 	for(int i=0;i<n5;i++){
+		//avoid enemy type5 inside a structure
 		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
 		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
 		while(isSolid(gen_x, gen_y)){
@@ -154,8 +193,13 @@ Map::Map(int difficulty){
 		enemies5 = head_insert_enemy5(enemies5,e,i); //add the enemy into the list
 	}
 
-	n6 = rand()%k; //number of enemies of type 6
+	int k_gun; //max number of enemies with gun
+	if(difficulty>2)
+		k_gun = difficulty;
+
+	n6 = k_gun; //number of enemies of type 6
 	for(int i=0;i<n6;i++){
+		//avoid enemy type6 inside a structure
 		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
 		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
 		while(isSolid(gen_x, gen_y)){
@@ -166,8 +210,9 @@ Map::Map(int difficulty){
 		enemies6 = head_insert_enemy6(enemies6,e,i); //add the enemy into the list
 	}
 
-	n7 = rand()%k; //number of enemies of type 7
+	n7 = k_gun; //number of enemies of type 7
 	for(int i=0;i<n7;i++){
+		//avoid enemy type7 inside a structure
 		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
 		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
 		while(isSolid(gen_x, gen_y)){
@@ -178,8 +223,9 @@ Map::Map(int difficulty){
 		enemies7 = head_insert_enemy7(enemies7,e,i); //add the enemy into the list
 	}
 
-	n8 = rand()%k; //number of enemies of type 8
+	n8 = k_gun; //number of enemies of type 8
 	for(int i=0;i<n8;i++){
+		//avoid enemy type8 inside a structure
 		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
 		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
 		while(isSolid(gen_x, gen_y)){
@@ -190,8 +236,9 @@ Map::Map(int difficulty){
 		enemies8 = head_insert_enemy8(enemies8,e,i); //add the enemy into the list
 	}
 
-	n9 = rand()%k; //number of enemies of type 9
+	n9 = k_gun; //number of enemies of type 9
 	for(int i=0;i<n9;i++){
+		//avoid enemy type9 inside a structure
 		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
 		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
 		while(isSolid(gen_x, gen_y)){
@@ -209,7 +256,11 @@ int Map::get_trigger_start(){
 }
 
 int Map::get_trigger_end(){
-	return trigger_end;;
+	return trigger_end;
+}
+
+int Map::get_trigger_market(){
+	return trigger_market;
 }
 
 Map::Map(){} //deafult constructor
@@ -278,8 +329,10 @@ string* Map::toString(){ //build matrix
     //create enemies
     mat = initializeEnemies(mat);
 
+    //symbol for teleport points
 	mat[22][trigger_end] = 'X';
 	mat[22][trigger_start] = 'X';
+	mat[22][trigger_market] = 'X';
 
     return mat;
 }

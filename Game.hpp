@@ -38,6 +38,9 @@ public:
 	Game(int height,int width);
 	int xMin;
 
+	bool Market_Active; //you are in the market
+	bool Market_Build; //you have to build the market
+
 	map_list mapList;
 	Map restartMap(int difficulty);
 	void nextMap(int dir, int difficulty);
@@ -51,6 +54,8 @@ public:
 
 	void updatePowerup();
 	void market(); //activate the market
+	void market_build(); //build the market
+	Powerup spawn_powerup[3]; //power up spawned in the market
 
 	void interaction(Enemy0 e); //Game interaction between Enemy without gun and Player
 	bool interactionBullet(bullt tmp); //Game interaction between Enemy with gun and Player
@@ -74,6 +79,10 @@ public:
 	void displayLife(); //Display life
 	void displayCoins(); //Display wallet
 	void displayGame(); //Display Title
+	void displayBullets(); //Display bullets
+	void displayPoints(); //Display points
+	void displayMarket(); //Display market
+
 	void shooting(); //handle the shooting
 	void enemyMovement(); //enemies movement
 

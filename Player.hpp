@@ -23,6 +23,7 @@ private:
 	int xLoc,yLoc; //coordinates of the player
 	int xMax,yMax; //coordinates of the box
 	int dir; //save the direction of the movement
+	int points; //points of the player
 	int jump_height;
 	void mvleft();
 	void mvright();
@@ -71,9 +72,11 @@ public:
 	int gety(); //y coordinate of the player
 	int getCoins(); //return coins of player
 	int getDir(); //return dir of player
+	int getPoints(); //points of the player
 
 	void SetJump(); //restart the variable of jump
 
+	void updatePoints(int points); //when you kill one enemy you take points
 	void updateCash(int money); //update your wallet
 	void updateCoordinates(int x,int y); //Update your x and y when you went in a not-possible place
 	void setDir(int dir); //change direction

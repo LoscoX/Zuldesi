@@ -19,6 +19,7 @@ Player::Player(WINDOW * win, int y, int x){
 	character[3] = '-';
 	life = 10000;
 	cash = 0;
+	points = 0; //no points when you start
 	dir = 1; //initial direction
 	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
@@ -43,7 +44,7 @@ Player::Player(WINDOW * win, int y, int x){
 	ACTIVE_ARMOR = false; //no armor when you start
 	ARMOR_ACTIVE_DURATION = 0; //no armor when you start
 	FLY_ACTIVE_DURATION = 0; //no fly when you start
-	FLY_DURATION = 500; //duration of the fly
+	FLY_DURATION = 50; //duration of the fly
 	ACTIVE_FLY = false; //no fly when you start
 };
 
@@ -129,15 +130,25 @@ int Player::getmv(){ //move the character with gun by user
 		if(FLY_ACTIVE_DURATION>0)FLY_ACTIVE_DURATION--; //if you have fly actived, you have to decrement the time life of fly
 		else{
 			ACTIVE_FLY = false; //Your fly finishes its life
-			while(yLoc<yMax-2)godown(); //fall when you end your fly
+			while(yLoc<yMax-4)godown(); //fall when you end your fly
 		}
 	}
 	int choice = wgetch(curwin);
 	switch (choice){
 		case KEY_UP: //just go up
-			activejump = true; //active jump
-			jump();
-		break;
+			if(FLY_ACTIVE_DURATION>0){ //if you are flying
+				goup();
+			}
+			else{ //if you are not flying
+				activejump = true; //active jump
+				jump();
+			}
+			break;
+		case KEY_DOWN: //just go down
+			if(FLY_ACTIVE_DURATION>0){ //if you are flying
+				godown();
+			}
+			break;
 		case 'h': //activate the gun
 			if(bullets.getQnt()>0 && strcmp(gun.getName().c_str(),"Pistol") == 0){ //you shoot one bullet
 				bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc,yLoc,ind); //add the bullet
@@ -280,8 +291,16 @@ int Player::getDir(){
 	return dir;
 }
 
+int Player::getPoints(){
+	return points;
+}
+
 void Player::updateCash(int money){ //update cash
 	cash = cash + money;
+}
+
+void Player::updatePoints(int points){ 	//update money
+	this->points = this->points + points;
 }
 
 void Player::updateCoordinates(int x,int y){ //update coordinates

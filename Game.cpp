@@ -35,11 +35,16 @@ Game::Game(int height,int width){
 	board.initialize(0,0); //initialize the board in 0,0
 	WINDOW* win = board.board_win;
 
-	difficulty = 10;
+	Market_Active = false; //you are not in the market when you start
+	Market_Build = false;
+
+	//start the map
+	difficulty = 0;
 	mapList = NULL;
 	nextMap(1, difficulty);
 
 	xMin = 5; //start with the map
+
 	//print all map
 	Game::PrintMap();
 
@@ -48,30 +53,13 @@ Game::Game(int height,int width){
 
 	time = 0; //time for the game
 
-	//Game::market(); //starts market
-
-	//try power-ups
-	//player.gun.name = guns[0].getName();
-	//player.gun.name = guns[1].getName();
-	//player.gun.name = guns[2].getName();
-	player.gun.name = guns[3].getName();
-
-	player.shield.setQnt(player.shield.getQnt() + bonus[1].getQnt());
-	player.hp.setQnt(player.hp.getQnt() + bonus[0].getQnt());
-	player.jumping.setQnt(player.jumping.getQnt()+ bonus[2].getQnt());
-
-	player.armor.setQnt(player.armor.getQnt() + active[0].getQnt());
-	player.teleportation.setQnt(player.teleportation.getQnt() + active[1].getQnt());
-	player.bullets.setQnt(player.bullets.getQnt() + active[2].getQnt());
-	player.fly.setQnt(player.fly.getQnt() + active[3].getQnt());
-
 	game_over = false;
 }
 
 //dir decides the direction, 1 = right (generate next map/go to the next map already existing)
 //0 = go the the previous map
 void Game::nextMap(int dir, int difficulty = 0){//we call this when the player reaches a trigger
-	if(mapList == NULL){//first map generation
+	if(mapList == NULL){//first map generation (you dont' have map
 		mapList = new map_el;
 		mapList->id=0;
 		mapList->prev=NULL;
@@ -81,28 +69,28 @@ void Game::nextMap(int dir, int difficulty = 0){//we call this when the player r
 	}
 	else{
 		if(dir == 1){//right
-			if(mapList->next == NULL){//generate next map
-				//call market function here and recalculate difficulty
+			if(mapList->next == NULL){//generate next map //new map
 				
 				mapList->next = new map_el;
-				mapList->next->prev=mapList;
+				mapList->next->prev = mapList;
 				mapList=mapList->next;
 
-				mapList->id=mapList->prev->id+1;
+				mapList->id=mapList->prev->id+1; //change the id of the map
 				mapList->next=NULL;
 				mapList->map = Map(difficulty);
 				matrix = mapList->map.toString();
 			}
-			else{//just move pointer to the next map
-				mapList=mapList->next;
+			else{//just move pointer to the next map (you have already visited)
+				mapList = mapList->next;
 				matrix = mapList->map.toString();
 			}
+			//restart also the variables of the game
 			xMin = 5;
 			time = 0;
 		}
 		else if(dir == 0){//left
 			if(mapList->prev != NULL){//if this is not the first map
-				mapList=mapList->prev;
+				mapList = mapList->prev;
 				xMin = mapList->map.get_trigger_end()-(player.getx()+3);
 				time = 0;
 				matrix = mapList->map.toString();
@@ -120,18 +108,53 @@ void Game::PrintMap(){ //print your map
 }
 
 void Game::market(){
-	//Generate randomly 3 power-ups
-	int a = rand()%NUM_GUNS;
-	int b = rand()%NUM_BONUS;
-	int c = rand()%NUM_ACTIVE;
-	Powerup pu_market[3] = {guns[a], bonus[b], active[c]};
-	//call graphic lib to load market level passing the 3 power-ups selected for sale
-	Game::drawPowerUp(pu_market);
+	drawPowerUp(spawn_powerup); //draw powerups
 
-	//Game::updatePowerup(Powerup pwp);
+	//check if the player buy some powerups
+	//first powerup
+	if(player.getx()+xMin>=mapList->map.getDim_x()-210 && player.getx()+xMin<=mapList->map.getDim_x()-200 && player.gety()<=17 && player.gety()>=13){
+		if(player.getCoins()-spawn_powerup[0].price>0){ //you have enough money
+			player.updateCash(-spawn_powerup[0].price); //update cash of player
+			player.gun.name = spawn_powerup[0].getName(); //update powerups of player
+		}
+	}
+	//second powerup
+	if(player.getx()+xMin>=mapList->map.getDim_x()-170 && player.getx()+xMin<=mapList->map.getDim_x()-160 && player.gety()<=17 && player.gety()>=13){
+		if(player.getCoins()-spawn_powerup[2].price>0){ //you have enough money
+			player.updateCash(-spawn_powerup[2].price); //update cash of player
+			//update powerups of player
+			if(spawn_powerup[1].getName().c_str() == "HP"){ //HP
+				player.hp.setQnt(player.hp.getQnt() + spawn_powerup[1].getQnt());
+			}
+			else if(spawn_powerup[1].getName().c_str() == "Shield"){ //Shield
+				player.shield.setQnt(player.shield.getQnt() + spawn_powerup[1].getQnt());
+			}
+			else if(spawn_powerup[1].getName().c_str() == "Jump"){ //Jump
+				player.jumping.setQnt(player.jumping.getQnt()+ spawn_powerup[1].getQnt());
+			}
+		}
+	}
+	//third powerup
+	if(player.getx()+xMin>=mapList->map.getDim_x()-130 && player.getx()+xMin<=mapList->map.getDim_x()-120 && player.gety()<=17 && player.gety()>=13){
+		if(player.getCoins()-spawn_powerup[1].price>0){ //you have enough money
+			player.updateCash(-spawn_powerup[1].price); //update cash of player
+			//update powerups of player
+			if(spawn_powerup[2].getName().c_str() == "Teleport"){ //teleport
+				player.teleportation.setQnt(player.hp.getQnt() + spawn_powerup[2].getQnt());
+			}
+			else if(spawn_powerup[2].getName().c_str() == "Armor"){ //armor
+				player.armor.setQnt(player.shield.getQnt() + spawn_powerup[2].getQnt());
+			}
+			else if(spawn_powerup[2].getName().c_str() == "Bullets"){ //Jump
+				player.bullets.setQnt(player.jumping.getQnt()+ spawn_powerup[2].getQnt());
+			}
+			else if(spawn_powerup[2].getName().c_str() == "Fly"){ //Fly
+				player.fly.setQnt(player.jumping.getQnt()+ spawn_powerup[2].getQnt());
+			}
+		}
+	}
 
-	//once we exit the market level
-	//update difficulty based on power-ups
+	//once we exit the market level we update difficulty based on power-ups
 	int diff = player.gun.getDifficulty();
 	diff += player.hp.getQnt() * player.hp.getDifficulty();
 	diff += player.shield.getQnt() * player.shield.getDifficulty();
@@ -142,32 +165,59 @@ void Game::market(){
 	//call map generation function
 }
 
-//void Game::updatePowerup(Powerup pwp){
-
-//}
+void Game::market_build(){ //build the market
+	//Generate randomly 3 power-ups
+	int a = rand()%NUM_GUNS;
+	int b = rand()%NUM_BONUS;
+	int c = rand()%NUM_ACTIVE;
+	//update spawned powerups vector
+	spawn_powerup[0] = guns[a];
+	spawn_powerup[1] = bonus[b];
+	spawn_powerup[2] = active[c];
+}
 
 void Game::drawPowerUp(Powerup pwp[]){ //Draw power-ups which are spawned
-	mvwprintw(board.board_win,20,28,pwp[0].getName().c_str());
-	mvwprintw(board.board_win,20,52,pwp[1].getName().c_str());
-	mvwprintw(board.board_win,20,80,pwp[2].getName().c_str());
+	//FIRST powerup
+	for(int i=0;i<strlen(pwp[0].getName().c_str());i++){
+		matrix[15][mapList->map.getDim_x()-210+i] = pwp[0].getName().c_str()[i];
+	}
+	//SECOND powerup
+	for(int i=0;i<strlen(pwp[1].getName().c_str());i++){
+		matrix[15][mapList->map.getDim_x()-170+i] = pwp[1].getName().c_str()[i];
+	}
+	//THIRD powerup
+	for(int i=0;i<strlen(pwp[2].getName().c_str());i++){
+		matrix[15][mapList->map.getDim_x()-130+i] = pwp[2].getName().c_str()[i];
+	}
+
 }
 
 void Game::updateState(){
 
 	//display title
-	Game::displayGame();
+	if(!Market_Active)displayGame();
+	else displayMarket();
+
+
 	//display life
-	Game::displayLife();
+	displayLife();
 	//display coins
-	Game::displayCoins();
+	displayCoins();
+	//display points
+	displayPoints();
+	//display bullets
+	displayBullets();
 
 	//Map movement
-	if(time%600 == 0)Game::mapMovement(); //We move the map on horizontal direction and the player only on vertical direction
+	if(time%600 == 0)mapMovement(); //We move the map on horizontal direction and the player only on vertical direction
 
+	//check if you take one coin
 	if(mapList->map.updateCoins(xMin+player.getx(), player.gety())){
 		matrix[player.gety()][xMin+player.getx()] = ' '; //update the map removing coin
 		player.updateCash(1); //increment cashes of player
 	}
+
+	//redraw all coins (avoid they disappear due to enemies movement)
 	mony m = mapList->map.coins;
 	while(m != NULL){
 		matrix[m->y][m->x] = '$';
@@ -175,18 +225,38 @@ void Game::updateState(){
 	}
 
 	//handle shooting
-	Game::shooting();
+	shooting();
 
 	//enemy movement
-	if(time%1200 == 0) Game::enemyMovement(); //you want to slow down enemies
+	if(time%1200 == 0)enemyMovement(); //you want to slow down enemies
 	time++;
 
 	if(player.hp.getQnt() <= 0) game_over = true; //Player death
-	if(player.getx()+xMin == mapList->map.get_trigger_end()){
-		nextMap(1, 10);
+
+	//next map (you finish market level)
+	if(player.getx()+xMin == mapList->map.get_trigger_market()){ //go to the next map
+		Market_Active = false; //you leave the market
+		nextMap(1, difficulty);
+	}
+	else if(player.getx()+xMin == mapList->map.get_trigger_end()){ 	//go to market
+		//teleport player to market
+		Market_Active = true; //you are in the market
+		Market_Build = true; //you have to build the market
+
+		xMin = xMin + 85;
+		PrintMap();
 	}
 	else if(player.getx()+xMin == mapList->map.get_trigger_start()){
 		nextMap(0);
+	}
+
+
+	if(Market_Build){ //check if the market is built
+		market_build();
+		Market_Build = false; //you have built the market
+	}
+	else if(Market_Active){ //check the position of the player in the market
+		market();
 	}
 
 	//Update board
@@ -245,6 +315,12 @@ void Game::displayGame(){
 	wattroff(board.board_win,COLOR_PAIR(3)); //color
 }
 
+void Game::displayMarket(){
+	wattron(board.board_win,COLOR_PAIR(3)); //color
+	mvwprintw(board.board_win,1,45,"WELCOME TO MARKET LEVEL");
+	wattroff(board.board_win,COLOR_PAIR(3)); //color
+}
+
 void Game::displayLife(){ //display life and bullets
 	wattron(board.board_win,COLOR_PAIR(1)); //color
 	mvwprintw(board.board_win,25,1,"Life: ");
@@ -255,17 +331,28 @@ void Game::displayLife(){ //display life and bullets
 	if(player.hp.getQnt()<100) mvwprintw(board.board_win,25,9," ");
 	if(player.hp.getQnt()<10) mvwprintw(board.board_win,25,8," ");
 	wattroff(board.board_win,COLOR_PAIR(2)); //color
+}
 
+void Game::displayBullets(){
 	wattron(board.board_win,COLOR_PAIR(1)); //color
-	mvwprintw(board.board_win,25,45,"Number of Bullets: ");
+	mvwprintw(board.board_win,25,30,"Number of Bullets: ");
 	wattroff(board.board_win,COLOR_PAIR(1)); //color
 
 	wattron(board.board_win,COLOR_PAIR(2)); //color
-	mvwprintw(board.board_win,25,64,"%d",player.bullets.getQnt());
-	if(player.bullets.getQnt()<100) mvwprintw(board.board_win,25,66," ");
-	if(player.bullets.getQnt()<10) mvwprintw(board.board_win,25,65," ");
+	mvwprintw(board.board_win,25,49,"%d",player.bullets.getQnt());
+	if(player.bullets.getQnt()<100) mvwprintw(board.board_win,25,51," ");
+	if(player.bullets.getQnt()<10) mvwprintw(board.board_win,25,50," ");
 	wattroff(board.board_win,COLOR_PAIR(2)); //color
-	mvwprintw(board.board_win,25,77,"%d",player.gety());
+}
+
+void Game::displayPoints(){
+	wattron(board.board_win,COLOR_PAIR(1)); //color
+	mvwprintw(board.board_win,25,72,"Points: ");
+	wattroff(board.board_win,COLOR_PAIR(1)); //color
+
+	wattron(board.board_win,COLOR_PAIR(2)); //color
+	mvwprintw(board.board_win,25,80,"%d",player.getPoints());
+	wattroff(board.board_win,COLOR_PAIR(2)); //color
 }
 
 void Game::displayCoins(){ //display coins
@@ -458,6 +545,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 			tmp0->enemy.injury(); //injury for the enemy
 			found = true; //you have removed this bullet, so you can stop the cycle
 			if(tmp0->enemy.getLife() <= 0){ //Enemy life = 0
+				player.updatePoints(5); //take points
 				matrix[tmp0->enemy.gety()][tmp0->enemy.getx()] = ' '; //delete graphically the enemy
 				codice = tmp0->val; //save the code of the enemy
 				tmp0 = mapList->map.obj_remove_enemy0(tmp0, codice,false); //if it is died, you have to remove from the list
@@ -475,6 +563,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 			tmp1->enemy.injury(); //injury for the enemy
 			found = true; //you have removed this bullet, so you can stop the cycle
 			if(tmp1->enemy.getLife() <= 0){ //Enemy life = 0
+				player.updatePoints(7); //take points
 				matrix[tmp1->enemy.gety()][tmp1->enemy.getx()] = ' '; //delete graphically the enemy
 				codice = tmp1->val; //save the code of the enemy
 				tmp1 = mapList->map.obj_remove_enemy1(tmp1, codice,false); //if it is died, you have to remove from the list
@@ -492,6 +581,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 			tmp2->enemy.injury(); //injury for the enemy
 			found = true; //you have removed this bullet, so you can stop the cycle
 			if(tmp2->enemy.getLife() <= 0){ //Enemy life = 0
+				player.updatePoints(7); //take points
 				matrix[tmp2->enemy.gety()][tmp2->enemy.getx()] = ' '; //delete graphically the enemy
 				codice = tmp2->val; //save the code of the enemy
 				tmp2 = mapList->map.obj_remove_enemy2(tmp2, codice,false); //if it is died, you have to remove from the list
@@ -509,6 +599,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 			tmp3->enemy.injury(); //injury for the enemy
 			found = true; //you have removed this bullet, so you can stop the cycle
 			if(tmp3->enemy.getLife() <= 0){ //Enemy life = 0
+				player.updatePoints(2); //take points
 				matrix[tmp3->enemy.gety()][tmp3->enemy.getx()] = ' '; //delete graphically the enemy
 				codice = tmp3->val; //save the code of the enemy
 				tmp3 = mapList->map.obj_remove_enemy3(tmp3, codice,false); //if it is died, you have to remove from the list
@@ -526,6 +617,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 			tmp4->enemy.injury(); //injury for the enemy
 			found = true; //you have removed this bullet, so you can stop the cycle
 			if(tmp4->enemy.getLife() <= 0){ //Enemy life = 0
+				player.updatePoints(3); //take points
 				matrix[tmp4->enemy.gety()][tmp4->enemy.getx()] = ' '; //delete graphically the enemy
 				codice = tmp4->val; //save the code of the enemy
 				tmp4 = mapList->map.obj_remove_enemy4(tmp4, codice,false); //if it is died, you have to remove from the list
@@ -543,6 +635,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 			tmp5->enemy.injury(); //injury for the enemy
 			found = true; //you have removed this bullet, so you can stop the cycle
 			if(tmp5->enemy.getLife() <= 0){ //Enemy life = 0
+				player.updatePoints(2); //take points
 				matrix[tmp5->enemy.gety()][tmp5->enemy.getx()] = ' '; //delete graphically the enemy
 				codice = tmp5->val; //save the code of the enemy
 				tmp5 = mapList->map.obj_remove_enemy5(tmp5, codice,false); //if it is died, you have to remove from the list
@@ -561,6 +654,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 			tmp6->enemy.injury(); //injury for the enemy
 			found = true; //you have removed this bullet, so you can stop the cycle
 			if(tmp6->enemy.getLife() <= 0){ //Enemy life = 0
+				player.updatePoints(5); //take points
 				matrix[tmp6->enemy.gety()][tmp6->enemy.getx()] = ' '; //delete graphically the enemy
 				//delete graphically the gun
 				if(tmp6->enemy.getSign()==1)matrix[tmp6->enemy.gety()][tmp6->enemy.getx()+1] = ' ';
@@ -587,6 +681,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 			tmp7->enemy.injury(); //injury for the enemy
 			found = true; //you have removed this bullet, so you can stop the cycle
 			if(tmp7->enemy.getLife() <= 0){ //Enemy life = 0
+				player.updatePoints(2); //take points
 				matrix[tmp7->enemy.gety()][tmp7->enemy.getx()] = ' '; //delete graphically the enemy
 				//delete graphically the gun
 				if(tmp7->enemy.getSign()==1)matrix[tmp7->enemy.gety()][tmp7->enemy.getx()+1] = ' ';
@@ -613,6 +708,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 			tmp8->enemy.injury(); //injury for the enemy
 			found = true; //you have removed this bullet, so you can stop the cycle
 			if(tmp8->enemy.getLife() <= 0){ //Enemy life = 0
+				player.updatePoints(5); //take points
 				matrix[tmp8->enemy.gety()][tmp8->enemy.getx()] = ' '; //delete graphically the enemy
 				//delete graphically the gun
 				if(tmp8->enemy.getSign()==1)matrix[tmp8->enemy.gety()][tmp8->enemy.getx()+1] = ' ';
@@ -639,6 +735,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 			tmp9->enemy.injury(); //injury for the enemy
 			found = true; //you have removed this bullet, so you can stop the cycle
 			if(tmp9->enemy.getLife() <= 0){ //Enemy life = 0
+				player.updatePoints(7); //take points
 				matrix[tmp9->enemy.gety()][tmp9->enemy.getx()] = ' '; //delete graphically the enemy
 				//delete graphically the two guns
 				matrix[tmp9->enemy.gety()][tmp9->enemy.getx()+1] = ' ';
@@ -735,12 +832,6 @@ void Game::mapMovement(){
 				xMin++; //increment the variable
 				if(xMin>mapList->map.getDim_x()-90) xMin--; //avoid exit
 				break;
-			case KEY_UP:
-				player.goup(); //go up
-				break;
-			case KEY_DOWN:
-				player.godown(); //go down
-				break;
 			default:
 				break;
 		}
@@ -791,12 +882,12 @@ void Game::PlayerCanFly(int choice){ //Player can or cannot fly
 			}
 			break;
 		case KEY_UP: //you went to up
-			if(mapList->map.isSolid(player.getx()+xMin,player.gety()-1)){ //check it there has been collision
+			if(mapList->map.isSolid(player.getx()+xMin,player.gety())){ //check it there has been collision
 				player.godown(); //move player
 			}
 			break;
 		case KEY_DOWN: //you went to down
-			if(mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check it there has been collision
+			if(mapList->map.isSolid(player.getx()+xMin,player.gety())){ //check it there has been collision
 				player.goup(); //move player
 			}
 			break;
