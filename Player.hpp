@@ -41,11 +41,13 @@ public:
 	Powerup bullets; //bullets
 	Powerup jumping; //jump
 	Powerup fly; //fly
+	Powerup explo_bullets; //explosive bullets
 	int ARMOR_DURATION[3]; //duration of the armor
 	int TELEPORT_DISTANCE[3]; //distance of teleport
 	bool ACTIVE_ARMOR; //you active or not armor
 	int ARMOR_ACTIVE_DURATION; //time duration of actived armor
 	int NUM_BULLETS; //number of bullets
+	int NUM_EXPLO_BULLETS; //number of explosive bullets
 	int FLY_DURATION; //duration of the fly
 	int FLY_ACTIVE_DURATION; //time duration of actived fly
 	bool ACTIVE_FLY; //you activd or not fly
@@ -60,8 +62,10 @@ public:
 	void teleport(); //teleport
 	void goup(); //go up
 
-	Bullet bullet; //gun magazine
-	int ind; //index for the list of bullet
+	Bullet bullet; //bullets magazine
+	Bullet explo_bullet; //explosive bullets magazine
+	int ind; //index for the list of bullets
+	int ind2; //index for the list of explosive bullets
 
 	void display(); //see the player
 	void initialize(); //start the player
@@ -73,6 +77,7 @@ public:
 	int getCoins(); //return coins of player
 	int getDir(); //return dir of player
 	int getPoints(); //points of the player
+	int getLife(); //life of player
 
 	void SetJump(); //restart the variable of jump
 

@@ -99,6 +99,7 @@ class Map{
         int trigger_start, trigger_end; //trigger points (to pass from one map to another one)
         int trigger_market; //(for the market level)
         seg_list_ptr segList; //list of segments
+        int gen_x, gen_y; //variables for the generation of enemies and coins
     public:
         Map();
         Map(int difficulty); //map depends of difficulty
@@ -110,6 +111,7 @@ class Map{
 		int get_trigger_start(); //take trigger start
 		int get_trigger_end(); //take trigger end
 		int get_trigger_market(); //take trigger market
+		void generationRandom(int iniz_x,int iniz_y,int fin_x,int fin_y); //generate two admissible coordinates
 
         //coins
     	mony head_insert_coin(mony h,int val,int x,int y); //insert one coin in the list

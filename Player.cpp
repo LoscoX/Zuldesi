@@ -17,26 +17,29 @@ Player::Player(WINDOW * win, int y, int x){
 	character[1] = '^';
 	character[2] = '|';
 	character[3] = '-';
-	life = 10000;
-	cash = 0;
+	life = 10;
+	cash = 20;
 	points = 0; //no points when you start
 	dir = 1; //initial direction
 	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
+	ind2 = 0; //explosive bullet
 	//jump
 	activejump = false; //start without jump
 	segno = -1; //segno for parabola
 	conta = 1;
 	jump_height = 5; //max height of the jump
 	onplatform = false; //you are not on a platform
-	NUM_BULLETS = 100; //number of bullets
+	NUM_BULLETS = 0; //number of bullets
+	NUM_EXPLO_BULLETS = 0; //number of exploding bullets
 	//powerup
-	gun = Powerup("None", "No gun", 1, 0, 0); //no gun when you start
+	gun = Powerup("None", "No gun", 1, 0, 2); //no gun when you start
 	shield = Powerup("Shield", "A shield that blocks damage one time", 0, 1, 1); //no shield when you start
 	hp = Powerup("HP", "Get back on your feet one more time", life, 1, 1);
 	armor = Powerup("Armor", "Become invincible for a limited time", 0, 1, 1); //no armor when you start
 	teleportation = Powerup("Teleport", "Teleport a short distance", 0, 1, 1); //you cannot teleport when you start
 	bullets = Powerup("Bullets","Charge of bullets",NUM_BULLETS,1,1); //no bullets when you start
+	explo_bullets = Powerup("Explo-Bullets","Charge of explosive bullets",NUM_EXPLO_BULLETS,1,1); //no bullets when you start
 	jumping = Powerup("Jump","Change the height of the jump",jump_height,1,1); //basic jump when you start
 	fly = Powerup("Fly","You can fly",0,1,1); //you cannot fly when you start
 	ARMOR_DURATION[0] = 500; ARMOR_DURATION[1] = 1000; ARMOR_DURATION[2] = 5000; //different type of Armor duration
@@ -95,7 +98,8 @@ void Player::godown(){ //go down
 	if(armor.getQnt()>0) mvwaddch(curwin,yLoc-1,xLoc,' '); //Delete armor
 	if(shield.getQnt()>0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //delete shield
 	if(shield.getQnt()==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //old gun
-	if(gun.getName()!="none") mvwaddch(curwin,yLoc,xLoc+getDir(),' '); //delete gun
+	if(strcmp(gun.getName().c_str(),"None")!=0) mvwaddch(curwin,yLoc,xLoc+getDir(),' '); //delete gun
+	if(strcmp(gun.getName().c_str(),"Doublegun")==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //see gun
 	yLoc = yLoc + 1; //you are falling
 	if (yLoc>yMax-2) yLoc = yMax-2;
 }
@@ -105,7 +109,8 @@ void Player::goup(){ //go up
 	if(armor.getQnt()>0) mvwaddch(curwin,yLoc-1,xLoc,' '); //Delete armor
 	if(shield.getQnt()>0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //delete shield
 	if(shield.getQnt()==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //old gun
-	if(gun.getName()!="none") mvwaddch(curwin,yLoc,xLoc+getDir(),' '); //delete gun
+	if(strcmp(gun.getName().c_str(),"None")!=0) mvwaddch(curwin,yLoc,xLoc+getDir(),' '); //delete gun
+	if(strcmp(gun.getName().c_str(),"Doublegun")==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //see gun
 	yLoc = yLoc - 1; //you are liftfing
 	if(yLoc<1) yLoc = 1;
 }
@@ -115,7 +120,8 @@ void Player::teleport(){
 	if(armor.getQnt()>0) mvwaddch(curwin,yLoc-1,xLoc,' '); //delete armor
 	if(shield.getQnt()>0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //delete shield
 	if(shield.getQnt()==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //delete old gun
-	if(gun.getName()!="none") mvwaddch(curwin,yLoc,xLoc+getDir(),' '); //delete gun
+	if(strcmp(gun.getName().c_str(),"None")!=0) mvwaddch(curwin,yLoc,xLoc+getDir(),' '); //delete gun
+	if(strcmp(gun.getName().c_str(),"Doublegun")==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //see gun
 	yLoc = yMax - 2; //ground floor
 	xLoc = xLoc + TELEPORT_DISTANCE[teleportation.getQnt()-1]; //teleport the character
 	if(xLoc > xMax-2) xLoc = xMax - 2; //you reach the wall
@@ -192,6 +198,13 @@ int Player::getmv(){ //move the character with gun by user
 				ACTIVE_FLY = true;
 			}
 			break;
+		case 'e': //explosive bullets
+			if(explo_bullets.getQnt()>0 && strcmp(gun.getName().c_str(),"None") != 0){ //you shoot one bullet
+				explo_bullet.blt = bullet.head_insert(explo_bullet.blt,dir,xLoc,yLoc,ind2); //add the bullet
+				ind2 = ind2 + 1; //we want different indexes for the different bullets
+				explo_bullets.setQnt(explo_bullets.getQnt()-1); //decrement bullets
+			}
+			break;
 		default:
 			break;
 	}
@@ -230,6 +243,20 @@ int Player::airshoot(){ //during jump movement or down movement, you can just sh
 				bullets.setQnt(bullets.getQnt()-1); //decrement bullets
 			}
 			break;
+		case 'a': //activate the armor (time_life of armor starts)
+			if(armor.getQnt()>0){ //you have at least on piece of armor
+				ARMOR_ACTIVE_DURATION = ARMOR_DURATION[armor.getQnt()-1]; //thanks to the quantity you get the armor duration. For example if you have two pieces of armor, you have 1000 time duration
+				armor.setQnt(0); //no armor anymore (you lose all piecies)
+				ACTIVE_ARMOR = true;
+			}
+			break;
+		case 'e': //explosive bullets
+			if(explo_bullets.getQnt()>0 && strcmp(gun.getName().c_str(),"None") != 0){ //you shoot one bullet
+				explo_bullet.blt = bullet.head_insert(explo_bullet.blt,dir,xLoc,yLoc,ind2); //add the bullet
+				ind2 = ind2 + 1; //we want different indexes for the different bullets
+				explo_bullets.setQnt(explo_bullets.getQnt()-1); //decrement bullets
+			}
+			break;
 		default:
 			break;
 	}
@@ -245,7 +272,8 @@ void Player::display(){ //display the character
 		}
 		if(shield.getQnt()>0) mvwaddch(curwin,yLoc,xLoc-getDir(),character[2]); //see the shield
 		if(shield.getQnt()==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //delete old gun
-		if(gun.getName()!="none") mvwaddch(curwin,yLoc,xLoc+getDir(),character[3]); //see the gun
+		if(strcmp(gun.getName().c_str(),"None")!=0) mvwaddch(curwin,yLoc,xLoc+getDir(),character[3]); //see the gun
+		if(strcmp(gun.getName().c_str(),"Doublegun")==0) mvwaddch(curwin,yLoc,xLoc-getDir(),character[3]); //see the gun
 		wattroff(curwin,COLOR_PAIR(3)); //color
 	}
 	else{ //if you have one life, you become red
@@ -256,7 +284,8 @@ void Player::display(){ //display the character
 		}
 		if(shield.getQnt()>0) mvwaddch(curwin,yLoc,xLoc-getDir(),character[2]); //see the shield
 		if(shield.getQnt()==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //delete old gun
-		if(gun.getName()!="none") mvwaddch(curwin,yLoc,xLoc+getDir(),character[3]); //see the gun
+		if(strcmp(gun.getName().c_str(),"None")!=0) mvwaddch(curwin,yLoc,xLoc+getDir(),character[3]); //see the gun
+		if(strcmp(gun.getName().c_str(),"Doublegun")==0) mvwaddch(curwin,yLoc,xLoc-getDir(),character[3]); //see the gun
 		wattroff(curwin,COLOR_PAIR(1));
 	}
 }
@@ -281,6 +310,10 @@ int Player::getx(){
 
 int Player::gety(){
 	return yLoc;
+}
+
+int Player::getLife(){
+	return life;
 }
 
 int Player::getCoins(){
