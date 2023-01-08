@@ -9,6 +9,7 @@
 
 
 /*List of enemies
+Every enemy, when it dies, it gives to player a number of points proportional to number of life of enemy
 No gun type
 	0- sin movement (life = 5). There is a costant (mv) which determines the radius of the oscillation
 	1- sin movement with lift (life = 7). There is a constant (mv) which determines the height for the lifting
@@ -19,13 +20,13 @@ No gun type
 Gun type (If you touch them, nothing happens)
 	6- It's the enemy type0 but with gun
 	7- It's the enemy type5 but with gun
-	8- Enemy can't move but he can shoot, when the player reaches a specific place
+	8- Enemy can't move but he can shoot, when the player reaches a specific place (life 5)
 	9- Is's the enemy type2 but with two guns
 */
 
 //Enemy type 0
 
-Enemy0::Enemy0(int y, int x, char c, int mv,int col){
+Enemy0::Enemy0(int y, int x, char c, int mv){
 	yLoc = y;
 	xLoc = x;
 	character = c;
@@ -33,20 +34,10 @@ Enemy0::Enemy0(int y, int x, char c, int mv,int col){
 	xpern = x; //save coordinates
 	ypern = y; //save coordinates
 	cost = mv;
-	color = col;
 	segno = -1;
 }
 
 Enemy0::Enemy0(){ //default constructor
-	yLoc = 0;
-	xLoc = 0;
-	character = '0'; //graphic icon
-	life = 5;
-	xpern = 0;
-	ypern = 0;
-	cost = 0;
-	color = 1;
-	segno = -1;
 }
 
 
@@ -99,10 +90,6 @@ char Enemy0::getChar(){
 	return character;
 }
 
-int Enemy0::getColor(){
-	return color;
-}
-
 void Enemy0::setLife(int life){
 	this->life = life;
 }
@@ -119,16 +106,12 @@ void Enemy0::updateCoordinates(int x,int y){ //update coordinates
 
 //Enemy type 1
 
-Enemy1::Enemy1(int y, int x, char c,int mv, int col) : Enemy0(y,x,c,mv,col){
+Enemy1::Enemy1(int y, int x, char c,int mv) : Enemy0(y,x,c,mv){
 	life = 7;
 	up = -1;
 }
 
 Enemy1::Enemy1() : Enemy0(){ //default constructor
-	character = '1';
-	life = 7;
-	color = 2;
-	up = -1;
 }
 
 void Enemy1::movement(){
@@ -168,14 +151,11 @@ bool Enemy1::ReachAngles(){
 
 //Enemy type 2
 
-Enemy2::Enemy2(int y, int x, char c,int mv, int col) : Enemy0(y,x,c,mv,col){
+Enemy2::Enemy2(int y, int x, char c,int mv) : Enemy0(y,x,c,mv){
 	life = 7;
 }
 
 Enemy2::Enemy2() : Enemy0(){
-	character = '2';
-	life = 7;
-	color = 3;
 }
 
 void Enemy2::movement(){
@@ -192,18 +172,13 @@ void Enemy2::movement(){
 
 //Enemy type 3
 
-Enemy3::Enemy3(int y, int x, char c,int mv, int col) : Enemy0(y,x,c,mv,col){
+Enemy3::Enemy3(int y, int x, char c,int mv) : Enemy0(y,x,c,mv){
 	life = 2;
 	conta = 1;
 	up = -1;
 }
 
 Enemy3::Enemy3() : Enemy0(){
-	character = '3';
-	life = 2;
-	color = 4;
-	conta = 1;
-	up = -1;
 }
 
 void Enemy3::movement(){
@@ -231,16 +206,12 @@ int Enemy3::GetConta(){
 
 //Enemy type 4
 
-Enemy4::Enemy4(int y, int x, char c,int mv, int col) : Enemy0(y,x,c,mv,col){
+Enemy4::Enemy4(int y, int x, char c,int mv) : Enemy0(y,x,c,mv){
 	life = 3;
 	conta = 0; //handle delay of the movement
 }
 
 Enemy4::Enemy4() : Enemy0(){
-	character = '4';
-	life = 3;
-	color = 5;
-	conta = 0; //handle delay of the movement
 }
 
 void Enemy4::movement(){
@@ -253,14 +224,11 @@ void Enemy4::movement(){
 
 //Enemy type 5
 
-Enemy5::Enemy5(int y, int x, char c,int mv, int col) : Enemy0(y,x,c,mv,col){
+Enemy5::Enemy5(int y, int x, char c,int mv) : Enemy0(y,x,c,mv){
 	life = 2;
 }
 
 Enemy5::Enemy5() : Enemy0(){
-	character = '5';
-	life = 2;
-	color = 6;
 }
 
 void Enemy5::movement(int direction){
@@ -270,7 +238,7 @@ void Enemy5::movement(int direction){
 
 //Enemy type 6
 
-Enemy6::Enemy6(int y, int x, char c,int mv, int col) : Enemy0(y,x,c,mv,col){
+Enemy6::Enemy6(int y, int x, char c,int mv) : Enemy0(y,x,c,mv){
 	life = 5;
 	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
@@ -279,13 +247,6 @@ Enemy6::Enemy6(int y, int x, char c,int mv, int col) : Enemy0(y,x,c,mv,col){
 }
 
 Enemy6::Enemy6() : Enemy0(){
-	character = '0';
-	color = 1;
-	life = 5;
-	bullet = Bullet(); //initialize the bullet
-	ind = 0; //no bullet
-	conta = 0; //no shots
-	gun = '-';
 }
 
 void Enemy6::movement(){
@@ -306,9 +267,13 @@ void Enemy6::movement(){
 	}
 }
 
+Bullet Enemy6::getBullet(){
+	return bullet;
+}
+
 //Enemy type7
 
-Enemy7::Enemy7(int y, int x, char c,int mv, int col) : Enemy6(y,x,c,mv,col){
+Enemy7::Enemy7(int y, int x, char c,int mv) : Enemy6(y,x,c,mv){
 	life = 5;
 	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
@@ -317,12 +282,6 @@ Enemy7::Enemy7(int y, int x, char c,int mv, int col) : Enemy6(y,x,c,mv,col){
 }
 
 Enemy7::Enemy7() : Enemy6(){
-	character = '5'; //It's the enemy type5 but with the gun
-	life = 5;
-	bullet = Bullet(); //initialize the bullet
-	ind = 0; //no bullet
-	conta = 0; //no shots
-	gun = '-';
 }
 
 void Enemy7::movement(int direction){
@@ -338,7 +297,7 @@ void Enemy7::movement(int direction){
 
 //Enemy type8
 
-Enemy8::Enemy8(int y, int x, char c,int mv, int col) : Enemy6(y,x,c,mv,col){
+Enemy8::Enemy8(int y, int x, char c,int mv) : Enemy6(y,x,c,mv){
 	life = 5;
 	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
@@ -347,12 +306,6 @@ Enemy8::Enemy8(int y, int x, char c,int mv, int col) : Enemy6(y,x,c,mv,col){
 }
 
 Enemy8::Enemy8() : Enemy6(){
-	character = '7';
-	life = 5;
-	bullet = Bullet(); //initialize the bullet
-	ind = 0; //no bullet
-	conta = 0; //no shots
-	gun = '-';
 }
 
 void Enemy8::movement(int direction){
@@ -367,7 +320,7 @@ void Enemy8::movement(int direction){
 
 //Enemy type9
 
-Enemy9::Enemy9(int y, int x, char c,int mv, int col) : Enemy6(y,x,c,mv,col){
+Enemy9::Enemy9(int y, int x, char c,int mv) : Enemy6(y,x,c,mv){
 	life = 5;
 	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
@@ -376,12 +329,6 @@ Enemy9::Enemy9(int y, int x, char c,int mv, int col) : Enemy6(y,x,c,mv,col){
 }
 
 Enemy9::Enemy9() : Enemy6(){
-	character = '2'; //It's the enemy type2 but with two guns
-	life = 5;
-	bullet = Bullet(); //initialize the bullet
-	ind = 0; //no bullet
-	conta = 0; //no shots
-	gun = '-';
 }
 
 void Enemy9::movement(){

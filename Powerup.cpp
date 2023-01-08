@@ -10,26 +10,26 @@ Powerup::Powerup(string name, string description, int qnt, int price, int diffic
     this->difficulty = difficulty; //difficulty
 }
 
-string Powerup::getName(){
+string Powerup::getName(){ //take name
     return name;
 }
 
-string Powerup::getDescription(){
+string Powerup::getDescription(){ //take description
     return description;
 }
 
-int Powerup::getQnt(){
+int Powerup::getQnt(){ //take quantity
     return qnt;
 }
 
-int Powerup::getPrice(){
+int Powerup::getPrice(){ //take price
     return price;
 }
 
-int Powerup::getDifficulty(){
+int Powerup::getDifficulty(){ //take difficulty
     return difficulty;
 } 
 
-void Powerup::setQnt(int qnt){
+void Powerup::setQnt(int qnt){ //set quantity
     this->qnt = qnt;
 }

@@ -8,7 +8,7 @@ Map::Map(int difficulty){
 
     //procedural generation
 	int numSeg = 0;
-    Segment seg = Segment("segments/segstart.txt");//fix before production
+    Segment seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/Basic/segstart.txt");//fix before production
     segList = new segment_el;
     segList->id = numSeg++; //first segment (start)
     segList->next = NULL;
@@ -16,10 +16,10 @@ Map::Map(int difficulty){
 
     seg_list_ptr segtmp = segList;
 
-    for(int i=0; i<difficulty; i++){
+    for(int i=0; i<3; i++){ //fixed number of segments
         seg_list_ptr tmp = new segment_el; //add new segment
         tmp->id = numSeg++;
-        tmp->seg = Segment("segments/seg"+to_string(i)+".txt");
+        tmp->seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/Segment_pieces/seg"+to_string(i)+".txt"); //map segments
         tmp->next = NULL;
         segtmp->next = tmp;
         segtmp = segtmp->next;
@@ -28,34 +28,68 @@ Map::Map(int difficulty){
 	for(int i=0; i<4; i++){
         seg_list_ptr tmp = new segment_el; //add new segment
         tmp->id = numSeg++;
-        tmp->seg = Segment("segments/segempty.txt");
+        tmp->seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/Basic/segempty.txt"); //empty segments
         tmp->next = NULL;
         segtmp->next = tmp;
         segtmp = segtmp->next;
     }
 
+	//wall at the end
 	seg_list_ptr tmp = new segment_el; //add new segment
 	tmp->id = numSeg++;
-	tmp->seg = Segment("segments/segend.txt");
+	tmp->seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/Basic/segend.txt");
 	tmp->next = NULL;
 	segtmp->next = tmp;
 	segtmp = segtmp->next;
 
+	//Market
+	for (int i=0; i<4; i++){
+		seg_list_ptr tmp = new segment_el; //add new segment
+		tmp->id = numSeg++;
+		tmp->seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/Market/segmarket"+to_string(i)+".txt"); //market segments
+		tmp->next = NULL;
+		segtmp->next = tmp;
+		segtmp = segtmp->next;
+	}
+
+	//wall at the end
+	tmp = new segment_el; //add new segment
+	tmp->id = numSeg++;
+	tmp->seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/Basic/segend.txt");
+	tmp->next = NULL;
+	segtmp->next = tmp;
+	segtmp = segtmp->next;
+
+	for(int i=0; i<4; i++){
+        seg_list_ptr tmp = new segment_el; //add new segment
+        tmp->id = numSeg++;
+        tmp->seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/Basic/segempty.txt"); //empty segments
+        tmp->next = NULL;
+        segtmp->next = tmp;
+        segtmp = segtmp->next;
+    }
+
+
     //set variable for the segments
     dim_x = numSeg*25;
     dim_y = 25;
-    trigger_start = 20;
-    trigger_end = dim_x-100;
+    trigger_start = 20; //to back to the previous map
+    trigger_end = dim_x-300; //to end the map and pass to market
+    trigger_market = dim_x-120; //to end market and start a new map
+
+    //to generate coins and enemies
 	int iniz_x = trigger_start+20;
 	int fin_x = trigger_end-15;
 	int iniz_y = 4;
 	int fin_y = 21;
+	gen_x = 0;gen_y = 0;
 
 	coins = NULL; //initialize coins
 
 	nc = 10; //number of coins
 
 	for(int i=0;i<nc;i++){ //create coins with random position and add them to the list
+		//avoid coins inside a structure
 		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
 		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
 		while(isSolid(gen_x, gen_y)){
@@ -80,139 +114,129 @@ Map::Map(int difficulty){
 	enemies8 = NULL; //initialize the list
 	enemies9 = NULL; //initialize the list
 
-	int k = 5; //max number of enemies
+	int k = difficulty; //handle the generation of enemies
 
-	n0 = rand()%k; //number of enemies of type 0
+	n0 = k; //number of enemies of type 0
 	for(int i=0;i<n0;i++){
-		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
-		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
-		while(isSolid(gen_x, gen_y)){
-			gen_x = iniz_x+rand()%(fin_x-iniz_x);
-			gen_y = iniz_y+rand()%(fin_y-iniz_y);
-		}
-		Enemy0 e = Enemy0(gen_y, gen_x,'0',9,1); //create one enemy
+		//avoid enemy type0 inside a structure
+		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
+		Enemy0 e = Enemy0(gen_y, gen_x,'0',9); //create one enemy
 		enemies0 = head_insert_enemy0(enemies0,e,i); //add the enemy into the list
 	}
 
-	n1 = rand()%k; //number of enemies of type 1
+	n1 = k; //number of enemies of type 1
 	for(int i=0;i<n1;i++){
-		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
-		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
-		while(isSolid(gen_x, gen_y)){
-			gen_x = iniz_x+rand()%(fin_x-iniz_x);
-			gen_y = iniz_y+rand()%(fin_y-iniz_y);
-		}
-		Enemy1 e = Enemy1(gen_y, gen_x,'1',9,2); //create one enemy
+		//avoid enemy type1 inside a structure
+		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
+		Enemy1 e = Enemy1(gen_y, gen_x,'1',9); //create one enemy
 		enemies1 = head_insert_enemy1(enemies1,e,i); //add the enemy into the list
 	}
 
-	n2 = rand()%k; //number of enemies of type 2
+	if(k>1) //activate enemies type2 and type3
+		n2 = k-1; //number of enemies of type 2
+	else
+		n2 = 0;
 	for(int i=0;i<n2;i++){
-		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
-		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
-		while(isSolid(gen_x, gen_y)){
-			gen_x = iniz_x+rand()%(fin_x-iniz_x);
-			gen_y = iniz_y+rand()%(fin_y-iniz_y);
-		}
-		Enemy2 e = Enemy2(gen_y, gen_x,'2',15,3); //create one enemy
+		//avoid enemy type2 inside a structure
+		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
+		Enemy2 e = Enemy2(gen_y, gen_x,'2',15); //create one enemy
 		enemies2 = head_insert_enemy2(enemies2,e,i); //add the enemy into the list
 	}
 
-	n3 = rand()%k; //number of enemies of type 3
+	n3 = rand()%(n2+1); //number of enemies of type 3
 	for(int i=0;i<n3;i++){
-		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
-		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
-		while(isSolid(gen_x, gen_y)){
-			gen_x = iniz_x+rand()%(fin_x-iniz_x);
-			gen_y = iniz_y+rand()%(fin_y-iniz_y);
-		}
-		Enemy3 e = Enemy3(gen_y, gen_x,'3',9,4); //create one enemy
+		//avoid enemy type3 inside a structure
+		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
+		Enemy3 e = Enemy3(gen_y, gen_x,'3',9); //create one enemy
 		enemies3 = head_insert_enemy3(enemies3,e,i); //add the enemy into the list
 	}
 
-	n4 = rand()%k; //number of enemies of type 4
+	if(k>2) n4 = k-2; //number of enemies of type 4
+	else n4 = 0;
 	for(int i=0;i<n4;i++){
-		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
-		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
-		while(isSolid(gen_x, gen_y)){
-			gen_x = iniz_x+rand()%(fin_x-iniz_x);
-			gen_y = iniz_y+rand()%(fin_y-iniz_y);
-		}
-		Enemy4 e = Enemy4(gen_y, gen_x,'4',7,5); //create one enemy
+		//avoid enemy type4 inside a structure
+		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
+		Enemy4 e = Enemy4(gen_y, gen_x,'4',7); //create one enemy
 		enemies4 = head_insert_enemy4(enemies4,e,i); //add the enemy into the list
 	}
 
-	n5 = rand()%k; //number of enemies of type 5
+	if(k>3) n5 = k-3; //number of enemies of type 5
+	else n5 = 0;
 	for(int i=0;i<n5;i++){
-		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
-		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
-		while(isSolid(gen_x, gen_y)){
-			gen_x = iniz_x+rand()%(fin_x-iniz_x);
-			gen_y = iniz_y+rand()%(fin_y-iniz_y);
-		}
-		Enemy5 e = Enemy5(gen_y, gen_x,'5',7,6); //create one enemy
+		//avoid enemy type5 inside a structure
+		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
+		Enemy5 e = Enemy5(gen_y, gen_x,'5',7); //create one enemy
 		enemies5 = head_insert_enemy5(enemies5,e,i); //add the enemy into the list
 	}
 
-	n6 = rand()%k; //number of enemies of type 6
+	if(k>5) //activate enemies type6 and type7
+		n6 = k-5; //number of enemies of type 6
+	else
+		n6 = 0;
+
 	for(int i=0;i<n6;i++){
-		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
-		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
-		while(isSolid(gen_x, gen_y)){
-			gen_x = iniz_x+rand()%(fin_x-iniz_x);
-			gen_y = iniz_y+rand()%(fin_y-iniz_y);
-		}
-		Enemy6 e = Enemy6(gen_y, gen_x,'0',7,1); //create one enemy
+		//avoid enemy type6 inside a structure
+		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
+		Enemy6 e = Enemy6(gen_y, gen_x,'0',7); //create one enemy
 		enemies6 = head_insert_enemy6(enemies6,e,i); //add the enemy into the list
 	}
 
-	n7 = rand()%k; //number of enemies of type 7
+	n7 = n6; //number of enemies of type 7
 	for(int i=0;i<n7;i++){
-		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
-		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
-		while(isSolid(gen_x, gen_y)){
-			gen_x = iniz_x+rand()%(fin_x-iniz_x);
-			gen_y = iniz_y+rand()%(fin_y-iniz_y);
-		}
-		Enemy7 e = Enemy7(gen_y, gen_x,'5',7,6); //create one enemy
+		//avoid enemy type7 inside a structure
+		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
+		Enemy7 e = Enemy7(gen_y, gen_x,'5',7); //create one enemy
 		enemies7 = head_insert_enemy7(enemies7,e,i); //add the enemy into the list
 	}
 
-	n8 = rand()%k; //number of enemies of type 8
+	if(k>8) //activate enemies type8
+		n8 = k-8; //number of enemies of type 8
+	else
+		n8 = 0;
+
 	for(int i=0;i<n8;i++){
-		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
-		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
-		while(isSolid(gen_x, gen_y)){
-			gen_x = iniz_x+rand()%(fin_x-iniz_x);
-			gen_y = iniz_y+rand()%(fin_y-iniz_y);
-		}
-		Enemy8 e = Enemy8(gen_y, gen_x,'8',7,7); //create one enemy
+		//avoid enemy type8 inside a structure
+		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
+		Enemy8 e = Enemy8(gen_y, gen_x,'8',7); //create one enemy
 		enemies8 = head_insert_enemy8(enemies8,e,i); //add the enemy into the list
 	}
 
-	n9 = rand()%k; //number of enemies of type 9
+	if(k>10) //activate the last enemy
+		n9 = k;
+	else
+		n9 = 0;
+
 	for(int i=0;i<n9;i++){
-		int gen_x = iniz_x+rand()%(fin_x-iniz_x);
-		int gen_y = iniz_y+rand()%(fin_y-iniz_y);
-		while(isSolid(gen_x, gen_y)){
-			gen_x = iniz_x+rand()%(fin_x-iniz_x);
-			gen_y = iniz_y+rand()%(fin_y-iniz_y);
-		}
-		Enemy9 e = Enemy9(gen_y, gen_x,'2',7,3); //create one enemy
+		//avoid enemy type9 inside a structure
+		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
+		Enemy9 e = Enemy9(gen_y, gen_x,'2',7); //create one enemy
 		enemies9 = head_insert_enemy9(enemies9,e,i); //add the enemy into the list
 	}
 
 }
+
+Map::Map(){} //deafult constructor
 
 int Map::get_trigger_start(){
 	return trigger_start;
 }
 
 int Map::get_trigger_end(){
-	return trigger_end;;
+	return trigger_end;
 }
 
-Map::Map(){} //deafult constructor
+int Map::get_trigger_market(){
+	return trigger_market;
+}
+
+void Map::generationRandom(int iniz_x,int iniz_y,int fin_x,int fin_y){
+	gen_x = iniz_x+rand()%(fin_x-iniz_x);
+	gen_y = iniz_y+rand()%(fin_y-iniz_y);
+	while(isSolid(gen_x, gen_y)){
+		gen_x = iniz_x+rand()%(fin_x-iniz_x);
+		gen_y = iniz_y+rand()%(fin_y-iniz_y);
+	}
+}
 
 bool Map::isSolid(int x, int y){ //check if the block is solid
     int target = (int)x/MATRIX_SIZE_X; //choose the right segment
@@ -278,8 +302,10 @@ string* Map::toString(){ //build matrix
     //create enemies
     mat = initializeEnemies(mat);
 
+    //symbol for teleport points
 	mat[22][trigger_end] = 'X';
 	mat[22][trigger_start] = 'X';
+	mat[22][trigger_market] = 'X';
 
     return mat;
 }
@@ -292,6 +318,7 @@ int Map::getDim_y(){
 	return dim_y;
 }
 
+//coins
 
 mony Map::head_insert_coin(mony h,int val,int x,int y){
 	mony tmp = new money;
