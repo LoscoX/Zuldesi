@@ -24,6 +24,7 @@ Player::Player(WINDOW * win, int y, int x){
 	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
 	ind2 = 0; //explosive bullet
+	buy = false; //nothing to build when you start
 	//jump
 	activejump = false; //start without jump
 	segno = -1; //segno for parabola
@@ -204,6 +205,9 @@ int Player::getmv(){ //move the character with gun by user
 				explo_bullets.setQnt(explo_bullets.getQnt()-1); //decrement bullets
 			}
 			break;
+		case 'b': //buy something in the market
+			buy = true;
+			break;
 		default:
 			break;
 	}
@@ -327,6 +331,14 @@ int Player::getPoints(){
 	return points;
 }
 
+bool Player::getBuy(){
+	return buy;
+}
+
+void Player::setBuy(bool val){
+	this->buy = val;
+}
+
 void Player::updateCash(int money){ //update cash
 	cash = cash + money;
 }
@@ -352,9 +364,33 @@ void Player::setLife(int life){
 Bullet Player::getBullet(){
 	return bullet;; //bullets
 }
+
+bullt Player::setBullet(bullt tmp,int cod){
+	tmp = bullet.obj_remove(tmp,cod,false); //remove from the list (don't clean the memory)
+	bullet.blt = bullet.obj_remove(bullet.blt,cod,true); //remove from the main list (clean the memory);
+	return tmp;
+}
+
 Bullet Player::getExploBullet(){
 	return explo_bullet; //explosive bullets
 }
+
+bullt Player::setExploBullet(bullt tmp,int cod){
+	tmp = explo_bullet.obj_remove(tmp,cod,false); //remove from the list (don't clean the memory)
+	explo_bullet.blt = explo_bullet.obj_remove(explo_bullet.blt,cod,true); //remove from the main list (clean the memory);
+	return tmp;
+}
+
+bullt Player::shoot(bullt tmp){ //move bullets
+	tmp = bullet.shoot(tmp,bullet.blt); //move bullets
+	return tmp;
+}
+
+bullt Player::explo_shoot(bullt tmp){ //move exposive bullets
+	tmp = bullet.shoot(tmp,explo_bullet.blt); //move explosive bullets
+	return tmp;
+}
+
 bool Player::getActiveFly(){
 	return ACTIVE_FLY; //take active fly variable
 }
@@ -392,20 +428,37 @@ Powerup Player::getJumping(){
 Powerup Player::getFly(){
 	return fly; //fly
 }
-Powerup Player::getExplo_bullets(){
+Powerup Player::getExplo_Bullets(){
 	return explo_bullets; //explosive bullets
 }
-/*
+
 //set Powerups
-Powerup Player::setGun(Powerup g){
-	;
+void Player::setGun(string g){
+	gun.setName(g); //gun
 }
-Powerup Player::setShield(Powerup s);
-Powerup Player::setHP(Powerup h);
-Powerup Player::setArmor(Powerup a);
-Powerup Player::setTeleportation(Powerup t); //teleport
-Powerup Player::setBullets(Powerup b); //bullets
-Powerup Player::setJumping(Powerup j); //jump
-Powerup Player::setFly(Powerup f); //fly
-Powerup Player::setExplo_bullets(Powerup e); //explosive bullets
-*/
+
+void Player::setShield(int s){
+	shield.setQnt(s); //Shield
+}
+void Player::setHP(int h){
+	hp.setQnt(h); //HP
+}
+void Player::setArmor(int a){
+	armor.setQnt(a); //armor
+}
+void Player::setTeleportation(int t){
+	teleportation.setQnt(t); //teleport
+}
+void Player::setBullets(int b){
+	bullets.setQnt(b); //bullets
+}
+void Player::setJumping(int j){
+	jumping.setQnt(j); //jump
+}
+void Player::setFly(int f){
+	fly.setQnt(f); //fly
+}
+void Player::setExplo_Bullets(int e){
+	explo_bullets.setQnt(e); //explosive bullets
+}
+

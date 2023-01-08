@@ -33,3 +33,7 @@ int Powerup::getDifficulty(){ //take difficulty
 void Powerup::setQnt(int qnt){ //set quantity
     this->qnt = qnt;
 }
+
+void Powerup::setName(string name){
+	this->name = name;
+}

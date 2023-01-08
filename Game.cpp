@@ -26,8 +26,8 @@ Game::Game(int height,int width){
 
 	HEIGHT_MARKET = 15; //height of powerups
 	draw_cost1 = 213;
-	draw_cost2 = 220;
-	draw_cost3 = 145;
+	draw_cost2 = 185;
+	draw_cost3 = 150;
 	Market_Active = false; //you are not in the market when you start
 	Market_Build = false;
 	//bought nothing
@@ -90,7 +90,7 @@ void Game::handleCoins(){
 	}
 
 	//redraw all coins (avoid they disappear due to enemies movement)
-	mony m = mapList->map.coins;
+	mony m = mapList->map.getCoins();
 	while(m != NULL){
 		matrix[m->y][m->x] = '$';
 		m = m->next;
@@ -128,6 +128,9 @@ void Game::handleMaps(){
 	}
 	else if(Market_Active){ //check the position of the player in the market
 		market();
+	}
+	else{
+		player.setBuy(false); //you can't
 	}
 }
 
@@ -215,52 +218,55 @@ void Game::market(){
 
 	//check if the player buy some powerups
 	//first powerup
-	if(player.getx()+xMin>=mapList->map.getDim_x()-draw_cost1 && player.getx()+xMin<=mapList->map.getDim_x()-(draw_cost1+10)){
-		if(player.getCoins()-spawn_powerup[0].price>=0 && !bought1){ //you have enough money
+	if(player.getx()+xMin>=mapList->map.getDim_x()-draw_cost1 && player.getx()+xMin<=mapList->map.getDim_x()-(draw_cost1-10) && player.getBuy()){
+		if(player.getCoins()-spawn_powerup[0].price>=0 && !bought1){ //you have enough money and it's the first powerup that you buy
 			if(strcmp(player.getGun().name.c_str(),spawn_powerup[0].getName().c_str())!=0){ //you don't already have this gun
 				player.updateCash(-spawn_powerup[0].price); //update cash of player
-				player.getGun().name = spawn_powerup[0].getName(); //update powerups of player
+				player.setGun(spawn_powerup[0].getName()); //update powerups of player
 				bought1 = true;
+				player.setBuy(false); //you can buy another powerup
 			}
 		}
 	}
 	//second powerup
-	if(player.getx()+xMin>=mapList->map.getDim_x()-draw_cost2 && player.getx()+xMin<=mapList->map.getDim_x()-(draw_cost2+10)){
-		if(player.getCoins()-spawn_powerup[1].price>=0 && !bought2){ //you have enough money
+	if(player.getx()+xMin>=mapList->map.getDim_x()-draw_cost2 && player.getx()+xMin<=mapList->map.getDim_x()-(draw_cost2-10) && player.getBuy()){
+		if(player.getCoins()-spawn_powerup[1].price>=0 && !bought2){ //you have enough money and it's the first powerup that you buy
 			player.updateCash(-spawn_powerup[1].price); //update cash of player
 			bought2 = true;
+			player.setBuy(false); //you can buy another powerup
 			//update powerups of player
 			if(strcmp(spawn_powerup[1].getName().c_str(),"HP") == 0){ //HP
-				player.getHP().setQnt(player.getHP().getQnt() + spawn_powerup[1].getQnt());
+				player.setHP(player.getHP().getQnt() + spawn_powerup[1].getQnt());
 			}
 			else if(strcmp(spawn_powerup[1].getName().c_str(),"Shield") == 0){ //Shield
-				player.getShield().setQnt(player.getShield().getQnt() + spawn_powerup[1].getQnt());
+				player.setShield(player.getShield().getQnt() + spawn_powerup[1].getQnt());
 			}
 			else if(strcmp(spawn_powerup[1].getName().c_str(),"Jump") == 0){ //Jump
-				player.getJumping().setQnt(player.getJumping().getQnt()+ spawn_powerup[1].getQnt());
+				player.setJumping(player.getJumping().getQnt() + spawn_powerup[1].getQnt());
 			}
 			else if(strcmp(spawn_powerup[1].getName().c_str(),"Bullets") == 0){ //Bullets
-				player.getBullets().setQnt(player.getBullets().getQnt()+ spawn_powerup[1].getQnt());
+				player.setBullets(player.getBullets().getQnt() + spawn_powerup[1].getQnt());
 			}
 			else if(strcmp(spawn_powerup[1].getName().c_str(),"Explo_Bullets") == 0){ //Explosive bullets
-				player.getExplo_bullets().setQnt(player.getExplo_bullets().getQnt()+ spawn_powerup[1].getQnt());
+				player.setExplo_Bullets(player.getExplo_Bullets().getQnt() + spawn_powerup[1].getQnt());
 			}
 		}
 	}
 	//third powerup
-	if(player.getx()+xMin>=mapList->map.getDim_x()-(draw_cost3) && player.getx()+xMin<=mapList->map.getDim_x()-(draw_cost3+10)){
-		if(player.getCoins()-spawn_powerup[2].price>=0 && !bought3){ //you have enough money
+	if(player.getx()+xMin>=mapList->map.getDim_x()-(draw_cost3) && player.getx()+xMin<=mapList->map.getDim_x()-(draw_cost3-10) && player.getBuy()){
+		if(player.getCoins()-spawn_powerup[2].price>=0 && !bought3){ ////you have enough money and it's the first powerup that you buy
 			player.updateCash(-spawn_powerup[1].price); //update cash of player
 			bought3 = true;
+			player.setBuy(false); //you can buy another powerup
 			//update powerups of player
 			if(strcmp(spawn_powerup[2].getName().c_str(),"Teleport") == 0){ //Teleport
-				player.getTeleportation().setQnt(player.getTeleportation().getQnt() + spawn_powerup[2].getQnt());
+				player.setTeleportation(player.getTeleportation().getQnt() + spawn_powerup[2].getQnt());
 			}
 			else if(strcmp(spawn_powerup[2].getName().c_str(),"Armor") == 0){ //Armor
-				player.getArmor().setQnt(player.getArmor().getQnt() + spawn_powerup[2].getQnt());
+				player.setArmor(player.getTeleportation().getQnt() + spawn_powerup[2].getQnt());
 			}
 			else if(strcmp(spawn_powerup[2].getName().c_str(),"Fly") == 0){ //Fly
-				player.getFly().setQnt(player.getFly().getQnt()+ spawn_powerup[2].getQnt());
+				player.setFly(player.getTeleportation().getQnt() + spawn_powerup[2].getQnt());
 			}
 		}
 	}
@@ -341,7 +347,7 @@ void Game::updateDifficulty(){
 	diff += player.getTeleportation().getQnt() * player.getTeleportation().getDifficulty();
 	diff += player.getFly().getQnt() * player.getFly().getDifficulty();
 	diff += player.getBullets().getQnt()/100 * player.getBullets().getDifficulty(); //you buy 100 bullets each time
-	diff += player.getExplo_bullets().getQnt() * player.getExplo_bullets().getDifficulty(); //you buy 100 bullets each time
+	diff += player.getExplo_Bullets().getQnt() * player.getExplo_Bullets().getDifficulty(); //you buy 100 bullets each time
 	difficulty = diff;
 }
 
@@ -367,7 +373,7 @@ void Game::displayLife(){ //display life and bullets
 	if(player.getHP().getQnt()<100) mvwprintw(board.board_win,25,8," ");
 	if(player.getHP().getQnt()<10) mvwprintw(board.board_win,25,7," ");
 	wattroff(board.board_win,COLOR_PAIR(2)); //color
-	mvwprintw(board.board_win,25,13,"%d",difficulty);
+	mvwprintw(board.board_win,25,13,"%d",player.getBuy());
 }
 
 void Game::displayPowerup(){
@@ -437,7 +443,7 @@ void Game::displayPowerup(){
 	wattroff(board.board_win,COLOR_PAIR(1)); //color
 
 	wattron(board.board_win,COLOR_PAIR(2)); //color
-	mvwprintw(board.board_win,27,107,"%d",player.getExplo_bullets().getQnt());
+	mvwprintw(board.board_win,27,107,"%d",player.getExplo_Bullets().getQnt());
 	wattroff(board.board_win,COLOR_PAIR(2)); //color
 }
 
@@ -477,49 +483,37 @@ void Game::displayCoins(){ //display coins
 
 bullt Game::deletePlayerBullets(bullt tmp){ //delete Player's bullets
 	int codice = tmp->cod; //save the code of the bullet
-	Bullet bullet = player.getBullet();
-	tmp = bullet.obj_remove(tmp,codice,false); //remove from the list (don't clean the memory)
-	bullet.blt = bullet.obj_remove(bullet.blt,codice,true); //remove from the main list (clean the memory);
+	tmp = player.setBullet(tmp,codice); //delete bullets
 	return tmp;
 }
 
 bullt Game::deletePlayerExplosiveBullets(bullt tmp){ //delete Player's bullets
 	int codice = tmp->cod; //save the code of the bullet
-	Bullet bullet = player.getExploBullet();
-	tmp = bullet.obj_remove(tmp,codice,false); //remove from the list (don't clean the memory)
-	bullet.blt = bullet.obj_remove(bullet.blt,codice,true); //remove from the main list (clean the memory);
+	tmp = player.setExploBullet(tmp,codice); //delete bullets
 	return tmp;
 }
 
 bullt Game::deleteEnemy6Bullets(bullt tmp,listenm6 e){ //delete Enemy6's bullets
 	int codice = tmp->cod; //save the code of the bullet
-	Bullet bullet = e->enemy.getBullet();
-	tmp = bullet.obj_remove(tmp,codice,false); //remove from the list (don't clean the memory)
-	bullet.blt = bullet.obj_remove(bullet.blt,codice,true); //remove from the main list (clean the memory);
+	tmp = e->enemy.setBullet(tmp,codice); //delete bullets;
 	return tmp;
 }
 
 bullt Game::deleteEnemy7Bullets(bullt tmp,listenm7 e){ //delete Enemy7's bullets
 	int codice = tmp->cod; //save the code of the bullet
-	Bullet bullet = e->enemy.getBullet();
-	tmp = bullet.obj_remove(tmp,codice,false); //remove from the list (don't clean the memory)
-	bullet.blt = bullet.obj_remove(bullet.blt,codice,true); //remove from the main list (clean the memory);
+	tmp = e->enemy.setBullet(tmp,codice); //delete bullets;
 	return tmp;
 }
 
 bullt Game::deleteEnemy8Bullets(bullt tmp,listenm8 e){ //delete Enemy8's bullets
 	int codice = tmp->cod; //save the code of the bullet
-	Bullet bullet = e->enemy.getBullet();
-	tmp = bullet.obj_remove(tmp,codice,false); //remove from the list (don't clean the memory)
-	bullet.blt = bullet.obj_remove(bullet.blt,codice,true); //remove from the main list (clean the memory);
+	tmp = e->enemy.setBullet(tmp,codice); //delete bullets;
 	return tmp;
 }
 
 bullt Game::deleteEnemy9Bullets(bullt tmp,listenm9 e){ //delete Enemy9's bullets
 	int codice = tmp->cod; //save the code of the bullet
-	Bullet bullet = e->enemy.getBullet();
-	tmp = bullet.obj_remove(tmp,codice,false); //remove from the list (don't clean the memory)
-	bullet.blt = bullet.obj_remove(bullet.blt,codice,true); //remove from the main list (clean the memory);
+	tmp = e->enemy.setBullet(tmp,codice); //delete bullets;
 	return tmp;
 }
 
@@ -545,8 +539,7 @@ void Game::shooting(){
 		tmp = player.getBullet().blt;
 		while(tmp!=NULL){ //you have to move all the bullets
 			mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
-			Bullet bullet = player.getBullet();
-			tmp = bullet.shoot(tmp,bullet.blt); //move bullets
+			tmp = player.shoot(tmp);
 			if(tmp->xB+xMin>(mapList->map.getDim_x()-5) || tmp->xB+xMin<5){ //check if it has reached the walls
 				tmp = Game::deletePlayerBullets(tmp); //delete bullet
 			}
@@ -568,8 +561,7 @@ void Game::shooting(){
 		tmp = player.getExploBullet().blt;
 		while(tmp!=NULL){ //you have to move all the bullets
 			mvwaddch(board.board_win,tmp->yB,tmp->xB,' '); //delete graphically the bullet
-			Bullet bullet = player.getExploBullet();
-			tmp = bullet.shoot(tmp,bullet.blt); //move bullets
+			tmp = player.explo_shoot(tmp);
 			if(tmp->xB+xMin>(mapList->map.getDim_x()-5) || tmp->xB+xMin<5){ //check if it has reached the walls
 				tmp = Game::deletePlayerExplosiveBullets(tmp); //delete bullet
 			}
@@ -588,13 +580,12 @@ void Game::shooting(){
 		}
 
 		//gun enemy type6
-		listenm6 cont = mapList->map.enemies6;
+		listenm6 cont = mapList->map.getEnemies6();
 		while(cont!=NULL){ //There are more enemies type6 than one
-			Bullet bullet = cont->enemy.getBullet();
-			tmp = bullet.blt;
+			tmp = cont->enemy.getBullet().blt;
 			while(tmp!=NULL){ //you have to move all the bullets
 				mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
-				tmp = bullet.shoot(tmp,bullet.blt);
+				tmp = cont->enemy.Enemyshoot(tmp); //shoot
 				if(tmp->xB>(mapList->map.getDim_x()-5) || tmp->xB<5){ //check if reaches the wall
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy6Bullets(tmp,cont); //delete bullet
@@ -616,13 +607,13 @@ void Game::shooting(){
 		}
 
 		//gun enemy type7
-		listenm7 cont2 = mapList->map.enemies7;
+		listenm7 cont2 = mapList->map.getEnemies7();
 		while(cont2!=NULL){ //There are more enemies type7 than one
 			Bullet bullet = cont2->enemy.getBullet();
 			tmp = bullet.blt;
 			while(tmp!=NULL){ //you have to move all the bullets
 				mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
-				tmp = bullet.shoot(tmp,bullet.blt); //move the bullet
+				tmp = cont2->enemy.Enemyshoot(tmp); //shoot
 				if(tmp->xB>(mapList->map.getDim_x()-5) || tmp->xB<5){//check if it reaches the wall
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy7Bullets(tmp,cont2); //delete bullet
@@ -644,13 +635,12 @@ void Game::shooting(){
 		}
 
 		//gun enemy type8
-		listenm8 cont3 = mapList->map.enemies8;
+		listenm8 cont3 = mapList->map.getEnemies8();
 		while(cont3!=NULL){ //There are more enemies type8 than one
-			Bullet bullet = cont3->enemy.getBullet();
-			tmp = bullet.blt;
+			tmp = cont3->enemy.getBullet().blt;
 			while(tmp!=NULL){ //you have to move all the bullets
 				mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
-				tmp = bullet.shoot(tmp,bullet.blt); //move the bullet
+				tmp = cont3->enemy.Enemyshoot(tmp); //shoot
 				if(tmp->xB>(mapList->map.getDim_x()-5) || tmp->xB<5){ //check if it reaches the
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy8Bullets(tmp,cont3); //delete bullet
@@ -672,13 +662,12 @@ void Game::shooting(){
 		}
 
 		//gun enemy type9
-		listenm9 cont4 = mapList->map.enemies9;
+		listenm9 cont4 = mapList->map.getEnemies9();
 		while(cont4!=NULL){ //There are more enemies type9 than one
-			Bullet bullet = cont4->enemy.getBullet();
-			tmp = bullet.blt;
+			tmp = cont4->enemy.getBullet().blt;
 			while(tmp!=NULL){ //you have to move all the bullets
 				mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
-				tmp = bullet.shoot(tmp,bullet.blt); //move the bullet
+				tmp = cont4->enemy.Enemyshoot(tmp); //shoot
 				if(tmp->xB>(mapList->map.getDim_x()-5) || tmp->xB<5){ //check if it reaches the wall
 					mvwaddch(board.board_win,tmp->yB,tmp->xB-xMin,' '); //delete graphically the bullet
 					tmp = deleteEnemy9Bullets(tmp,cont4); //delete bullet
@@ -704,7 +693,7 @@ void Game::shooting(){
 
 bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 	//check enemy0
-	listenm0 tmp0 = mapList->map.enemies0;
+	listenm0 tmp0 = mapList->map.getEnemies0();
 	bool found = false;
 	int codice; //variable where we can save the code of one enemy
 	while(tmp0!=NULL && !found){
@@ -715,8 +704,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 				player.updatePoints(5); //take points
 				matrix[tmp0->enemy.gety()][tmp0->enemy.getx()] = ' '; //delete graphically the enemy
 				codice = tmp0->val; //save the code of the enemy
-				tmp0 = mapList->map.obj_remove_enemy0(tmp0, codice,false); //if it is died, you have to remove from the list
-				mapList->map.enemies0 = mapList->map.obj_remove_enemy0(mapList->map.enemies0, codice,true); //if it is died, you have to remove from the main list
+				tmp0 = mapList->map.setEnemies0(tmp0,codice); //update list
 			}
 			else tmp0 = tmp0->next;
 		}
@@ -724,7 +712,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 	}
 
 	//check enemy1
-	listenm1 tmp1 = mapList->map.enemies1;
+	listenm1 tmp1 = mapList->map.getEnemies1();
 	while(tmp1!=NULL && !found){
 		if(abs(tmp->xB+xMin - tmp1->enemy.getx())<=1 && abs(tmp->yB - tmp1->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp1->enemy.injury(); //injury for the enemy
@@ -733,8 +721,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 				player.updatePoints(7); //take points
 				matrix[tmp1->enemy.gety()][tmp1->enemy.getx()] = ' '; //delete graphically the enemy
 				codice = tmp1->val; //save the code of the enemy
-				tmp1 = mapList->map.obj_remove_enemy1(tmp1, codice,false); //if it is died, you have to remove from the list
-				mapList->map.enemies1 = mapList->map.obj_remove_enemy1(mapList->map.enemies1, codice,true); //if it is died, you have to remove from the main list
+				tmp1 = mapList->map.setEnemies1(tmp1,codice); //update list
 			}
 			else tmp1 = tmp1->next;
 		}
@@ -742,7 +729,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 	}
 
 	//check enemy2
-	listenm2 tmp2 = mapList->map.enemies2;
+	listenm2 tmp2 = mapList->map.getEnemies2();
 	while(tmp2!=NULL && !found){
 		if(abs(tmp->xB+xMin - tmp2->enemy.getx())<=1 && abs(tmp->yB - tmp2->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp2->enemy.injury(); //injury for the enemy
@@ -751,8 +738,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 				player.updatePoints(7); //take points
 				matrix[tmp2->enemy.gety()][tmp2->enemy.getx()] = ' '; //delete graphically the enemy
 				codice = tmp2->val; //save the code of the enemy
-				tmp2 = mapList->map.obj_remove_enemy2(tmp2, codice,false); //if it is died, you have to remove from the list
-				mapList->map.enemies2 = mapList->map.obj_remove_enemy2(mapList->map.enemies2, codice,true); //if it is died, you have to remove from the main list
+				tmp2 = mapList->map.setEnemies2(tmp2,codice); //update list
 			}
 			else tmp2 = tmp2->next;
 		}
@@ -760,7 +746,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 	}
 
 	//check enemy3
-	listenm3 tmp3 = mapList->map.enemies3;
+	listenm3 tmp3 = mapList->map.getEnemies3();
 	while(tmp3!=NULL && !found){
 		if(abs(tmp->xB+xMin - tmp3->enemy.getx())<=1 && abs(tmp->yB - tmp3->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp3->enemy.injury(); //injury for the enemy
@@ -769,8 +755,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 				player.updatePoints(2); //take points
 				matrix[tmp3->enemy.gety()][tmp3->enemy.getx()] = ' '; //delete graphically the enemy
 				codice = tmp3->val; //save the code of the enemy
-				tmp3 = mapList->map.obj_remove_enemy3(tmp3, codice,false); //if it is died, you have to remove from the list
-				mapList->map.enemies3 = mapList->map.obj_remove_enemy3(mapList->map.enemies3, codice,true); //if it is died, you have to remove from the main list
+				tmp3 = mapList->map.setEnemies3(tmp3,codice); //update list
 			}
 			else tmp3 = tmp3->next;
 		}
@@ -778,7 +763,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 	}
 
 	//check enemy4
-	listenm4 tmp4 = mapList->map.enemies4;
+	listenm4 tmp4 = mapList->map.getEnemies4();
 	while(tmp4!=NULL && !found){
 		if(abs(tmp->xB+xMin - tmp4->enemy.getx())<=1 && abs(tmp->yB - tmp4->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp4->enemy.injury(); //injury for the enemy
@@ -787,8 +772,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 				player.updatePoints(3); //take points
 				matrix[tmp4->enemy.gety()][tmp4->enemy.getx()] = ' '; //delete graphically the enemy
 				codice = tmp4->val; //save the code of the enemy
-				tmp4 = mapList->map.obj_remove_enemy4(tmp4, codice,false); //if it is died, you have to remove from the list
-				mapList->map.enemies4 = mapList->map.obj_remove_enemy4(mapList->map.enemies4, codice,true); //if it is died, you have to remove from the main list
+				tmp4 = mapList->map.setEnemies4(tmp4,codice); //update list
 			}
 			else tmp4 = tmp4->next;
 		}
@@ -796,7 +780,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 	}
 
 	//check enemy5
-	listenm5 tmp5 = mapList->map.enemies5;
+	listenm5 tmp5 = mapList->map.getEnemies5();
 	while(tmp5!=NULL && !found){
 		if(abs(tmp->xB+xMin - tmp5->enemy.getx())<=1 && abs(tmp->yB - tmp5->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp5->enemy.injury(); //injury for the enemy
@@ -805,8 +789,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 				player.updatePoints(2); //take points
 				matrix[tmp5->enemy.gety()][tmp5->enemy.getx()] = ' '; //delete graphically the enemy
 				codice = tmp5->val; //save the code of the enemy
-				tmp5 = mapList->map.obj_remove_enemy5(tmp5, codice,false); //if it is died, you have to remove from the list
-				mapList->map.enemies5 = mapList->map.obj_remove_enemy5(mapList->map.enemies5, codice,true); //if it is died, you have to remove from the main list
+				tmp5 = mapList->map.setEnemies5(tmp5,codice); //update list
 			}
 			else tmp5 = tmp5->next;
 		}
@@ -815,7 +798,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 
 	bullt temp; //we need it to raise all remaining bullets
 	//check enemy6
-	listenm6 tmp6 = mapList->map.enemies6;
+	listenm6 tmp6 = mapList->map.getEnemies6();
 	while(tmp6!=NULL && !found){
 		if(abs(tmp->xB+xMin - tmp6->enemy.getx())<=1 && abs(tmp->yB - tmp6->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp6->enemy.injury(); //injury for the enemy
@@ -833,8 +816,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 					temp = deleteEnemy6Bullets(temp,tmp6); //delete bullet
 				}
 				codice = tmp6->val; //save the code of the enemy
-				tmp6 = mapList->map.obj_remove_enemy6(tmp6, codice,false); //if it is died, you have to remove from the list
-				mapList->map.enemies6 = mapList->map.obj_remove_enemy6(mapList->map.enemies6, codice,true); //if it is died, you have to remove from the main list
+				tmp6 = mapList->map.setEnemies6(tmp6,codice); //update list
 			}
 			else tmp6 = tmp6->next;
 		}
@@ -842,7 +824,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 	}
 
 	//check enemy7
-	listenm7 tmp7 = mapList->map.enemies7;
+	listenm7 tmp7 = mapList->map.getEnemies7();
 	while(tmp7!=NULL && !found){
 		if(abs(tmp->xB+xMin - tmp7->enemy.getx())<=1 && abs(tmp->yB - tmp7->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp7->enemy.injury(); //injury for the enemy
@@ -860,8 +842,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 					temp = deleteEnemy7Bullets(temp,tmp7); //delete bullet
 				}
 				codice = tmp7->val; //save the code of the enemy
-				tmp7 = mapList->map.obj_remove_enemy7(tmp7, codice,false); //if it is died, you have to remove from the list
-				mapList->map.enemies7 = mapList->map.obj_remove_enemy7(mapList->map.enemies7, codice,true); //if it is died, you have to remove from the main list
+				tmp7 = mapList->map.setEnemies7(tmp7,codice); //update list
 			}
 			else tmp7 = tmp7->next;
 		}
@@ -869,7 +850,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 	}
 
 	//check enemy8
-	listenm8 tmp8 = mapList->map.enemies8;
+	listenm8 tmp8 = mapList->map.getEnemies8();
 	while(tmp8!=NULL && !found){
 		if(abs(tmp->xB+xMin - tmp8->enemy.getx())<=1 && abs(tmp->yB - tmp8->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp8->enemy.injury(); //injury for the enemy
@@ -887,8 +868,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 					temp = deleteEnemy8Bullets(temp,tmp8); //delete bullet
 				}
 				codice = tmp8->val; //save the code of the enemy
-				tmp8 = mapList->map.obj_remove_enemy8(tmp8, codice,false); //if it is died, you have to remove from the list
-				mapList->map.enemies8 = mapList->map.obj_remove_enemy8(mapList->map.enemies8, codice,true); //if it is died, you have to remove from the main list
+				tmp8 = mapList->map.setEnemies8(tmp8,codice); //update list
 			}
 			else tmp8 = tmp8->next;
 		}
@@ -896,7 +876,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 	}
 
 	//check enemy9
-	listenm9 tmp9 = mapList->map.enemies9;
+	listenm9 tmp9 = mapList->map.getEnemies9();
 	while(tmp9!=NULL && !found){
 		if(abs(tmp->xB+xMin - tmp9->enemy.getx())<=1 && abs(tmp->yB - tmp9->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp9->enemy.injury(); //injury for the enemy
@@ -914,8 +894,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 					temp = deleteEnemy9Bullets(temp,tmp9); //delete bullet
 				}
 				codice = tmp9->val; //save the code of the enemy
-				tmp9 = mapList->map.obj_remove_enemy9(tmp9, codice,false); //if it is died, you have to remove from the list
-				mapList->map.enemies9 = mapList->map.obj_remove_enemy9(mapList->map.enemies9, codice,true); //if it is died, you have to remove from the main list
+				tmp9 = mapList->map.setEnemies9(tmp9,codice); //update list
 			}
 			else tmp9 = tmp9->next;
 		}
@@ -927,7 +906,7 @@ bool Game::enemydeath(bullt tmp){ //check if one bullet touch one of the enemy
 
 bool Game::enemydeath2(bullt tmp){ //check if one explosive bullet touch one of the enemy
 	//check enemy0
-	listenm0 tmp0 = mapList->map.enemies0;
+	listenm0 tmp0 = mapList->map.getEnemies0();
 	bool found = false;
 	int codice; //variable where we can save the code of one enemy
 	while(tmp0!=NULL && !found){
@@ -937,14 +916,13 @@ bool Game::enemydeath2(bullt tmp){ //check if one explosive bullet touch one of 
 			player.updatePoints(5); //take points
 			matrix[tmp0->enemy.gety()][tmp0->enemy.getx()] = ' '; //delete graphically the enemy
 			codice = tmp0->val; //save the code of the enemy
-			tmp0 = mapList->map.obj_remove_enemy0(tmp0, codice,false); //if it is died, you have to remove from the list
-			mapList->map.enemies0 = mapList->map.obj_remove_enemy0(mapList->map.enemies0, codice,true); //if it is died, you have to remove from the main list
+			tmp0 = mapList->map.setEnemies0(tmp0,codice); //update list
 		}
 		else tmp0 = tmp0->next;
 	}
 
 	//check enemy1
-	listenm1 tmp1 = mapList->map.enemies1;
+	listenm1 tmp1 = mapList->map.getEnemies1();
 	while(tmp1!=NULL && !found){
 		if(abs(tmp->xB+xMin - tmp1->enemy.getx())<=1 && abs(tmp->yB - tmp1->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp1->enemy.setLife(0); //death for the enemy
@@ -952,14 +930,13 @@ bool Game::enemydeath2(bullt tmp){ //check if one explosive bullet touch one of 
 			player.updatePoints(7); //take points
 			matrix[tmp1->enemy.gety()][tmp1->enemy.getx()] = ' '; //delete graphically the enemy
 			codice = tmp1->val; //save the code of the enemy
-			tmp1 = mapList->map.obj_remove_enemy1(tmp1, codice,false); //if it is died, you have to remove from the list
-			mapList->map.enemies1 = mapList->map.obj_remove_enemy1(mapList->map.enemies1, codice,true); //if it is died, you have to remove from the main list
+			tmp1 = mapList->map.setEnemies1(tmp1,codice); //update list
 		}
 		else tmp1 = tmp1->next;
 	}
 
 	//check enemy2
-	listenm2 tmp2 = mapList->map.enemies2;
+	listenm2 tmp2 = mapList->map.getEnemies2();
 	while(tmp2!=NULL && !found){
 		if(abs(tmp->xB+xMin - tmp2->enemy.getx())<=1 && abs(tmp->yB - tmp2->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp2->enemy.setLife(0); //death for the enemy
@@ -967,14 +944,13 @@ bool Game::enemydeath2(bullt tmp){ //check if one explosive bullet touch one of 
 			player.updatePoints(7); //take points
 			matrix[tmp2->enemy.gety()][tmp2->enemy.getx()] = ' '; //delete graphically the enemy
 			codice = tmp2->val; //save the code of the enemy
-			tmp2 = mapList->map.obj_remove_enemy2(tmp2, codice,false); //if it is died, you have to remove from the list
-			mapList->map.enemies2 = mapList->map.obj_remove_enemy2(mapList->map.enemies2, codice,true); //if it is died, you have to remove from the main list
+			tmp2 = mapList->map.setEnemies2(tmp2,codice); //update list
 		}
 		else tmp2 = tmp2->next;
 	}
 
 	//check enemy3
-	listenm3 tmp3 = mapList->map.enemies3;
+	listenm3 tmp3 = mapList->map.getEnemies3();
 	while(tmp3!=NULL && !found){
 		if(abs(tmp->xB+xMin - tmp3->enemy.getx())<=1 && abs(tmp->yB - tmp3->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp3->enemy.setLife(0); //death for the enemy
@@ -982,14 +958,13 @@ bool Game::enemydeath2(bullt tmp){ //check if one explosive bullet touch one of 
 			player.updatePoints(2); //take points
 			matrix[tmp3->enemy.gety()][tmp3->enemy.getx()] = ' '; //delete graphically the enemy
 			codice = tmp3->val; //save the code of the enemy
-			tmp3 = mapList->map.obj_remove_enemy3(tmp3, codice,false); //if it is died, you have to remove from the list
-			mapList->map.enemies3 = mapList->map.obj_remove_enemy3(mapList->map.enemies3, codice,true); //if it is died, you have to remove from the main list
+			tmp3 = mapList->map.setEnemies3(tmp3,codice); //update list
 		}
 		else tmp3 = tmp3->next;
 	}
 
 	//check enemy4
-	listenm4 tmp4 = mapList->map.enemies4;
+	listenm4 tmp4 = mapList->map.getEnemies4();
 	while(tmp4!=NULL && !found){
 		if(abs(tmp->xB+xMin - tmp4->enemy.getx())<=1 && abs(tmp->yB - tmp4->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp4->enemy.setLife(0); //death for the enemy
@@ -997,14 +972,13 @@ bool Game::enemydeath2(bullt tmp){ //check if one explosive bullet touch one of 
 			player.updatePoints(3); //take points
 			matrix[tmp4->enemy.gety()][tmp4->enemy.getx()] = ' '; //delete graphically the enemy
 			codice = tmp4->val; //save the code of the enemy
-			tmp4 = mapList->map.obj_remove_enemy4(tmp4, codice,false); //if it is died, you have to remove from the list
-			mapList->map.enemies4 = mapList->map.obj_remove_enemy4(mapList->map.enemies4, codice,true); //if it is died, you have to remove from the main list
+			tmp4 = mapList->map.setEnemies4(tmp4,codice); //update list
 		}
 		else tmp4 = tmp4->next;
 	}
 
 	//check enemy5
-	listenm5 tmp5 = mapList->map.enemies5;
+	listenm5 tmp5 = mapList->map.getEnemies5();
 	while(tmp5!=NULL && !found){
 		if(abs(tmp->xB+xMin - tmp5->enemy.getx())<=1 && abs(tmp->yB - tmp5->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp5->enemy.setLife(0); //death for the enemy
@@ -1012,15 +986,14 @@ bool Game::enemydeath2(bullt tmp){ //check if one explosive bullet touch one of 
 			player.updatePoints(2); //take points
 			matrix[tmp5->enemy.gety()][tmp5->enemy.getx()] = ' '; //delete graphically the enemy
 			codice = tmp5->val; //save the code of the enemy
-			tmp5 = mapList->map.obj_remove_enemy5(tmp5, codice,false); //if it is died, you have to remove from the list
-			mapList->map.enemies5 = mapList->map.obj_remove_enemy5(mapList->map.enemies5, codice,true); //if it is died, you have to remove from the main list
+			tmp5 = mapList->map.setEnemies5(tmp5,codice); //update list
 		}
 		else tmp5 = tmp5->next;
 	}
 
 	bullt temp; //we need it to raise all remaining bullets
 	//check enemy6
-	listenm6 tmp6 = mapList->map.enemies6;
+	listenm6 tmp6 = mapList->map.getEnemies6();
 	while(tmp6!=NULL && !found){
 		if(abs(tmp->xB+xMin - tmp6->enemy.getx())<=1 && abs(tmp->yB - tmp6->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp6->enemy.setLife(0); //death for the enemy
@@ -1037,14 +1010,13 @@ bool Game::enemydeath2(bullt tmp){ //check if one explosive bullet touch one of 
 				temp = deleteEnemy6Bullets(temp,tmp6); //delete bullet
 			}
 			codice = tmp6->val; //save the code of the enemy
-			tmp6 = mapList->map.obj_remove_enemy6(tmp6, codice,false); //if it is died, you have to remove from the list
-			mapList->map.enemies6 = mapList->map.obj_remove_enemy6(mapList->map.enemies6, codice,true); //if it is died, you have to remove from the main list
+			tmp6 = mapList->map.setEnemies6(tmp6,codice); //update list
 		}
 		else tmp6 = tmp6->next;
 	}
 
 	//check enemy7
-	listenm7 tmp7 = mapList->map.enemies7;
+	listenm7 tmp7 = mapList->map.getEnemies7();
 	while(tmp7!=NULL && !found){
 		if(abs(tmp->xB+xMin - tmp7->enemy.getx())<=1 && abs(tmp->yB - tmp7->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp7->enemy.setLife(0); //death for the enemy
@@ -1061,14 +1033,13 @@ bool Game::enemydeath2(bullt tmp){ //check if one explosive bullet touch one of 
 				temp = deleteEnemy7Bullets(temp,tmp7); //delete bullet
 			}
 			codice = tmp7->val; //save the code of the enemy
-			tmp7 = mapList->map.obj_remove_enemy7(tmp7, codice,false); //if it is died, you have to remove from the list
-			mapList->map.enemies7 = mapList->map.obj_remove_enemy7(mapList->map.enemies7, codice,true); //if it is died, you have to remove from the main list
+			tmp7 = mapList->map.setEnemies7(tmp7,codice); //update list
 		}
 		else tmp7 = tmp7->next;
 	}
 
 	//check enemy8
-	listenm8 tmp8 = mapList->map.enemies8;
+	listenm8 tmp8 = mapList->map.getEnemies8();
 	while(tmp8!=NULL && !found){
 		if(abs(tmp->xB+xMin - tmp8->enemy.getx())<=1 && abs(tmp->yB - tmp8->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp8->enemy.setLife(0); //death for the enemy
@@ -1085,14 +1056,13 @@ bool Game::enemydeath2(bullt tmp){ //check if one explosive bullet touch one of 
 				temp = deleteEnemy8Bullets(temp,tmp8); //delete bullet
 			}
 			codice = tmp8->val; //save the code of the enemy
-			tmp8 = mapList->map.obj_remove_enemy8(tmp8, codice,false); //if it is died, you have to remove from the list
-			mapList->map.enemies8 = mapList->map.obj_remove_enemy8(mapList->map.enemies8, codice,true); //if it is died, you have to remove from the main list
+			tmp8 = mapList->map.setEnemies8(tmp8,codice); //update list
 		}
 		else tmp8 = tmp8->next;
 	}
 
 	//check enemy9
-	listenm9 tmp9 = mapList->map.enemies9;
+	listenm9 tmp9 = mapList->map.getEnemies9();
 	while(tmp9!=NULL && !found){
 		if(abs(tmp->xB+xMin - tmp9->enemy.getx())<=1 && abs(tmp->yB - tmp9->enemy.gety())<=1){ //check if the bullet and the enemy are in the same place (the same approach used in interaction1)
 			tmp9->enemy.setLife(0); //death for the enemy
@@ -1109,8 +1079,7 @@ bool Game::enemydeath2(bullt tmp){ //check if one explosive bullet touch one of 
 				temp = deleteEnemy9Bullets(temp,tmp9); //delete bullet
 			}
 			codice = tmp9->val; //save the code of the enemy
-			tmp9 = mapList->map.obj_remove_enemy9(tmp9, codice,false); //if it is died, you have to remove from the list
-			mapList->map.enemies9 = mapList->map.obj_remove_enemy9(mapList->map.enemies9, codice,true); //if it is died, you have to remove from the main list
+			tmp9 = mapList->map.setEnemies9(tmp9,codice); //update list
 		}
 		else tmp9 = tmp9->next;
 	}
@@ -1506,7 +1475,7 @@ void Game::Enemy9CanMove(listenm9 h){ //Enemies can or cannot move
 }
 
 void Game::enemyMovement(){	//Enemies movement
-	listenm0 tmp = mapList->map.enemies0; //type0
+	listenm0 tmp = mapList->map.getEnemies0(); //type0
 	while(tmp!=NULL){
 		matrix[tmp->enemy.gety()][tmp->enemy.getx()] = ' '; //delete enemy
 		tmp->enemy.movement(); //move one enemy
@@ -1515,7 +1484,7 @@ void Game::enemyMovement(){	//Enemies movement
 		Game::interaction(tmp->enemy); //check the interaction between one enemy and the player
 		tmp = tmp->next; //go to the next enemy
 	}
-	listenm1 tmp1 = mapList->map.enemies1; //type1
+	listenm1 tmp1 = mapList->map.getEnemies1(); //type1
 	while(tmp1!=NULL){
 		matrix[tmp1->enemy.gety()][tmp1->enemy.getx()] = ' '; //delete enemy
 		tmp1->enemy.movement(); //move one enemy
@@ -1525,7 +1494,7 @@ void Game::enemyMovement(){	//Enemies movement
 		tmp1 = tmp1->next; //go to the next enemy
 	}
 
-	listenm2 tmp2 = mapList->map.enemies2; //type2
+	listenm2 tmp2 = mapList->map.getEnemies2(); //type2
 	while(tmp2!=NULL){
 		matrix[tmp2->enemy.gety()][tmp2->enemy.getx()] = ' '; //delete enemy
 		tmp2->enemy.movement(); //move one enemy
@@ -1535,7 +1504,7 @@ void Game::enemyMovement(){	//Enemies movement
 		tmp2 = tmp2->next; //go to the next enemy
 	}
 
-	listenm3 tmp3 = mapList->map.enemies3; //type3
+	listenm3 tmp3 = mapList->map.getEnemies3(); //type3
 	while(tmp3!=NULL){
 		matrix[tmp3->enemy.gety()][tmp3->enemy.getx()] = ' '; //delete enemy
 		tmp3->enemy.movement(); //move one enemy
@@ -1545,7 +1514,7 @@ void Game::enemyMovement(){	//Enemies movement
 		tmp3 = tmp3->next; //go to the next enemy
 	}
 
-	listenm4 tmp4 = mapList->map.enemies4; //type4
+	listenm4 tmp4 = mapList->map.getEnemies4(); //type4
 	while(tmp4!=NULL){
 		matrix[tmp4->enemy.gety()][tmp4->enemy.getx()] = ' '; //delete enemy
 		tmp4->enemy.movement(); //move one enemy
@@ -1556,7 +1525,7 @@ void Game::enemyMovement(){	//Enemies movement
 	}
 
 	int dir;
-	listenm5 tmp5 = mapList->map.enemies5; //type5
+	listenm5 tmp5 = mapList->map.getEnemies5(); //type5
 	while(tmp5!=NULL){
 		matrix[tmp5->enemy.gety()][tmp5->enemy.getx()] = ' '; //delete enemy
 		dir = Game::directionSmartEnemy5(tmp5->enemy);
@@ -1569,7 +1538,7 @@ void Game::enemyMovement(){	//Enemies movement
 		tmp5 = tmp5->next; //go to the next enemy
 	}
 
-	listenm6 tmp6 = mapList->map.enemies6;  //type6
+	listenm6 tmp6 = mapList->map.getEnemies6();  //type6
 	while(tmp6!=NULL){
 		matrix[tmp6->enemy.gety()][tmp6->enemy.getx()] = ' '; //delete enemy
 		matrix[tmp6->enemy.gety()][tmp6->enemy.getx()+tmp6->enemy.getSign()] = ' '; //delete gun
@@ -1581,7 +1550,7 @@ void Game::enemyMovement(){	//Enemies movement
 		tmp6 = tmp6->next; //go to the next enemy
 	}
 
-	listenm7 tmp7 = mapList->map.enemies7;  //type7
+	listenm7 tmp7 = mapList->map.getEnemies7();  //type7
 	while(tmp7!=NULL){
 		matrix[tmp7->enemy.gety()][tmp7->enemy.getx()] = ' '; //delete enemy
 		matrix[tmp7->enemy.gety()][tmp7->enemy.getx()+tmp7->enemy.getSign()] = ' '; //delete gun
@@ -1596,7 +1565,7 @@ void Game::enemyMovement(){	//Enemies movement
 		tmp7 = tmp7->next; //go to the next enemy
 	}
 
-	listenm8 tmp8 = mapList->map.enemies8;  //type8
+	listenm8 tmp8 = mapList->map.getEnemies8();  //type8
 	while(tmp8!=NULL){
 		matrix[tmp8->enemy.gety()][tmp8->enemy.getx()] = ' '; //delete enemy
 		matrix[tmp8->enemy.gety()][tmp8->enemy.getx()+tmp8->enemy.getSign()] = ' '; //delete gun
@@ -1611,7 +1580,7 @@ void Game::enemyMovement(){	//Enemies movement
 		tmp8 = tmp8->next; //go to the next enemy
 	}
 
-	listenm9 tmp9 = mapList->map.enemies9;  //type9
+	listenm9 tmp9 = mapList->map.getEnemies9();  //type9
 	while(tmp9!=NULL){
 		matrix[tmp9->enemy.gety()][tmp9->enemy.getx()] = ' '; //delete enemy
 		matrix[tmp9->enemy.gety()][tmp9->enemy.getx()+1] = ' '; //delete gun

@@ -30,6 +30,7 @@ protected:
 	bool activejump; //if it is true, you are jumping
 	int conta;
 	int segno;
+	bool buy; //if you want to buy something
 
 	//powerup
 	Powerup gun; //type of gun
@@ -80,6 +81,8 @@ public:
 	int getDir(); //return dir of player
 	int getPoints(); //points of the player
 	int getLife(); //life of player
+	bool getBuy(); //take buy variable
+	void setBuy(bool val); //set buy variable
 
 	void SetJump(); //restart the variable of jump
 
@@ -91,7 +94,11 @@ public:
 
 	//bullets
 	Bullet getBullet(); //bullets
+	bullt setBullet(bullt tmp,int cod);
 	Bullet getExploBullet(); //explosive bullets
+	bullt setExploBullet(bullt tmp,int cod);
+	bullt shoot(bullt tmp);
+	bullt explo_shoot(bullt tmp);
 
 	//get Powerups
 	Powerup getGun(); //gun
@@ -102,7 +109,18 @@ public:
 	Powerup getBullets(); //bullets
 	Powerup getJumping(); //jump
 	Powerup getFly(); //fly
-	Powerup getExplo_bullets(); //explosive bullets
+	Powerup getExplo_Bullets(); //explosive bullets
+
+	//set Powerups
+	void setGun(string g); //gun
+	void setShield(int s); //shield
+	void setHP(int h); //HP
+	void setArmor(int a); //Armor
+	void setTeleportation(int t); //teleport
+	void setBullets(int b); //bullets
+	void setJumping(int j); //jump
+	void setFly(int f); //fly
+	void setExplo_Bullets(int e); //explosive bullets
 
 	bool getActiveFly(); //take active fly variable
 	bool getActiveJump(); //take active jump variable

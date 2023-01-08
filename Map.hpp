@@ -100,6 +100,21 @@ class Map{
         int trigger_market; //(for the market level)
         seg_list_ptr segList; //list of segments
         int gen_x, gen_y; //variables for the generation of enemies and coins
+
+        //Enemies
+    	listenm0 enemies0; //list of enemies type 0
+    	listenm1 enemies1; //list of enemies type 1
+    	listenm2 enemies2; //list of enemies type 2
+    	listenm3 enemies3; //list of enemies type 3
+    	listenm4 enemies4; //list of enemies type 4
+    	listenm5 enemies5; //list of enemies type 5
+    	listenm6 enemies6; //list of enemies type 6
+    	listenm7 enemies7; //list of enemies type 7
+    	listenm8 enemies8; //list of enemies type 8
+    	listenm9 enemies9; //list of enemies type 9
+
+       	mony coins; //coins
+
     public:
         Map();
         Map(int difficulty); //map depends of difficulty
@@ -119,19 +134,28 @@ class Map{
     	mony removeCoins(mony h,int cod); //remove one coin
     	mony FallCoins(mony h); //avoid coins on the air
 
-    	//Enemies
-
         //Enemies
-    	listenm0 enemies0; //list of enemies type 0
-    	listenm1 enemies1; //list of enemies type 1
-    	listenm2 enemies2; //list of enemies type 2
-    	listenm3 enemies3; //list of enemies type 3
-    	listenm4 enemies4; //list of enemies type 4
-    	listenm5 enemies5; //list of enemies type 5
-    	listenm6 enemies6; //list of enemies type 6
-    	listenm7 enemies7; //list of enemies type 7
-    	listenm8 enemies8; //list of enemies type 8
-    	listenm9 enemies9; //list of enemies type 8
+    	listenm0 getEnemies0(); //take list of enemies type 0
+    	listenm1 getEnemies1(); //take list of enemies type 1
+    	listenm2 getEnemies2(); //take list of enemies type 2
+    	listenm3 getEnemies3(); //take list of enemies type 3
+    	listenm4 getEnemies4(); //take list of enemies type 4
+    	listenm5 getEnemies5(); //take list of enemies type 5
+    	listenm6 getEnemies6(); //take list of enemies type 6
+    	listenm7 getEnemies7(); //take list of enemies type 7
+    	listenm8 getEnemies8(); //take list of enemies type 8
+    	listenm9 getEnemies9(); //take list of enemies type 9
+
+    	listenm0 setEnemies0(listenm0 tmp,int cod); //update list of enemies type 0
+    	listenm1 setEnemies1(listenm1 tmp,int cod); //update list of enemies type 1
+    	listenm2 setEnemies2(listenm2 tmp,int cod); //update list of enemies type 2
+    	listenm3 setEnemies3(listenm3 tmp,int cod); //update list of enemies type 3
+    	listenm4 setEnemies4(listenm4 tmp,int cod); //update list of enemies type 4
+    	listenm5 setEnemies5(listenm5 tmp,int cod); //update list of enemies type 5
+    	listenm6 setEnemies6(listenm6 tmp,int cod); //update list of enemies type 6
+    	listenm7 setEnemies7(listenm7 tmp,int cod); //update list of enemies type 7
+    	listenm8 setEnemies8(listenm8 tmp,int cod); //update list of enemies type 8
+    	listenm9 setEnemies9(listenm9 tmp,int cod); //update list of enemies type 9
 
     	listenm0 head_insert_enemy0(listenm0 h,Enemy0 e, int val); //add one enemy type0
     	listenm1 head_insert_enemy1(listenm1 h,Enemy1 e, int val); //add one enemy type1
@@ -157,5 +181,6 @@ class Map{
 
     	string* initializeEnemies(string* mat); //initalize enemies
 
-    	mony coins; //coins
+    	mony getCoins(); //take coins
+
 };

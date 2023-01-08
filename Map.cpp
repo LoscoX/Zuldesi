@@ -16,10 +16,11 @@ Map::Map(int difficulty){
 
     seg_list_ptr segtmp = segList;
 
-    for(int i=0; i<3; i++){ //fixed number of segments
+    for(int i=0; i<5; i++){ //fixed number of segments
         seg_list_ptr tmp = new segment_el; //add new segment
         tmp->id = numSeg++;
-        tmp->seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/Segment_pieces/seg"+to_string(i)+".txt"); //map segments
+        int x = rand()%41;//generate a random number between 0 and num_max of segments
+        tmp->seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/Segment_pieces/seg"+to_string(x)+".txt"); //map segments
         tmp->next = NULL;
         segtmp->next = tmp;
         segtmp = segtmp->next;
@@ -382,7 +383,95 @@ mony Map::FallCoins(mony h){ //avoid coins in the air
 	return h;
 }
 
+mony Map::getCoins(){
+	return coins;
+}
+
 //list of function for enemies
+
+listenm0 Map::getEnemies0(){
+	return enemies0; //take list of enemies type 0
+}
+listenm1 Map::getEnemies1(){
+	return enemies1; //take list of enemies type 1
+}
+listenm2 Map::getEnemies2(){
+	return enemies2; //take list of enemies type 2
+}
+listenm3 Map::getEnemies3(){
+	return enemies3; //take list of enemies type 3
+}
+listenm4 Map::getEnemies4(){
+	return enemies4; //take list of enemies type 4
+}
+listenm5 Map::getEnemies5(){
+	return enemies5; //take list of enemies type 5
+}
+listenm6 Map::getEnemies6(){
+	return enemies6; //take list of enemies type 6
+}
+listenm7 Map::getEnemies7(){
+	return enemies7; //take list of enemies type 7
+}
+listenm8 Map::getEnemies8(){
+	return enemies8; //take list of enemies type 8
+}
+listenm9 Map::getEnemies9(){
+	return enemies9; //take list of enemies type 9
+}
+
+listenm0 Map::setEnemies0(listenm0 tmp,int cod){ //take list of enemies type 0
+	tmp = obj_remove_enemy0(tmp,cod,false); //if it is died, you have to remove from the list
+	enemies0 = obj_remove_enemy0(enemies0, cod,true); //if it is died, you have to remove from the main list
+	return tmp;
+}
+listenm1 Map::setEnemies1(listenm1 tmp,int cod){ //take list of enemies type 1
+	tmp = obj_remove_enemy1(tmp,cod,false); //if it is died, you have to remove from the list
+	enemies1 = obj_remove_enemy1(enemies1, cod,true); //if it is died, you have to remove from the main list
+	return tmp;
+}
+listenm2 Map::setEnemies2(listenm2 tmp,int cod){ //take list of enemies type 2
+	tmp = obj_remove_enemy2(tmp,cod,false); //if it is died, you have to remove from the list
+	enemies2 = obj_remove_enemy2(enemies2, cod,true); //if it is died, you have to remove from the main list
+	return tmp;
+}
+listenm3 Map::setEnemies3(listenm3 tmp,int cod){ //take list of enemies type 3
+	tmp = obj_remove_enemy3(tmp,cod,false); //if it is died, you have to remove from the list
+	enemies3 = obj_remove_enemy3(enemies3, cod,true); //if it is died, you have to remove from the main list
+	return tmp;
+}
+listenm4 Map::setEnemies4(listenm4 tmp,int cod){ //take list of enemies type 4
+	tmp = obj_remove_enemy4(tmp,cod,false); //if it is died, you have to remove from the list
+	enemies4 = obj_remove_enemy4(enemies4, cod,true); //if it is died, you have to remove from the main list
+	return tmp;
+}
+listenm5 Map::setEnemies5(listenm5 tmp,int cod){ //take list of enemies type 5
+	tmp = obj_remove_enemy5(tmp,cod,false); //if it is died, you have to remove from the list
+	enemies5 = obj_remove_enemy5(enemies5, cod,true); //if it is died, you have to remove from the main list
+	return tmp;
+}
+listenm6 Map::setEnemies6(listenm6 tmp,int cod){ //take list of enemies type 6
+	tmp = obj_remove_enemy6(tmp,cod,false); //if it is died, you have to remove from the list
+	enemies6 = obj_remove_enemy6(enemies6, cod,true); //if it is died, you have to remove from the main list
+	return tmp;
+}
+listenm7 Map::setEnemies7(listenm7 tmp,int cod){ //take list of enemies type 7
+	tmp = obj_remove_enemy7(tmp,cod,false); //if it is died, you have to remove from the list
+	enemies7 = obj_remove_enemy7(enemies7, cod,true); //if it is died, you have to remove from the main list
+	return tmp;
+}
+listenm8 Map::setEnemies8(listenm8 tmp,int cod){ //take list of enemies type 8
+	tmp = obj_remove_enemy8(tmp,cod,false); //if it is died, you have to remove from the list
+	enemies8 = obj_remove_enemy8(enemies8, cod,true); //if it is died, you have to remove from the main list
+	return tmp;
+}
+listenm9 Map::setEnemies9(listenm9 tmp,int cod){ //take list of enemies type 9
+	tmp = obj_remove_enemy9(tmp,cod,false); //if it is died, you have to remove from the list
+	enemies9 = obj_remove_enemy9(enemies9, cod,true); //if it is died, you have to remove from the main list
+	return tmp;
+}
+
+
 
 listenm0 Map::head_insert_enemy0(listenm0 h,Enemy0 e, int val){ //add one enemy type0 to the list
 	listenm0 tmp = new listenemy0;
