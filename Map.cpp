@@ -1,8 +1,10 @@
 #include <iostream>
 #include <cstring>
 #include "Map.hpp"
+#include "Primenumebers.hpp"
 
 using namespace std;
+
 
 Map::Map(int difficulty){
 
@@ -109,12 +111,14 @@ Map::Map(int difficulty){
 	enemies3 = NULL; //initialize the list
 	enemies4 = NULL; //initialize the list
 	enemies5 = NULL; //initialize the list
-	enemies6 = NULL; //initialize the list
+	enemies6 = NULL; //initialize the list //shoot
 	enemies7 = NULL; //initialize the list
 	enemies8 = NULL; //initialize the list
 	enemies9 = NULL; //initialize the list
 
-	int k = difficulty; //handle the generation of enemies
+	int k = getPrime(difficulty); //handle the generation of enemies
+
+
 
 	n0 = k; //number of enemies of type 0
 	for(int i=0;i<n0;i++){
@@ -383,7 +387,7 @@ mony Map::FallCoins(mony h){ //avoid coins in the air
 }
 
 int Map::rand_segment_selection() {
-    return rand()%20;
+    return rand()%40;
 }
 
 //list of function for enemies
@@ -810,3 +814,9 @@ string* Map::initializeEnemies(string* mat){
 }
 
 
+
+
+
+void map_difficulty(){
+
+}
