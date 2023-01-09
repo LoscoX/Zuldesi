@@ -62,12 +62,12 @@ int countPrime(int n){
     return counter;
 }
 
-int* thelast9prime(int n){
-    int* arr = new int[9];
+int* thelast10prime(int n){
+    int* arr = new int[10];
     int y;
-    if (countPrime(n)<9){
+    if (countPrime(n)<10){
         y = n -1;
-        for (int i = 0; i<9; i++){
+        for (int i = 0; i<10; i++){
             if (y<=n){
                 arr[i] = nextPrime(y);
                 y = arr[i];
@@ -77,7 +77,7 @@ int* thelast9prime(int n){
         }
     }else{
         y = n+1;
-        for (int i = 8; i>=0; i--){
+        for (int i = 9; i>=0; i--){
             arr[i] = prevPrime(y);
             y = prevPrime(y);
         }

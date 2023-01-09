@@ -35,8 +35,8 @@ int getPrime(int n);
 int countPrime(int n);
 
 /*
- * @return an array of the last 9 prime number til n value
- * note: if countPrime(n)<9 the last elements will be set to 0.
+ * @return an array of the last 10 prime number til n value
+ * note: if countPrime(n)<10 the last elements will be set to 0.
  */
-int* thelast9prime(int n);
+int* thelast10prime(int n);
 
