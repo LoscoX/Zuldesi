@@ -357,6 +357,14 @@ void Game::drawDescription(int j){
 		if(j==1)matrix[6][mapList->map.getDim_x()-draw_cost2+i] = spawn_powerup[j].getDescription().c_str()[i-s0]; //draw description of power up
 		if(j==2)matrix[7][mapList->map.getDim_x()-draw_cost3+i] = spawn_powerup[j].getDescription().c_str()[i-s0]; //draw description of power up
 	};
+
+	string s = "PRESS b TO BUY";
+	int slen = strlen(s.c_str());
+	for(int i=0;i<slen;i++){
+		if(j==0)matrix[22][mapList->map.getDim_x()-draw_cost1+i] = s[i]; //draw name of power up
+		if(j==1)matrix[22][mapList->map.getDim_x()-draw_cost2+i] = s[i]; //draw name of power up
+		if(j==2)matrix[22][mapList->map.getDim_x()-draw_cost3+i] = s[i]; //draw name of power up
+	}
 }
 void Game::deleteDescription(int j){
 	//show the description of powerup
@@ -372,6 +380,14 @@ void Game::deleteDescription(int j){
 		if(j==1)matrix[6][mapList->map.getDim_x()-draw_cost2+i] = ' '; //delete description of power up
 		if(j==2)matrix[7][mapList->map.getDim_x()-draw_cost3+i] = ' '; //delete description of power up
 	};
+
+	string s = "PRESS b TO BUY";
+	int slen = strlen(s.c_str());
+	for(int i=0;i<slen;i++){
+		if(j==0)matrix[22][mapList->map.getDim_x()-draw_cost1+i] = ' '; //draw name of power up
+		if(j==1)matrix[22][mapList->map.getDim_x()-draw_cost2+i] = ' '; //draw name of power up
+		if(j==2)matrix[22][mapList->map.getDim_x()-draw_cost3+i] = ' '; //draw name of power up
+	}
 }
 
 void Game::initializePowerUp(){
@@ -383,13 +399,13 @@ void Game::initializePowerUp(){
 
     bonus[0] = Powerup("HP", ": Additional life (+1)", 1, 1, 1); //quantity corresponds to the number of lives which you have bought
 	bonus[1] = Powerup("Shield", ": It blocks damage one time", 1, 5, 1);//quantity corresponds to the number of protection you have (max 2)
-	bonus[2] = Powerup("Jump",": Change the height of the jump (+2)  (max 3)",2,5,1); //quantity corresponds to max (plus with respect to basic jump) height of the jump
+	bonus[2] = Powerup("Jump",": Change the height of the jump(+2)(max 3)",2,5,1); //quantity corresponds to max (plus with respect to basic jump) height of the jump
 	bonus[3] = Powerup("Bullets",": Charge of bullets",100,5,1); //quantity corresponds to the number of bullets
 	bonus[4] = Powerup("Explo_Bullets",": Charge of explosive bullets",1,20,1); //quantity corresponds to the number of explosive bullets
 
-	active[0] = Powerup("Armor", ": Become invincible for a limited time (max 3)", 1, 10, 1); //quantity corresponds to the number of protection you have (max 3)
-	active[1] = Powerup("Teleport", ": Teleport a short distance (max 3)", 1, 10, 1); //quantity corresponds to the number of possibility of teleportation you have
-	active[2] = Powerup("Fly",": You can fly for a limited time",1,20,1); //quantity corresponds to the number of fly you can do it (max 1)
+	active[0] = Powerup("Armor", ": Become invincible -limited time(max 3)", 1, 10, 1); //quantity corresponds to the number of protection you have (max 3)
+	active[1] = Powerup("Teleport", ": Teleport a short distance(max 3)", 1, 10, 1); //quantity corresponds to the number of possibility of teleportation you have
+	active[2] = Powerup("Fly",": You can fly -limited time",1,20,1); //quantity corresponds to the number of fly you can do it (max 1)
 }
 
 void Game::drawPowerUp(Powerup pwp[]){ //Draw power-ups which are spawned
@@ -446,7 +462,7 @@ void Game::updateDifficulty(){
 
 void Game::displayGame(){
 	wattron(board.board_win,COLOR_PAIR(3)); //color
-	mvwprintw(board.board_win,1,39,"WELCOME TO THIS NEW FANTASTIC GAME");
+	mvwprintw(board.board_win,1,1,"PRESS 'a':Active Armor  -  PRESS 't':Active Teleport  -  PRESS 'f':Active Fly  -  PRESS 'e':Active Explosive");
 	wattroff(board.board_win,COLOR_PAIR(3)); //color
 }
 
