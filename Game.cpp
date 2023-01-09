@@ -48,6 +48,31 @@ Game::Game(int height,int width){
 	player = Player(win,height-6,20); //create the player
 	player.initialize(); //initialize the player
 
+	//read from save file player powerups
+	ifstream save;
+	save.open("save.txt");
+	string line;
+	getline(save, line);
+	if(line != "-"){
+		player.setGun(line); //gun name
+		getline(save, line);
+		player.setBullets(stoi(line)); //bullets qnt
+		getline(save, line);
+		player.setExplo_Bullets(stoi(line)); //explo bullets qnt
+		getline(save, line);
+		player.setHP(stoi(line)); //hp qnt
+		getline(save, line);
+		player.setShield(stoi(line)); //shield qnt
+		getline(save, line);
+		player.setArmor(stoi(line)); //armor qnt
+		getline(save, line);
+		player.setTeleportation(stoi(line)); //teleportation qnt
+		getline(save, line);
+		player.setJumping(stoi(line)); //jumping qnt
+		getline(save, line);
+		player.setFly(stoi(line)); //fly qnt
+	}
+
 	time = 0; //time for the game
 
 	game_over = false;
@@ -122,6 +147,21 @@ void Game::handleCoins(){
 	}
 }
 
+void Game::save(){
+	ofstream save;
+	save.open("save.txt");
+	save << player.getGun().getName() << endl; //gun name
+	save << player.getBullets().getQnt() << endl; //bullets qnt
+	save << player.getExplo_Bullets().getQnt() << endl; //explo bullets qnt
+	save << player.getHP().getQnt() << endl; //hp qnt
+	save << player.getShield().getQnt() << endl; //shield qnt
+	save << player.getArmor().getQnt() << endl; //armor qnt
+	save << player.getTeleportation().getQnt() << endl; //teleportation qnt
+	save << player.getJumping().getQnt() << endl; //jumping qnt
+	save << player.getFly().getQnt() << endl; //fly qnt
+	save.close();
+}
+
 void Game::handleMaps(){
 	//next map (you finish market level)
 	if(player.getx()+xMin == mapList->map.get_trigger_market()){ //go to the next map
@@ -137,6 +177,7 @@ void Game::handleMaps(){
 		bought2 = false;
 		bought3 = false;
 		updateDifficulty();
+		save();
 		nextMap(1, difficulty);
 	}
 	else if(player.getx()+xMin == mapList->map.get_trigger_end()){ 	//go to market

@@ -107,6 +107,9 @@ public:
 	void UpdateBoard(); //redraw the board
 	void updateDifficulty();
 
+	//savefile
+	void save();
+
 protected:
 
 	Powerup spawn_powerup[3]; //power up spawned in the market
