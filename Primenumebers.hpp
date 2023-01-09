@@ -7,36 +7,48 @@
 
 #endif //ZULDESI_PRIMENUMEBERS_HPP
 
-/*
- *  @return bool value which indicates if the number is a prime number.
+/**
+ *
+ * @param n
+ * @return bool value which indicates if the number is a prime number.
  */
 bool isPrime(int n);
 
-/*
- *  @return the next prime number to the input number.
+/**
+ *
+ * @param n
+ * @return bool value which indicates if the number is a prime number.
  */
 int nextPrime(int n);
 
-/*
- *  @return the previous prime number to the input
- *  note: if n<=2 it will return 2.
+/**
+ *
+ * @param n
+ * @return the previous prime number to the input.
+ * @attention if n is equal or less than 2 it will return 2.
  */
 int prevPrime(int n);
 
-/*
+/**
  *
- * @return prime number in n position
+ * @param n
+ * @return prime number in n position.
  */
 int getPrime(int n);
 
-/*
- *  @return quantity of prime numbers til n value
+/**
+ *
+ * @param n
+ * @return quantity of prime numbers til n value.
  */
 int countPrime(int n);
 
-/*
- * @return an array of the last 10 prime number til n value
- * note: if countPrime(n)<10 the last elements will be set to 0.
+/**
+ *
+ * @param n
+ * @return an array of the last 10 prime number til n value.
+ * @attention if countPrime(n) is less than 10 the last elements will be set to 0.
+ * @attention It create an array stored in the heap. It must be deleted when it became useless.
  */
 int* thelast10prime(int n);
 
