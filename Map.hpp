@@ -91,6 +91,7 @@ typedef money* mony;
 
 typedef segment_el* seg_list_ptr;
 
+
 class Map{
     protected:
 		int n0,n1,n2,n3,n4,n5,n6,n7,n8,n9; //number of enemies
@@ -102,27 +103,105 @@ class Map{
         int gen_x, gen_y; //variables for the generation of enemies and coins
     public:
         Map();
-        Map(int difficulty); //map depends on difficulty
-        bool isSolid(int x, int y); //check if your movement is ok within the respect of structures of map
-        bool isDanger(int x,int y); //check if your movement is dangerous
-        int getDim_x(); //take dimension x
-        int getDim_y(); //take dimension y
-        string* toString(); //return the matrix of the map
-		int get_trigger_start(); //take trigger start
-		int get_trigger_end(); //take trigger end
-		int get_trigger_market(); //take trigger market
-		void generationRandom(int iniz_x,int iniz_y,int fin_x,int fin_y); //generate two admissible coordinates
-        int rand_segment_selection(); //select randomically a segment to generate
+        /**
+         *
+         * @param difficulty : map depends on difficulty.
+         */
+        Map(int difficulty);
+        /**
+         *
+         * @param x
+         * @param y
+         * @return check if your movement is right within the respect of structures of map.
+         */
+        bool isSolid(int x, int y);
+        /**
+         *
+         * @param x
+         * @param y
+         * @return check if your movement is dangerous.
+         */
+        bool isDanger(int x,int y);
+        /**
+         *
+         * @return x dimension.
+         */
+        int getDim_x();
+        /**
+         *
+         * @return y dimension.
+         */
+        int getDim_y();
+        /**
+         *
+         * @return Matrix of the map.
+         */
+        string* toString();
+        /**
+         *
+         * @return start trigger.
+         */
+		int get_trigger_start();
+        /**
+         *
+         * @return end trigger.
+         */
+		int get_trigger_end();
+        /**
+         *
+         * @return market trigger.
+         */
+		int get_trigger_market();
+        /**
+         * generate two admissible coordinates.
+         * @param iniz_x
+         * @param iniz_y
+         * @param fin_x
+         * @param fin_y
+         */
+		void generationRandom(int iniz_x,int iniz_y,int fin_x,int fin_y);
+        /**
+         *
+         * @return randomly a segment to generate.
+         */
+        int rand_segment_selection();
 
         //coins
+        /**
+         *
+         * @param h
+         * @param val
+         * @param x
+         * @param y
+         * @return insert one coin in the list.
+         */
     	mony head_insert_coin(mony h,int val,int x,int y); //insert one coin in the list
-    	bool updateCoins(int x,int y); //check if one coin has to be removed
-    	mony removeCoins(mony h,int cod); //remove one coin
-    	mony FallCoins(mony h); //avoid coins on the air
+        /**
+         *
+         * @param x
+         * @param y
+         * @return check if one coin has to be removed.
+         */
+    	bool updateCoins(int x,int y);
+        /**
+         *
+         * @param h
+         * @param cod
+         * @return remove one coin.
+         */
+    	mony removeCoins(mony h,int cod);
+        /**
+         *
+         * @param h
+         * @return avoid coins in the air.
+         */
+    	mony FallCoins(mony h);
 
     	//Enemies
 
         //Enemies
+
+        
     	listenm0 enemies0; //list of enemies type 0
     	listenm1 enemies1; //list of enemies type 1
     	listenm2 enemies2; //list of enemies type 2

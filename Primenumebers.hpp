@@ -48,7 +48,7 @@ int countPrime(int n);
  * @param n
  * @return an array of the last 10 prime number til n value.
  * @attention if countPrime(n) is less than 10 the last elements will be set to 0.
- * @attention It create an array stored in the heap. It must be deleted when it became useless.
+ * @attention It creates an array stored in the heap. It must be deleted when it became useless.
  */
 int* thelast10prime(int n);
 
