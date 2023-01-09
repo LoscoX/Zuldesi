@@ -358,12 +358,43 @@ void Game::drawDescription(int j){
 		if(j==2)matrix[7][mapList->map.getDim_x()-draw_cost3+i] = spawn_powerup[j].getDescription().c_str()[i-s0]; //draw description of power up
 	};
 
+	string sp = "PRICE: ";
+	int s2 = strlen(sp.c_str());
+	for(int i=0;i<s2;i++){
+		if(j==0)matrix[6][mapList->map.getDim_x()-draw_cost1+i] = sp[i];
+		if(j==1)matrix[7][mapList->map.getDim_x()-draw_cost2+i] = sp[i];
+		if(j==2)matrix[8][mapList->map.getDim_x()-draw_cost3+i] = sp[i];
+	};
+
+	if(j==0){
+		if(spawn_powerup[j].getPrice()<=9)matrix[6][mapList->map.getDim_x()-draw_cost1+s2] = spawn_powerup[j].getPrice() + '0'; //draw price of power up
+		if(spawn_powerup[j].getPrice()>9){
+			matrix[6][mapList->map.getDim_x()-draw_cost1+s2] = spawn_powerup[j].getPrice()/10 + '0'; //draw price of power up
+			matrix[6][mapList->map.getDim_x()-draw_cost1+s2+1] = spawn_powerup[j].getPrice()%10 + '0'; //draw price of power up
+		}
+	}
+	if(j==1){
+		if(spawn_powerup[j].getPrice()<=9)matrix[7][mapList->map.getDim_x()-draw_cost2+s2] = spawn_powerup[j].getPrice() + '0'; //draw price of power up
+		if(spawn_powerup[j].getPrice()>9){
+			matrix[7][mapList->map.getDim_x()-draw_cost2+s2] = spawn_powerup[j].getPrice()/10 + '0'; //draw price of power up
+			matrix[7][mapList->map.getDim_x()-draw_cost2+1+s2] = spawn_powerup[j].getPrice()%10 + '0'; //draw price of power up
+		}
+	}
+	if(j==2){
+		if(spawn_powerup[j].getPrice()<=9)matrix[8][mapList->map.getDim_x()-draw_cost3+s2] = spawn_powerup[j].getPrice() + '0'; //draw price of power up
+		if(spawn_powerup[j].getPrice()>9){
+			matrix[8][mapList->map.getDim_x()-draw_cost3+s2] = spawn_powerup[j].getPrice()/10 + '0'; //draw price of power up
+			matrix[8][mapList->map.getDim_x()-draw_cost3+1+s2] = spawn_powerup[j].getPrice()%10 + '0'; //draw price of power up
+		}
+	}
+
+
 	string s = "PRESS b TO BUY";
 	int slen = strlen(s.c_str());
 	for(int i=0;i<slen;i++){
-		if(j==0)matrix[22][mapList->map.getDim_x()-draw_cost1+i] = s[i]; //draw name of power up
-		if(j==1)matrix[22][mapList->map.getDim_x()-draw_cost2+i] = s[i]; //draw name of power up
-		if(j==2)matrix[22][mapList->map.getDim_x()-draw_cost3+i] = s[i]; //draw name of power up
+		if(j==0)matrix[22][mapList->map.getDim_x()-draw_cost1+i] = s[i];
+		if(j==1)matrix[22][mapList->map.getDim_x()-draw_cost2+i] = s[i];
+		if(j==2)matrix[22][mapList->map.getDim_x()-draw_cost3+i] = s[i];
 	}
 }
 void Game::deleteDescription(int j){
@@ -381,12 +412,42 @@ void Game::deleteDescription(int j){
 		if(j==2)matrix[7][mapList->map.getDim_x()-draw_cost3+i] = ' '; //delete description of power up
 	};
 
+	string sp = "PRICE: ";
+	int s2 = strlen(sp.c_str());
+	for(int i=0;i<s2;i++){
+		if(j==0)matrix[6][mapList->map.getDim_x()-draw_cost1+i] = ' ';
+		if(j==1)matrix[7][mapList->map.getDim_x()-draw_cost2+i] = ' ';
+		if(j==2)matrix[8][mapList->map.getDim_x()-draw_cost3+i] = ' ';
+	};
+
+	if(j==0){
+		if(spawn_powerup[j].getPrice()<=9)matrix[6][mapList->map.getDim_x()-draw_cost1+s2] = ' '; //draw price of power up
+		if(spawn_powerup[j].getPrice()>9){
+			matrix[6][mapList->map.getDim_x()-draw_cost1+s2] = ' '; //draw price of power up
+			matrix[6][mapList->map.getDim_x()-draw_cost1+s2+1] = ' '; //draw price of power up
+		}
+	}
+	if(j==1){
+		if(spawn_powerup[j].getPrice()<=9)matrix[7][mapList->map.getDim_x()-draw_cost2+s2] = ' '; //draw price of power up
+		if(spawn_powerup[j].getPrice()>9){
+			matrix[7][mapList->map.getDim_x()-draw_cost2+s2] = ' '; //draw price of power up
+			matrix[7][mapList->map.getDim_x()-draw_cost2+1+s2] = ' '; //draw price of power up
+		}
+	}
+	if(j==2){
+		if(spawn_powerup[j].getPrice()<=9)matrix[8][mapList->map.getDim_x()-draw_cost3+s2] = ' '; //draw price of power up
+		if(spawn_powerup[j].getPrice()>9){
+			matrix[8][mapList->map.getDim_x()-draw_cost3+s2] = ' '; //draw price of power up
+			matrix[8][mapList->map.getDim_x()-draw_cost3+1+s2] = ' '; //draw price of power up
+		}
+	}
+
 	string s = "PRESS b TO BUY";
 	int slen = strlen(s.c_str());
 	for(int i=0;i<slen;i++){
-		if(j==0)matrix[22][mapList->map.getDim_x()-draw_cost1+i] = ' '; //draw name of power up
-		if(j==1)matrix[22][mapList->map.getDim_x()-draw_cost2+i] = ' '; //draw name of power up
-		if(j==2)matrix[22][mapList->map.getDim_x()-draw_cost3+i] = ' '; //draw name of power up
+		if(j==0)matrix[22][mapList->map.getDim_x()-draw_cost1+i] = ' ';
+		if(j==1)matrix[22][mapList->map.getDim_x()-draw_cost2+i] = ' ';
+		if(j==2)matrix[22][mapList->map.getDim_x()-draw_cost3+i] = ' ';
 	}
 }
 
@@ -482,7 +543,6 @@ void Game::displayLife(){ //display life and bullets
 	if(player.getHP().getQnt()<100) mvwprintw(board.board_win,25,8," ");
 	if(player.getHP().getQnt()<10) mvwprintw(board.board_win,25,7," ");
 	wattroff(board.board_win,COLOR_PAIR(2)); //color
-	mvwprintw(board.board_win,25,13,"%d",player.getBuy());
 }
 
 void Game::displayPowerup(){
