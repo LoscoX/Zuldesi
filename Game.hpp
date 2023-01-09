@@ -50,6 +50,8 @@ public:
 	void updatePowerup();
 	void market(); //activate the market
 	void market_build(); //build the market
+	void drawDescription(int i); //draw description of power up
+	void deleteDescription(int i); //draw description of power up
 
 	//Function for the movement
 	void PlayerCanMove(int choice); //Game interaction between player and structure map

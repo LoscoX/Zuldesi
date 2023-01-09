@@ -101,6 +101,11 @@ void Game::handleMaps(){
 	//next map (you finish market level)
 	if(player.getx()+xMin == mapList->map.get_trigger_market()){ //go to the next map
 		Market_Active = false; //you leave the market
+		//raise all descriptions
+		deleteDescription(0);
+		deleteDescription(1);
+		deleteDescription(2);
+		//delete powerups
 		deletePowerup(spawn_powerup); //you have to raise powerups from the matrix
 		//update bought variables
 		bought1 = false;
@@ -218,8 +223,12 @@ void Game::market(){
 
 	//check if the player buy some powerups
 	//first powerup
-	if(player.getx()+xMin>=mapList->map.getDim_x()-draw_cost1 && player.getx()+xMin<=mapList->map.getDim_x()-(draw_cost1-10) && player.getBuy()){
-		if(player.getCoins()-spawn_powerup[0].price>=0 && !bought1){ //you have enough money and it's the first powerup that you buy
+	if(player.getx()+xMin>=mapList->map.getDim_x()-draw_cost1 && player.getx()+xMin<=mapList->map.getDim_x()-(draw_cost1-10)){
+		//draw description
+		drawDescription(0);
+		deleteDescription(1);
+		deleteDescription(2);
+		if(player.getCoins()-spawn_powerup[0].price>=0 && !bought1  && player.getBuy()){ //you have enough money and it's the first powerup that you buy
 			if(strcmp(player.getGun().name.c_str(),spawn_powerup[0].getName().c_str())!=0){ //you don't already have this gun
 				player.updateCash(-spawn_powerup[0].price); //update cash of player
 				player.setGun(spawn_powerup[0].getName()); //update powerups of player
@@ -229,44 +238,70 @@ void Game::market(){
 		}
 	}
 	//second powerup
-	if(player.getx()+xMin>=mapList->map.getDim_x()-draw_cost2 && player.getx()+xMin<=mapList->map.getDim_x()-(draw_cost2-10) && player.getBuy()){
-		if(player.getCoins()-spawn_powerup[1].price>=0 && !bought2){ //you have enough money and it's the first powerup that you buy
-			player.updateCash(-spawn_powerup[1].price); //update cash of player
-			bought2 = true;
-			player.setBuy(false); //you can buy another powerup
+	if(player.getx()+xMin>=mapList->map.getDim_x()-draw_cost2 && player.getx()+xMin<=mapList->map.getDim_x()-(draw_cost2-10)){
+		//draw description
+		drawDescription(1);
+		deleteDescription(0);
+		deleteDescription(2);
+		if(player.getCoins()-spawn_powerup[1].price>=0 && !bought2  && player.getBuy()){ //you have enough money and it's the first powerup that you buy
 			//update powerups of player
 			if(strcmp(spawn_powerup[1].getName().c_str(),"HP") == 0){ //HP
+				player.updateCash(-spawn_powerup[1].price); //update cash of player
+				bought2 = true;
+				player.setBuy(false); //you can buy another powerup
 				player.setHP(player.getHP().getQnt() + spawn_powerup[1].getQnt());
 			}
 			else if(strcmp(spawn_powerup[1].getName().c_str(),"Shield") == 0){ //Shield
+				player.updateCash(-spawn_powerup[1].price); //update cash of player
+				bought2 = true;
+				player.setBuy(false); //you can buy another powerup
 				player.setShield(player.getShield().getQnt() + spawn_powerup[1].getQnt());
 			}
-			else if(strcmp(spawn_powerup[1].getName().c_str(),"Jump") == 0){ //Jump
+			else if(strcmp(spawn_powerup[1].getName().c_str(),"Jump") == 0  && player.getJumping().getQnt()<3){ //Jump
+				player.updateCash(-spawn_powerup[1].price); //update cash of player
+				bought2 = true;
+				player.setBuy(false); //you can buy another powerup
 				player.setJumping(player.getJumping().getQnt() + spawn_powerup[1].getQnt());
 			}
 			else if(strcmp(spawn_powerup[1].getName().c_str(),"Bullets") == 0){ //Bullets
+				player.updateCash(-spawn_powerup[1].price); //update cash of player
+				bought2 = true;
+				player.setBuy(false); //you can buy another powerup
 				player.setBullets(player.getBullets().getQnt() + spawn_powerup[1].getQnt());
 			}
 			else if(strcmp(spawn_powerup[1].getName().c_str(),"Explo_Bullets") == 0){ //Explosive bullets
+				player.updateCash(-spawn_powerup[1].price); //update cash of player
+				bought2 = true;
+				player.setBuy(false); //you can buy another powerup
 				player.setExplo_Bullets(player.getExplo_Bullets().getQnt() + spawn_powerup[1].getQnt());
 			}
 		}
 	}
 	//third powerup
-	if(player.getx()+xMin>=mapList->map.getDim_x()-(draw_cost3) && player.getx()+xMin<=mapList->map.getDim_x()-(draw_cost3-10) && player.getBuy()){
-		if(player.getCoins()-spawn_powerup[2].price>=0 && !bought3){ ////you have enough money and it's the first powerup that you buy
-			player.updateCash(-spawn_powerup[1].price); //update cash of player
-			bought3 = true;
-			player.setBuy(false); //you can buy another powerup
+	if(player.getx()+xMin>=mapList->map.getDim_x()-(draw_cost3) && player.getx()+xMin<=mapList->map.getDim_x()-(draw_cost3-10)){
+		//draw description
+		drawDescription(2);
+		deleteDescription(0);
+		deleteDescription(1);
+		if(player.getCoins()-spawn_powerup[2].price>=0 && !bought3  && player.getBuy()){ ////you have enough money and it's the first powerup that you buy
 			//update powerups of player
-			if(strcmp(spawn_powerup[2].getName().c_str(),"Teleport") == 0){ //Teleport
+			if(strcmp(spawn_powerup[2].getName().c_str(),"Teleport") == 0 && player.getTeleportation().getQnt()<3){ //Teleport
+				player.updateCash(-spawn_powerup[1].price); //update cash of player
+				bought3 = true;
+				player.setBuy(false); //you can buy another powerup
 				player.setTeleportation(player.getTeleportation().getQnt() + spawn_powerup[2].getQnt());
 			}
-			else if(strcmp(spawn_powerup[2].getName().c_str(),"Armor") == 0){ //Armor
-				player.setArmor(player.getTeleportation().getQnt() + spawn_powerup[2].getQnt());
+			else if(strcmp(spawn_powerup[2].getName().c_str(),"Armor") == 0 && player.getArmor().getQnt()<3){ //Armor
+				player.updateCash(-spawn_powerup[1].price); //update cash of player
+				bought3 = true;
+				player.setBuy(false); //you can buy another powerup
+				player.setArmor(player.getArmor().getQnt() + spawn_powerup[2].getQnt());
 			}
 			else if(strcmp(spawn_powerup[2].getName().c_str(),"Fly") == 0){ //Fly
-				player.setFly(player.getTeleportation().getQnt() + spawn_powerup[2].getQnt());
+				player.updateCash(-spawn_powerup[1].price); //update cash of player
+				bought3 = true;
+				player.setBuy(false); //you can buy another powerup
+				player.setFly(player.getFly().getQnt() + spawn_powerup[2].getQnt());
 			}
 		}
 	}
@@ -283,22 +318,53 @@ void Game::market_build(){ //build the market
 	spawn_powerup[2] = active[c];
 }
 
+void Game::drawDescription(int j){
+	//show the description of powerup
+	int s0 = strlen(spawn_powerup[j].getName().c_str());
+	for(int i=0;i<s0;i++){
+		if(j==0)matrix[5][mapList->map.getDim_x()-draw_cost1+i] = spawn_powerup[j].getName().c_str()[i]; //draw name of power up
+		if(j==1)matrix[6][mapList->map.getDim_x()-draw_cost2+i] = spawn_powerup[j].getName().c_str()[i]; //draw name of power up
+		if(j==2)matrix[7][mapList->map.getDim_x()-draw_cost3+i] = spawn_powerup[j].getName().c_str()[i]; //draw name of power up
+	}
+	int s1 = strlen(spawn_powerup[j].getDescription().c_str());
+	for(int i=s0;i<s1+s0;i++){
+		if(j==0)matrix[5][mapList->map.getDim_x()-draw_cost1+i] = spawn_powerup[j].getDescription().c_str()[i-s0]; //draw description of power up
+		if(j==1)matrix[6][mapList->map.getDim_x()-draw_cost2+i] = spawn_powerup[j].getDescription().c_str()[i-s0]; //draw description of power up
+		if(j==2)matrix[7][mapList->map.getDim_x()-draw_cost3+i] = spawn_powerup[j].getDescription().c_str()[i-s0]; //draw description of power up
+	};
+}
+void Game::deleteDescription(int j){
+	//show the description of powerup
+	int s0 = strlen(spawn_powerup[j].getName().c_str());
+	for(int i=0;i<s0;i++){
+		if(j==0)matrix[5][mapList->map.getDim_x()-draw_cost1+i] = ' '; //delete name of power up
+		if(j==1)matrix[6][mapList->map.getDim_x()-draw_cost2+i] = ' '; //delete name of power up
+		if(j==2)matrix[7][mapList->map.getDim_x()-draw_cost3+i] = ' '; //delete name of power up
+	}
+	int s1 = strlen(spawn_powerup[j].getDescription().c_str());
+	for(int i=s0;i<s1+s0;i++){
+		if(j==0)matrix[5][mapList->map.getDim_x()-draw_cost1+i] = ' '; //delete description of power up
+		if(j==1)matrix[6][mapList->map.getDim_x()-draw_cost2+i] = ' '; //delete description of power up
+		if(j==2)matrix[7][mapList->map.getDim_x()-draw_cost3+i] = ' '; //delete description of power up
+	};
+}
+
 void Game::initializePowerUp(){
 	//(quantity of the guns is fixed to 1-->you can have just one gun)
-	guns[0] = Powerup("Pistol", "you shoot one bullet", 1, 5, 1);
-	guns[1] = Powerup("Rifle", "you shoot two bullets", 1, 10, 1);
-	guns[2] = Powerup("Machinegun", "you shoot three bullets", 1, 15, 1);
-	guns[3] = Powerup("Doublegun", "you shoot two bullets, one dx direction and one sx direction", 1, 15, 1);
+	guns[0] = Powerup("Pistol", ": You can shoot one bullet", 1, 5, 1);
+	guns[1] = Powerup("Rifle", ": You can shoot two bullets", 1, 10, 1);
+	guns[2] = Powerup("Machinegun", ": You can shoot three bullets", 1, 15, 1);
+	guns[3] = Powerup("Doublegun", ": You can shoot two bullets, one to dx direction and one to sx direction", 1, 15, 1);
 
-    bonus[0] = Powerup("HP", "Additional life", 1, 1, 1); //quantity corresponds to the number of lives which you have bought
-	bonus[1] = Powerup("Shield", "A shield that blocks damage one time", 1, 5, 1);//quantity corresponds to the number of protection you have (max 2)
-	bonus[2] = Powerup("Jump","Change the height of the jump",2,5,1); //quantity corresponds to max (plus with respect to basic jump) height of the jump
-	bonus[3] = Powerup("Bullets","Charge of bullets",100,5,1); //quantity corresponds to the number of bullets
-	bonus[4] = Powerup("Explo_Bullets","Charge of explosive bullets",1,20,1); //quantity corresponds to the number of explosive bullets
+    bonus[0] = Powerup("HP", ": Additional life (+1)", 1, 1, 1); //quantity corresponds to the number of lives which you have bought
+	bonus[1] = Powerup("Shield", ": It blocks damage one time", 1, 5, 1);//quantity corresponds to the number of protection you have (max 2)
+	bonus[2] = Powerup("Jump",": Change the height of the jump (+2)  (max 3)",2,5,1); //quantity corresponds to max (plus with respect to basic jump) height of the jump
+	bonus[3] = Powerup("Bullets",": Charge of bullets",100,5,1); //quantity corresponds to the number of bullets
+	bonus[4] = Powerup("Explo_Bullets",": Charge of explosive bullets",1,20,1); //quantity corresponds to the number of explosive bullets
 
-	active[0] = Powerup("Armor", "Become invincible for a limited time", 1, 10, 1); //quantity corresponds to the number of protection you have (max 3)
-	active[1] = Powerup("Teleport", "Teleport a short distance", 1, 10, 1); //quantity corresponds to the number of possibility of teleportation you have
-	active[2] = Powerup("Fly","You can fly",1,20,1); //quantity corresponds to the number of fly you can do it (max 1)
+	active[0] = Powerup("Armor", ": Become invincible for a limited time (max 3)", 1, 10, 1); //quantity corresponds to the number of protection you have (max 3)
+	active[1] = Powerup("Teleport", ": Teleport a short distance (max 3)", 1, 10, 1); //quantity corresponds to the number of possibility of teleportation you have
+	active[2] = Powerup("Fly",": You can fly for a limited time",1,20,1); //quantity corresponds to the number of fly you can do it (max 1)
 }
 
 void Game::drawPowerUp(Powerup pwp[]){ //Draw power-ups which are spawned
@@ -317,6 +383,8 @@ void Game::drawPowerUp(Powerup pwp[]){ //Draw power-ups which are spawned
 	for(int i=0;i<s2;i++){
 		matrix[HEIGHT_MARKET][mapList->map.getDim_x()-draw_cost3+i] = pwp[2].getName().c_str()[i];
 	}
+
+	//print description of powerup
 }
 
 void Game::deletePowerup(Powerup pwp[]){
@@ -342,12 +410,12 @@ void Game::updateDifficulty(){
 	int diff = player.getGun().getDifficulty();
 	diff += (player.getHP().getQnt()-player.getLife()) * player.getHP().getDifficulty(); //you start with a life
 	diff += player.getShield().getQnt() * player.getShield().getDifficulty();
-	diff += ((player.getJumping().getQnt()-5)/2)* player.getJumping().getDifficulty(); //you buy 2 jumping each time
+	diff += ((player.getJumping().getQnt()-5)/2)* player.getJumping().getDifficulty(); //you buy 2 jumping each time and your height at the beginning is 5
 	diff += player.getArmor().getQnt() * player.getArmor().getDifficulty();
 	diff += player.getTeleportation().getQnt() * player.getTeleportation().getDifficulty();
 	diff += player.getFly().getQnt() * player.getFly().getDifficulty();
 	diff += player.getBullets().getQnt()/100 * player.getBullets().getDifficulty(); //you buy 100 bullets each time
-	diff += player.getExplo_Bullets().getQnt() * player.getExplo_Bullets().getDifficulty(); //you buy 100 bullets each time
+	diff += player.getExplo_Bullets().getQnt() * player.getExplo_Bullets().getDifficulty();
 	difficulty = diff;
 }
 

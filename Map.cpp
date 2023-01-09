@@ -87,7 +87,7 @@ Map::Map(int difficulty){
 
 	coins = NULL; //initialize coins
 
-	nc = 10; //number of coins
+	nc = 5; //number of coins
 
 	for(int i=0;i<nc;i++){ //create coins with random position and add them to the list
 		//avoid coins inside a structure
