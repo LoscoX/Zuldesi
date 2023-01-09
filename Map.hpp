@@ -117,7 +117,7 @@ class Map{
 
     public:
         Map();
-        Map(int difficulty); //map depends of difficulty
+        Map(int difficulty); //map depends on difficulty
         bool isSolid(int x, int y); //check if your movement is ok with the respsect of structures of map
         bool isDanger(int x,int y); //check if your movement is danger
         int getDim_x(); //take dimension x
