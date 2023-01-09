@@ -118,7 +118,7 @@ Map::Map(int difficulty){
 
 	int k = getPrime(difficulty); //handle the generation of enemies
 
-    int* enemies_quantity = thelast10prime(k);
+    int* enemies_quantity = thelast10prime(k); // generate array to define quantity of enemies by type
 
     for (int i = 0; i<5; i++){
         int aux = enemies_quantity[9-i];
@@ -216,6 +216,7 @@ Map::Map(int difficulty){
 		enemies9 = head_insert_enemy9(enemies9,e,i); //add the enemy into the list
 	}
 
+    delete[] enemies_quantity; // delete array to clear dynamic memory
 }
 
 Map::Map(){} //deafult constructor
