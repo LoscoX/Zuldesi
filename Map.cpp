@@ -19,7 +19,7 @@ Map::Map(int difficulty){
     for(int i=0; i<5; i++){ //fixed number of segments
         seg_list_ptr tmp = new segment_el; //add new segment
         tmp->id = numSeg++;
-        int x = rand()%73;//generate a random number between 0 and num_max of segments
+        int x = rand()%82;//generate a random number between 0 and num_max of segments
         tmp->seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/Segment_pieces/seg"+to_string(x)+".txt"); //map segments
         tmp->next = NULL;
         segtmp->next = tmp;
@@ -125,7 +125,7 @@ Map::Map(int difficulty){
 		enemies0 = head_insert_enemy0(enemies0,e,i); //add the enemy into the list
 	}
 
-	n1 = k; //number of enemies of type 1
+	n1 = rand()%(k+1); //number of enemies of type 1
 	for(int i=0;i<n1;i++){
 		//avoid enemy type1 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
@@ -182,7 +182,7 @@ Map::Map(int difficulty){
 		enemies6 = head_insert_enemy6(enemies6,e,i); //add the enemy into the list
 	}
 
-	n7 = n6; //number of enemies of type 7
+	n7 = rand()%(n6+1); //number of enemies of type 7
 	for(int i=0;i<n7;i++){
 		//avoid enemy type7 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);

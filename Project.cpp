@@ -34,8 +34,9 @@ int main(int argc, char ** argv) {
 		game.redraw();
 	}
 
+	//update save file
 	ofstream save;
-	save.open("save.txt");
+	save.open("C:/Users/david/eclipse-workspace/Project/src/save.txt");
 	save << "-";
 	save.close();
 
