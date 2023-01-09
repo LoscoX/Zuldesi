@@ -36,7 +36,7 @@ Game::Game(int height,int width){
 	bought3 = false;
 
 	//start the map
-	difficulty = 0;
+	difficulty = 1;
 	mapList = NULL;
 	nextMap(1, difficulty);
 
@@ -54,16 +54,17 @@ Game::Game(int height,int width){
 }
 
 void Game::updateState(){
-
 	//display title
 	handleDisplay();
 
+	int hp_tmp = player.getHP().getQnt();
+
 	//Map movement
 	if(time%200 == 0)mapMovement(); //We move the map on horizontal direction and the player only on vertical direction
-
+	
 	//coins
 	handleCoins();
-
+	
 	//handle shooting
 	shooting();
 
@@ -71,15 +72,39 @@ void Game::updateState(){
 	if(time%400 == 0)enemyMovement(); //you want to slow down enemies
 	time++;
 
-	//maps and market
-	handleMaps();
+	if(player.getHP().getQnt() != hp_tmp){
+		restartMap(difficulty);
+		PrintMap();
+	}
+	else{
+		//maps and market
+		handleMaps();
 
-	//Update board
-	Game::UpdateBoard();
+		//Update board
+		Game::UpdateBoard();
+	}
 
 	//end of the game
 	if(player.getHP().getQnt() <= 0) game_over = true; //Player death
 
+}
+
+void Game::restartMap(int difficulty){
+	if(mapList->prev == NULL){
+		mapList->map = Map(difficulty);
+	}else{
+		mapList = mapList->prev;
+		delete mapList->next;
+		mapList->next = new map_el;
+		mapList->next->prev = mapList;
+		mapList = mapList->next;
+		mapList->id=mapList->prev->id+1;
+		mapList->next=NULL;
+		mapList->map = Map(difficulty);
+	}
+	matrix = mapList->map.toString();
+	xMin = 5;
+	time = 0;
 }
 
 void Game::handleCoins(){

@@ -408,10 +408,10 @@ Powerup Player::getGun(){
 	return gun;
 }
 Powerup Player::getShield(){
-	return shield;;
+	return shield;
 }
 Powerup Player::getHP(){
-	return hp;;
+	return hp;
 }
 Powerup Player::getArmor(){
 	return armor;
