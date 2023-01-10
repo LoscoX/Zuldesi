@@ -16,7 +16,7 @@ Map::Map(int difficulty){
 
     seg_list_ptr segtmp = segList;
 
-    for(int i=0; i<15+difficulty; i++){ //fixed number of segments
+    for(int i=0; i<5+difficulty; i++){ //fixed number of segments
         seg_list_ptr tmp = new segment_el; //add new segment
         tmp->id = numSeg++;
         int x = rand()%107;//generate a random number between 0 and num_max of segments
@@ -203,7 +203,7 @@ Map::Map(int difficulty){
 	}
 
 	if(k>10) //activate the last enemy
-		n9 = k;
+		n9 = k-10;
 	else
 		n9 = 0;
 

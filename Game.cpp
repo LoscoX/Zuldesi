@@ -349,7 +349,7 @@ void Game::market(){
 				player.setBuy(false); //you can buy another powerup
 				player.setShield(player.getShield().getQnt() + spawn_powerup[1].getQnt());
 			}
-			else if(strcmp(spawn_powerup[1].getName().c_str(),"Jump") == 0  && player.getJumping().getQnt()<=3){ //Jump
+			else if(strcmp(spawn_powerup[1].getName().c_str(),"Jump") == 0  && player.getJumping().getQnt()<=11){ //Jump
 				player.updateCash(-spawn_powerup[1].price); //update cash of player
 				bought2 = true;
 				player.setBuy(false); //you can buy another powerup
@@ -681,6 +681,8 @@ void Game::displayPowerup(){
 
 	wattron(board.board_win,COLOR_PAIR(2)); //color
 	mvwprintw(board.board_win,27,107,"%d",player.getExplo_Bullets().getQnt());
+	if(player.getExplo_Bullets().getQnt()<100) mvwprintw(board.board_win,27,109," ");
+	if(player.getExplo_Bullets().getQnt()<10) mvwprintw(board.board_win,27,108," ");
 	wattroff(board.board_win,COLOR_PAIR(2)); //color
 }
 
