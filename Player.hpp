@@ -179,27 +179,89 @@ public:
      * Fall.
      */
 	void godown();
-	void goup(); //go up
+    /**
+     * Go up.
+     */
+	void goup();
+    /**
+     * See the player.
+     */
+	void display();
+    /**
+     * Start the player.
+     */
+	void initialize();
 
-	void display(); //see the player
-	void initialize(); //start the player
+    /**
+     * Damage.
+     */
+	void injury();
+    /**
+     * X coordinate of the player.
+     * @return
+     */
+	int getx();
+    /**
+     * y coordinate of the player.
+     * @return
+     */
+	int gety();
+    /**
+     *
+     * @return coins of player.
+     */
+	int getCoins();
+    /**
+     *
+     * @return dir of player.
+     */
+	int getDir();
+    /**
+     * Points of the player.
+     * @return
+     */
+	int getPoints();
+    /**
+     * Life of player.
+     * @return
+     */
+	int getLife();
+    /**
+     * Take buy variable.
+     * @return
+     */
+	bool getBuy();
+    /**
+     * Set buy variable.
+     * @param val
+     */
+	void setBuy(bool val);
 
-	void injury(); //damage
+    /**
+     * Reset jump variable.
+     */
+	void SetJump();
 
-	int getx(); //x coordinate of the player
-	int gety(); //y coordinate of the player
-	int getCoins(); //return coins of player
-	int getDir(); //return dir of player
-	int getPoints(); //points of the player
-	int getLife(); //life of player
-	bool getBuy(); //take buy variable
-	void setBuy(bool val); //set buy variable
-
-	void SetJump(); //restart the variable of jump
-
-	void updatePoints(int points); //when you kill one enemy you take points
-	void updateCash(int money); //update your wallet
-	void updateCoordinates(int x,int y); //Update your x and y when you went in a not-possible place
+    /**
+     * When you kill one enemy you take points.
+     * @param points
+     */
+	void updatePoints(int points);
+    /**
+     * Update your wallet.
+     * @param money
+     */
+	void updateCash(int money);
+    /**
+     * Update your x and y when you went in a not-possible place.
+     * @param x
+     * @param y
+     */
+	void updateCoordinates(int x,int y);
+    /**
+     *
+     * @param dir
+     */
 	void setDir(int dir); //change direction
 	void setLife(int val); //change life
 
