@@ -21,7 +21,7 @@ Gun type (If you touch them, nothing happens)
 	6- It's the enemy type0 but with gun
 	7- It's the enemy type5 but with gun
 	8- Enemy can't move, but he can shoot, when the player reaches a specific place (life 5)
-	9- Is's the enemy type2 but with two guns
+	9- As's the enemy type2 but with two guns
 */
 
 //Enemy type 0

@@ -254,7 +254,7 @@ bool Game::isOver(){
 
 
 //dir decides the direction, 1 = right (generate next map/go to the next map already existing)
-//0 = go the the previous map
+//0 = go the previous map
 void Game::nextMap(int dir, int difficulty = 0){//we call this when the player reaches a trigger
 	if(mapList == NULL){//first map generation (you don't have map)
 		mapList = new map_el;
@@ -314,7 +314,7 @@ void Game::market(){
 		drawDescription(0);
 		deleteDescription(1);
 		deleteDescription(2);
-		if(player.getCoins()-spawn_powerup[0].price>=0 && !bought1  && player.getBuy()){ //you have enough money and it's the first power-up that you buy
+		if(player.getCoins()-spawn_powerup[0].price>=0 && !bought1  && player.getBuy()){ //you have enough money, so it's the first power-up that you buy
 			if(strcmp(player.getGun().name.c_str(),spawn_powerup[0].getName().c_str())!=0){ //you don't already have this gun
 				player.updateCash(-spawn_powerup[0].price); //update cash of player
 				player.setGun(spawn_powerup[0].getName()); //update power-ups of player
@@ -330,7 +330,7 @@ void Game::market(){
 		drawDescription(1);
 		deleteDescription(0);
 		deleteDescription(2);
-		if(player.getCoins()-spawn_powerup[1].price>=0 && !bought2  && player.getBuy()){ //you have enough money and it's the first power-up that you buy
+		if(player.getCoins()-spawn_powerup[1].price>=0 && !bought2  && player.getBuy()){ //you have enough money, so it's the first power-up that you buy
 			//update power-ups of player
 			if(strcmp(spawn_powerup[1].getName().c_str(),"HP") == 0){ //HP
 				player.updateCash(-spawn_powerup[1].price); //update cash of player
@@ -581,7 +581,7 @@ void Game::updateDifficulty(){
 	diff += player.getFly().getQnt() * player.getFly().getDifficulty();
 	if(player.getBullets().getQnt()>10)diff += 1; //you have bought bullets
 	diff += player.getExplo_Bullets().getQnt() * player.getExplo_Bullets().getDifficulty();
-	if(difficulty<diff)difficulty = diff; //diffculty can't decrease
+	if(difficulty<diff)difficulty = diff; //difficulty can't decrease
 }
 
 void Game::displayGame(){

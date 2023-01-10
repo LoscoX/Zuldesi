@@ -224,7 +224,7 @@ Map::Map(int difficulty){
     delete[] enemies_quantity; // delete array to clear dynamic memory
 }
 
-Map::Map(){} //deafult constructor
+Map::Map(){} //default constructor
 
 int Map::get_trigger_start(){
 	return trigger_start;
