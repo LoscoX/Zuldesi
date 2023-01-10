@@ -1406,19 +1406,28 @@ void Game::mapMovement(){
 		}
 	}
 	else{
-		switch(choice){
-			case KEY_LEFT:
-				player.setDir(-1);  //direction of the player
-				xMin--; //decrement the variable
-				if(xMin<0) xMin = 0; //avoid exit
-				break;
-			case KEY_RIGHT:
-				player.setDir(1); //direction of the player
-				xMin++; //increment the variable
-				if(xMin>mapList->map.getDim_x()-90) xMin--; //avoid exit
-				break;
-			default:
-				break;
+		if(player.getFlyActiveDuration()>0){
+			player.setFlyActiveDuration(player.getFlyActiveDuration()-1); //if you have fly actived, you have to decrement the time life of fly
+			switch(choice){
+				case KEY_LEFT:
+					player.setDir(-1);  //direction of the player
+					xMin--; //decrement the variable
+					if(xMin<0) xMin = 0; //avoid exit
+					break;
+				case KEY_RIGHT:
+					player.setDir(1); //direction of the player
+					xMin++; //increment the variable
+					if(xMin>mapList->map.getDim_x()-90) xMin--; //avoid exit
+					break;
+				default:
+					break;
+			}
+		}
+		else{
+			player.setActiveFly(false); //Your fly finishes its life
+			while(!mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //fall
+				player.godown();
+			}
 		}
 		Game::PlayerCanFly(choice); //check if you can fly
 	}
