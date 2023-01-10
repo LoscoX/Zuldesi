@@ -9,9 +9,9 @@ using namespace std;
 
 class Powerup{
 public:
-	string name;//powerup identifier
+	string name;//power-up identifier
 	string description; //Description
-	int qnt; //Quantity of powerup
+	int qnt; //Quantity of power-up
 	int price; //price
 	int difficulty;//measures how much the difficulty should increase when bought
 	Powerup();

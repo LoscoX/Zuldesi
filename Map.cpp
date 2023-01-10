@@ -2,8 +2,10 @@
 #include <cstring>
 #include <fstream>
 #include "Map.hpp"
+#include "Primenumebers.hpp"
 
 using namespace std;
+
 
 Map::Map(int difficulty){
 
@@ -111,28 +113,18 @@ Map::Map(int difficulty){
 	enemies3 = NULL; //initialize the list
 	enemies4 = NULL; //initialize the list
 	enemies5 = NULL; //initialize the list
-	enemies6 = NULL; //initialize the list
+	enemies6 = NULL; //initialize the list //shoot
 	enemies7 = NULL; //initialize the list
 	enemies8 = NULL; //initialize the list
 	enemies9 = NULL; //initialize the list
 
-	//ofstream myfile;
-	//myfile.open("log.txt");
-
 	int k = getPrime(difficulty); //handle the generation of enemies
-    //myfile<<k<<endl;
 	int* enemies_quantity = thelast10prime(k); // generate array to define quantity of enemies by type
-
-	/*for(int i=0; i<10; i++){
-		myfile<<enemies_quantity[i]<<endl;
-	}
-	myfile.close();*/
 
     for (int i = 0; i<9; i++){
 		if(enemies_quantity[i] != 0)
         	enemies_quantity[i] = rand() % enemies_quantity[i];
     }
-
 	n0 = enemies_quantity[0]; //number of enemies of type 0
 	for(int i=0;i<n0;i++){
 		//avoid enemy type0 inside a structure
@@ -150,6 +142,7 @@ Map::Map(int difficulty){
 	}
 
 	n2 = enemies_quantity[2]; //number of enemies of type 2
+
 	for(int i=0;i<n2;i++){
 		//avoid enemy type2 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
@@ -165,14 +158,14 @@ Map::Map(int difficulty){
 		enemies3 = head_insert_enemy3(enemies3,e,i); //add the enemy into the list
 	}
 
-	n4 = enemies_quantity[4];  //number of enemies of type 4
+	n4 = enemies_quantity[4]; //number of enemies of type 4
 	for(int i=0;i<n4;i++){
 		//avoid enemy type4 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
 		Enemy4 e = Enemy4(gen_y, gen_x,'4',7); //create one enemy
 		enemies4 = head_insert_enemy4(enemies4,e,i); //add the enemy into the list
 	}
-
+  
 	n5 = enemies_quantity[5]; //number of enemies of type 5
 	for(int i=0;i<n5;i++){
 		//avoid enemy type5 inside a structure
@@ -182,6 +175,7 @@ Map::Map(int difficulty){
 	}
 
 	n6 = enemies_quantity[6]; //number of enemies of type 6
+
 	for(int i=0;i<n6;i++){
 		//avoid enemy type6 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
@@ -190,6 +184,7 @@ Map::Map(int difficulty){
 	}
 
 	n7 = enemies_quantity[7]; //number of enemies of type 7
+
 	for(int i=0;i<n7;i++){
 		//avoid enemy type7 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
@@ -198,6 +193,7 @@ Map::Map(int difficulty){
 	}
 
 	n8 = enemies_quantity[8]; //number of enemies of type 8
+
 	for(int i=0;i<n8;i++){
 		//avoid enemy type8 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
@@ -206,6 +202,7 @@ Map::Map(int difficulty){
 	}
 
 	n9 = enemies_quantity[9]; //number of enemies of type 9
+
 	for(int i=0;i<n9;i++){
 		//avoid enemy type9 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
@@ -213,9 +210,10 @@ Map::Map(int difficulty){
 		enemies9 = head_insert_enemy9(enemies9,e,i); //add the enemy into the list
 	}
 
+    delete[] enemies_quantity; // delete array to clear dynamic memory
 }
 
-Map::Map(){} //deafult constructor
+Map::Map(){} //default constructor
 
 int Map::get_trigger_start(){
 	return trigger_start;
@@ -399,8 +397,10 @@ mony Map::FallCoins(mony h){ //avoid coins in the air
 	return h;
 }
 
+
 mony Map::getCoins(){
 	return coins;
+
 }
 
 //list of function for enemies
@@ -824,7 +824,7 @@ listenm8 Map::obj_remove_enemy8(listenm8 h,int cod,bool head){ //remove the enem
 listenm9 Map::obj_remove_enemy9(listenm9 h,int cod,bool head){ //remove the enemy type7 with this cod
 	if (h==NULL) return h;
 	else if(h->val == cod){ //if the enemy is in the top of the list
-		if(head == true){ //we need because we have a problem if we delete the list and use again the element pointed by the list
+		if(head){ //we need because we have a problem if we delete the list and use again the element pointed by the list
 			listenm9 tmp = h;
 			h = h->next;  //ok also if h has one element
 			delete tmp;
@@ -911,3 +911,9 @@ string* Map::initializeEnemies(string* mat){
 }
 
 
+
+
+
+void map_difficulty(){
+
+}

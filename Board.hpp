@@ -12,36 +12,81 @@
 #include <cmath>
 #include <cstdlib>
 
-const int len = 7; //length of one structure
+/**
+ * Length of one structure.
+ */
+const int len = 7;
 
-struct platform{ //structure for a platform
+/**
+ * Structure for a platform.
+ */
+struct platform{
 	char graph[len];
 	int xpos[len];
 	int ypos[len];
 };
 
-struct wall{ //structure for a wall
+
+/**
+ * Structure for a wall.
+ */
+struct wall{
 	char graph[len];
 	int xpos[len];
 	int ypos[len];
 };
 
-const int num_ogg = 30; //number of one type of objects
+/**
+ * Number of one type of objects.
+ */
+const int num_ogg = 30;
 
+/**
+ * Manage game borders.
+ */
 class Board{
 public:
 	WINDOW *board_win;
+    /**
+     * Default constructor.
+     */
 	Board();
+    /**
+     * Constructor with size parameters.
+     * @param height
+     * @param width
+     */
 	Board(int height, int width);
+    /**
+     * create a border in the input coordinate.
+     * @param x
+     * @param y
+     */
 	void addBorder(int x,int y);
+    /**
+     * Clear the borders window.
+     */
 	void clear();
+    /**
+     * Refresh the borders window.
+     */
 	void refresh();
+    /**
+     * Initialize the window getting in inputs its width and high.
+     * @param x Width of the window.
+     * @param y Height of the window.
+     */
 	void initialize(int x,int y);
-	void addAt(int y,int x,char ch);
-	char getInput();
-	int getHeight();
-	int getWidth();
+
 protected:
+    /**
+     * Make the board with size parameters.
+     * @param height
+     * @param width
+     */
 	void construct(int height, int width);
-	int height,width; //height and width of the board
+    /**
+     * Height and width of the board.
+     */
+	int height,width;
 };

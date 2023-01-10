@@ -11,17 +11,17 @@
 /*List of enemies
 Every enemy, when it dies, it gives to player a number of points proportional to number of life of enemy
 No gun type
-	0- sin movement (life = 2). There is a costant (mv) which determines the radius of the oscillation
-	1- sin movement with lift (life = 2). There is a constant (mv) which determines the height for the lifting
-	2- fixed lift (life = 3). There is a constant (mv) which determines the max height for the lifting
-	3- No fixed jump (life = 4). There is a constant (mv) which determines the height of the jump but the jump is dinamic
-	4- random movement (life = 5). Random movement in a constant neighborhood (mv)
-	5- smart movement (life = 5). It follows the player when it is sufficiently near to the enemy
+	0- sin movement (life = 5). There is a constant (mv) which determines the radius of the oscillation
+	1- sin movement with lift (life = 7). There is a constant (mv) which determines the height for the lifting
+	2- fixed lift (life = 7). There is a constant (mv) which determines the max height for the lifting
+	3- No fixed jump (life = 2). There is a constant (mv) which determines the height of the jump but the jump is dynamic
+	4- random movement (life = 3). Random movement in a constant neighborhood (mv)
+	5- smart movement (life = 2). It follows the player when it is sufficiently near to the enemy
 Gun type (If you touch them, nothing happens)
-	6- It's the enemy type0 but with gun (life 8)
-	7- It's the enemy type5 but with gun (life 8)
-	8- Enemy can't move but he can shoot, when the player reaches a specific place (life 8)
-	9- Is's the enemy type2 but with two guns (life 10)
+	6- It's the enemy type0 but with gun
+	7- It's the enemy type5 but with gun
+	8- Enemy can't move, but he can shoot, when the player reaches a specific place (life 5)
+	9- As's the enemy type2 but with two guns
 */
 
 //Enemy type 0
@@ -57,11 +57,11 @@ void Enemy0::EnemyGoDown(){ //go down
 	yLoc = yLoc + 1; //Enemy is falling
 }
 
-int Enemy0::getx(){ //Take x
+int Enemy0::getx() const{ //Take x
 	return xLoc;
 }
 
-int Enemy0::gety(){
+int Enemy0::gety() const{
 	return yLoc;
 }
 
@@ -69,11 +69,11 @@ void Enemy0::injury(){ //Injury
 	setLife(getLife()-1);
 }
 
-int Enemy0::getLife(){
+int Enemy0::getLife() const{
 	return life;
 }
 
-int Enemy0::getSign(){
+int Enemy0::getSign() const{
 	return segno;
 }
 
@@ -81,22 +81,12 @@ void Enemy0::setSign(){
 	segno = segno * (-1); //change sign
 }
 
-int Enemy0::getXpern()
-{
-	return xpern;
-}
-
-char Enemy0::getChar(){
+char Enemy0::getChar() const{
 	return character;
 }
 
 void Enemy0::setLife(int life){
 	this->life = life;
-}
-
-void Enemy0::setXpern(int x)
-{
-	xpern = x;
 }
 
 void Enemy0::updateCoordinates(int x,int y){ //update coordinates
@@ -126,7 +116,7 @@ void Enemy1::movement(){
 		xLoc = xpern - cost;
 		Enemy0::setSign(); //change the direction of the movement
 	}
-	else if(yLoc < 25 - 2 - cost){ //lifting depends from cost
+	else if(yLoc < 25 - 2 - cost){ //lifting depends on from cost
 		yLoc = 25 - 2 - cost;
 		Enemy1::setUp(); //change the direction of the lifting
 	}
@@ -140,7 +130,7 @@ void Enemy1::setUp(){
 	up = up * (-1);
 }
 
-int Enemy1::getUp(){
+int Enemy1::getUp() const{
 	return up;
 }
 
@@ -160,7 +150,7 @@ Enemy2::Enemy2() : Enemy0(){
 
 void Enemy2::movement(){
 	Enemy0::updateCoordinates(0,segno);
-	if(yLoc < 25 - 2 - cost){ //lifting depends from cost
+	if(yLoc < 25 - 2 - cost){ //lifting depends on from cost
 		yLoc = 25 - 2 - cost;
 		Enemy0::setSign(); //change the direction of the lifting
 	}
@@ -200,7 +190,7 @@ void Enemy3::SetJump(){
 	up = -1;
 }
 
-int Enemy3::GetConta(){
+int Enemy3::GetConta() const{
 	return conta;
 }
 
@@ -243,7 +233,6 @@ Enemy6::Enemy6(int y, int x, char c,int mv) : Enemy0(y,x,c,mv){
 	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
 	conta = 0; //no shots
-	gun = '-'; //gun
 }
 
 Enemy6::Enemy6() : Enemy0(){
@@ -290,7 +279,6 @@ Enemy7::Enemy7(int y, int x, char c,int mv) : Enemy6(y,x,c,mv){
 	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
 	conta = 0; //no shots
-	gun = '-'; //gun
 }
 
 Enemy7::Enemy7() : Enemy6(){
@@ -314,7 +302,6 @@ Enemy8::Enemy8(int y, int x, char c,int mv) : Enemy6(y,x,c,mv){
 	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
 	conta = 0; //no shots
-	gun = '-'; //gun
 }
 
 Enemy8::Enemy8() : Enemy6(){
@@ -337,7 +324,6 @@ Enemy9::Enemy9(int y, int x, char c,int mv) : Enemy6(y,x,c,mv){
 	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
 	conta = 0; //no shots
-	gun = '-'; //gun
 }
 
 Enemy9::Enemy9() : Enemy6(){
@@ -346,7 +332,7 @@ Enemy9::Enemy9() : Enemy6(){
 void Enemy9::movement(){
 	conta++; //increment time for the shot
 	Enemy0::updateCoordinates(0,segno);
-	if(yLoc < 25 - 2 - cost){ //lifting depends from cost
+	if(yLoc < 25 - 2 - cost){ //lifting depends on from cost
 		yLoc = 25 - 2 - cost;
 		Enemy0::setSign(); //change the direction of the lifting
 	}

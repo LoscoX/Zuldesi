@@ -26,9 +26,37 @@ typedef bullet* bullt;
 
 class Bullet{
 public:
+    /**
+     * Default constructor.
+     */
 	Bullet();
-	bullt blt; //list of bullet that you are using
-	bullt head_insert(bullt h,int dir,int x,int y,int ind); //create new bullet and add it in the gun magazine
-	bullt obj_remove(bullt h, int e,bool head); //destroy the first bullet and remove from the gun magazine. If head==true we clean the memory in the head, otherwise no
-	bullt shoot(bullt h,bullt blt); //handle the dynamic of the bullet
+    /**
+     * List of bullet that you are using.
+     */
+	bullt blt;
+    /**
+     * Create new bullet and add it in the gun magazine.
+     * @param h
+     * @param dir
+     * @param x
+     * @param y
+     * @param ind
+     * @return
+     */
+	bullt head_insert(bullt h,int dir,int x,int y,int ind);
+    /**
+     * Destroy the first bullet and remove from the gun magazine. Just if head is equal to true, memory will be cleaned.
+     * @param h
+     * @param e
+     * @param head
+     * @return
+     */
+	bullt obj_remove(bullt h, int e,bool head);
+    /**
+     * Handle the dynamic of the bullet.
+     * @param h
+     * @param blt
+     * @return
+     */
+	bullt shoot(bullt h,bullt blt);
 };
