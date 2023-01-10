@@ -43,7 +43,7 @@ int main(int argc, char ** argv) {
 
 	//update save file
 	ofstream save;
-	save.open("C:/Users/david/eclipse-workspace/Project/src/save.txt");
+	save.open("save.txt");
 	save << "-";
 	save.close();
 

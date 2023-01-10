@@ -30,7 +30,7 @@ Enemy0::Enemy0(int y, int x, char c, int mv){
 	yLoc = y;
 	xLoc = x;
 	character = c;
-	life = 5;
+	life = 2;
 	xpern = x; //save coordinates
 	ypern = y; //save coordinates
 	cost = mv;
@@ -97,7 +97,7 @@ void Enemy0::updateCoordinates(int x,int y){ //update coordinates
 //Enemy type 1
 
 Enemy1::Enemy1(int y, int x, char c,int mv) : Enemy0(y,x,c,mv){
-	life = 7;
+	life = 2;
 	up = -1;
 }
 
@@ -142,7 +142,7 @@ bool Enemy1::ReachAngles(){
 //Enemy type 2
 
 Enemy2::Enemy2(int y, int x, char c,int mv) : Enemy0(y,x,c,mv){
-	life = 7;
+	life = 3;
 }
 
 Enemy2::Enemy2() : Enemy0(){
@@ -163,7 +163,7 @@ void Enemy2::movement(){
 //Enemy type 3
 
 Enemy3::Enemy3(int y, int x, char c,int mv) : Enemy0(y,x,c,mv){
-	life = 2;
+	life = 3;
 	conta = 1;
 	up = -1;
 }
@@ -197,7 +197,7 @@ int Enemy3::GetConta() const{
 //Enemy type 4
 
 Enemy4::Enemy4(int y, int x, char c,int mv) : Enemy0(y,x,c,mv){
-	life = 3;
+	life = 4;
 	conta = 0; //handle delay of the movement
 }
 
@@ -215,7 +215,7 @@ void Enemy4::movement(){
 //Enemy type 5
 
 Enemy5::Enemy5(int y, int x, char c,int mv) : Enemy0(y,x,c,mv){
-	life = 2;
+	life = 5;
 }
 
 Enemy5::Enemy5() : Enemy0(){
@@ -229,7 +229,7 @@ void Enemy5::movement(int direction){
 //Enemy type 6
 
 Enemy6::Enemy6(int y, int x, char c,int mv) : Enemy0(y,x,c,mv){
-	life = 5;
+	life = 8;
 	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
 	conta = 0; //no shots
@@ -275,7 +275,7 @@ bullt Enemy6::Enemyshoot(bullt tmp){
 //Enemy type7
 
 Enemy7::Enemy7(int y, int x, char c,int mv) : Enemy6(y,x,c,mv){
-	life = 5;
+	life = 8;
 	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
 	conta = 0; //no shots
@@ -298,7 +298,7 @@ void Enemy7::movement(int direction){
 //Enemy type8
 
 Enemy8::Enemy8(int y, int x, char c,int mv) : Enemy6(y,x,c,mv){
-	life = 5;
+	life = 8;
 	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
 	conta = 0; //no shots
@@ -320,7 +320,7 @@ void Enemy8::movement(int direction){
 //Enemy type9
 
 Enemy9::Enemy9(int y, int x, char c,int mv) : Enemy6(y,x,c,mv){
-	life = 5;
+	life = 10;
 	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
 	conta = 0; //no shots
@@ -340,7 +340,7 @@ void Enemy9::movement(){
 		yLoc = 25 - 2;
 		Enemy0::setSign(); //change the direction of the lifting
 	}
-	if(conta==5){ //every 5 seconds, the enemy fires two bullets in opposite directions
+	if(conta==10){ //every 5 seconds, the enemy fires two bullets in opposite directions
 		bullet.blt = bullet.head_insert(bullet.blt,segno,xLoc,yLoc,ind); //add the bullet
 		ind = ind + 1; //we want different indexes for the different bullets
 		bullet.blt = bullet.head_insert(bullet.blt,-segno,xLoc,yLoc,ind); //add the bullet
