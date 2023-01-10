@@ -47,7 +47,7 @@ Player::Player(WINDOW * win, int y, int x){
 	ACTIVE_ARMOR = false; //no armor when you start
 	ARMOR_ACTIVE_DURATION = 0; //no armor when you start
 	FLY_ACTIVE_DURATION = 0; //no fly when you start
-	FLY_DURATION = 50; //duration of the fly
+	FLY_DURATION = 500; //duration of the fly
 	ACTIVE_FLY = false; //no fly when you start
 };
 
@@ -73,19 +73,9 @@ void Player::jump(){ //not move the x
 		if(conta == jumping.getQnt())segno = 1; //go down
 		yLoc = yLoc + segno;
 		conta++;
-		if(xLoc>xMax-2){ //if you reach the wall
+		if(yLoc<1){ //if you reach the roof
 			SetJump(); //ready for a new jump
-			xLoc = xMax-2; //fix the x
-			while(yLoc>yMax-2)godown(); //go down
-		}
-		else if(xLoc<1){ //if you reach the wall
-			SetJump(); //ready for a new jump
-			xLoc = 1; //fix the x
-			while(yLoc>yMax-2)godown(); //go down
-		}
-		else if(yLoc<1){ //if you reach the roof
-			SetJump(); //ready for a new jump
-			while(yLoc>yMax-2)godown(); //godown
+			while(yLoc<yMax-6)godown(); //godown
 		}
 	}
 	else{
@@ -101,7 +91,7 @@ void Player::godown(){ //go down
 	if(strcmp(gun.getName().c_str(),"None")!=0) mvwaddch(curwin,yLoc,xLoc+getDir(),' '); //delete gun
 	if(strcmp(gun.getName().c_str(),"Doublegun")==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //see gun
 	yLoc = yLoc + 1; //you are falling
-	if (yLoc>yMax-2) yLoc = yMax-2;
+	if (yLoc>yMax-6) yLoc = yMax-6; //ground floor
 }
 
 void Player::goup(){ //go up
@@ -122,9 +112,8 @@ void Player::teleport(){
 	if(shield.getQnt()==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //delete old gun
 	if(strcmp(gun.getName().c_str(),"None")!=0) mvwaddch(curwin,yLoc,xLoc+getDir(),' '); //delete gun
 	if(strcmp(gun.getName().c_str(),"Doublegun")==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //see gun
-	yLoc = yMax - 2; //ground floor
+	yLoc = yMax - 6; //ground floor
 	xLoc = xLoc + TELEPORT_DISTANCE[teleportation.getQnt()-1]; //teleport the character
-	if(xLoc > xMax-2) xLoc = xMax - 2; //you reach the wall
 }
 
 int Player::getmv(){ //move the character with gun by user
@@ -136,7 +125,7 @@ int Player::getmv(){ //move the character with gun by user
 		if(FLY_ACTIVE_DURATION>0)FLY_ACTIVE_DURATION--; //if you have fly actived, you have to decrement the time life of fly
 		else{
 			ACTIVE_FLY = false; //Your fly finishes its life
-			while(yLoc<yMax-4)godown(); //fall when you end your fly
+			yLoc=yMax-6; //come back to the floor when you end your fly (ground floor)
 		}
 	}
 	int choice = wgetch(curwin);
@@ -147,7 +136,6 @@ int Player::getmv(){ //move the character with gun by user
 			}
 			else{ //if you are not flying
 				activejump = true; //active jump
-				jump();
 			}
 			break;
 		case KEY_DOWN: //just go down
@@ -194,7 +182,7 @@ int Player::getmv(){ //move the character with gun by user
 		case 'f': //activate the fly (time_life of fly starts)
 			if(fly.getQnt()>0){ //you have the fly
 				FLY_ACTIVE_DURATION = FLY_DURATION; //thanks to the quantity you get the fly duration.
-				fly.setQnt(0); //no fly anymore
+				fly.setQnt(fly.getQnt()-1); //no fly anymore
 				ACTIVE_FLY = true;
 			}
 			break;
@@ -274,7 +262,6 @@ void Player::display(){ //display the character
 			mvwaddch(curwin,yLoc,xLoc,'O'); //see armor
 		}
 		if(shield.getQnt()>0) mvwaddch(curwin,yLoc,xLoc-getDir(),character[2]); //see the shield
-		//if(shield.getQnt()==0 && strcmp(gun.getName().c_str(),"Doublegun")==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //delete old gun
 		if(strcmp(gun.getName().c_str(),"None")!=0) mvwaddch(curwin,yLoc,xLoc+getDir(),character[3]); //see the gun
 		if(strcmp(gun.getName().c_str(),"Doublegun")==0) mvwaddch(curwin,yLoc,xLoc-getDir(),character[3]); //see the gun
 		wattroff(curwin,COLOR_PAIR(3)); //color
@@ -286,7 +273,6 @@ void Player::display(){ //display the character
 			mvwaddch(curwin,yLoc,xLoc,'O'); //see armor
 		}
 		if(shield.getQnt()>0) mvwaddch(curwin,yLoc,xLoc-getDir(),character[2]); //see the shield
-		//if(shield.getQnt()==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //delete old gun
 		if(strcmp(gun.getName().c_str(),"None")!=0) mvwaddch(curwin,yLoc,xLoc+getDir(),character[3]); //see the gun
 		if(strcmp(gun.getName().c_str(),"Doublegun")==0) mvwaddch(curwin,yLoc,xLoc-getDir(),character[3]); //see the gun
 		wattroff(curwin,COLOR_PAIR(1));
