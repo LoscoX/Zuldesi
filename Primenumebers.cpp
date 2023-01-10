@@ -62,7 +62,7 @@ int* thelast10prime(int n){
     int* arr = new int[10];
     int y;
     if (countPrime(n)<10){
-        y = 1;
+        y = 0;
         for (int i = 0; i<10; i++){
             if (nextPrime(y)<=n){
                 arr[i] = nextPrime(y);
