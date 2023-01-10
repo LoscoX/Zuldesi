@@ -151,73 +151,217 @@ public:
 
 class Enemy2 : public Enemy0{
 public:
+
+    /**
+     * Constructor with parameters.
+     * @param y
+     * @param x
+     * @param c
+     * @param mv
+     */
 	Enemy2(int y, int x, char c, int mv);
+    /**
+     * Default constructor.
+     */
 	Enemy2();
-	void movement() override; //modify the movement
+    /**
+     * Change the movement direction.
+     */
+	void movement() override;
 };
 
 
 class Enemy3 : public Enemy0{
 protected:
-	int conta; //time for the jump
-	int up; //direction of the parabola
+    /**
+     * Counter for the jump's time.
+     */
+	int conta;
+    /**
+     * Jump parabola's direction.
+     */
+	int up;
 public:
+    /**
+     * Constructor with parameters.
+     * @param y
+     * @param x
+     * @param c
+     * @param mv
+     */
 	Enemy3(int y, int x, char c, int mv);
+    /**
+     * Default constructor.
+     */
 	Enemy3();
-	void SetJump(); //starts the jump
-	void movement() override; //modify the movement
-	int GetConta(); //take conta
+    /**
+     * Starts the jump.
+     */
+	void SetJump();
+    /**
+     * Change the movement direction.
+     */
+	void movement() override;
+    /**
+     *
+     * @return conta value.
+     */
+	int GetConta();
 };
 
 class Enemy4 : public Enemy0{
 protected:
 	int conta;
 public:
+    /**
+     * Constructor with parameters.
+     * @param y
+     * @param x
+     * @param c
+     * @param mv
+     */
 	Enemy4(int y, int x, char c, int mv);
+    /**
+     * Default constructor.
+     */
 	Enemy4();
-	void movement() override; //modify the movement
+    /**
+     * Change the movement direction.
+     */
+	void movement() override;
 };
 
 class Enemy5 : public Enemy0{
 public:
+    /**
+     * Constructor with parameters.
+     * @param y
+     * @param x
+     * @param c
+     * @param mv
+     */
 	Enemy5(int y, int x, char c, int mv);
+    /**
+     * Default constructor.
+     */
 	Enemy5();
-	void movement(int direction); //modify the movement
+    /**
+     * Change the movement direction.
+     * @param direction
+     */
+	void movement(int direction);
 };
 
 class Enemy6 : public Enemy0{
 protected:
-	int conta; //time for one shot
-	char gun; //character for the gun
-	Bullet bullet; //list of bullet that you are using
-	int ind; //index for the list of bullet
+    /**
+     *  Counter for one shot time.
+     */
+	int conta{};
+    /**
+     * List of bullet that you are using.
+     */
+	Bullet bullet;
+    /**
+     * Index for the list of bullet.
+     */
+	int ind{};
 public:
+    /**
+     * Constructor with parameters.
+     * @param y
+     * @param x
+     * @param c
+     * @param mv
+     */
 	Enemy6(int y, int x, char c, int mv);
+    /**
+     * Default constructor.
+     */
 	Enemy6();
-	void movement() override; //modify the movement
-	Bullet getBullet(); //take bullet
-	bullt setBullet(bullt tmp,int cod); //set bullet(remove one bullet)
-	bullt Enemyshoot(bullt tmp); //shooting
+    /**
+     * Change the movement direction.
+     */
+	void movement() override;
+    /**
+     * Take the bullet.
+     * @return
+     */
+	Bullet getBullet();
+    /**
+     * Set bullet (remove one bullet).
+     * @param tmp
+     * @param cod
+     * @return
+     */
+	bullt setBullet(bullt tmp,int cod);
+    /**
+     * Shooting.
+     * @param tmp
+     * @return
+     */
+	bullt Enemyshoot(bullt tmp);
 };
 
 class Enemy7 : public Enemy6{
 public:
+    /**
+     * Constructor with parameters.
+     * @param y
+     * @param x
+     * @param c
+     * @param mv
+     */
 	Enemy7(int y, int x, char c, int mv);
+    /**
+     * Default constructor.
+     */
 	Enemy7();
-	void movement(int direction); //modify the movement
+    /**
+     * Change the movement direction.
+     * @param direction
+     */
+	void movement(int direction);
 };
 
 class Enemy8 : public Enemy6{
 public:
+    /**
+     * Constructor with parameters.
+     * @param y
+     * @param x
+     * @param c
+     * @param mv
+     */
 	Enemy8(int y, int x, char c, int mv);
+    /**
+     * Default constructor.
+     */
 	Enemy8();
-	void movement(int direction); //modify the movement
+    /**
+     * Change the movement direction.
+     * @param direction
+     */
+	void movement(int direction);
 };
 
 class Enemy9 : public Enemy6{
 public:
+    /**
+     * Constructor with parameters.
+     * @param y
+     * @param x
+     * @param c
+     * @param mv
+     */
 	Enemy9(int y, int x, char c, int mv);
+    /**
+     * Default constructor.
+     */
 	Enemy9();
-	void movement() override; //modify the movement
+    /**
+     * Change the movement direction.
+     */
+	void movement() override;
 };
 
