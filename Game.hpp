@@ -41,7 +41,7 @@ public:
 	//Main functions
 	void updateState(); //Main game
 	void redraw(); //
-	bool isOver(); //Game is over
+	bool isOver() const; //Game is over
 
 	//Market function
 	void initializePowerUp(); //initialize power-up
@@ -108,7 +108,7 @@ public:
 	void updateDifficulty();
 
 	//save file
-	void save();
+	void save() const;
 
 protected:
 
@@ -141,7 +141,7 @@ protected:
 
 	Map map; //map
 
-	string* matrix; //matrix for the map
+	string* matrix{}; //matrix for the map
 
 	bool game_over;
 
