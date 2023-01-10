@@ -33,16 +33,16 @@ Player::Player(WINDOW * win, int y, int x){
 	NUM_BULLETS = 0; //number of bullets
 	NUM_EXPLO_BULLETS = 0; //number of exploding bullets
 	//powerup
-	gun = Powerup("None", "No gun", 1, 0, 2); //no gun when you start
-	shield = Powerup("Shield", "A shield that blocks damage one time", 0, 1, 1); //no shield when you start
-	hp = Powerup("HP", "Get back on your feet one more time", life, 1, 1);
-	armor = Powerup("Armor", "Become invincible for a limited time", 0, 1, 1); //no armor when you start
-	teleportation = Powerup("Teleport", "Teleport a short distance", 0, 1, 1); //you cannot teleport when you start
-	bullets = Powerup("Bullets","Charge of bullets",NUM_BULLETS,1,1); //no bullets when you start
-	explo_bullets = Powerup("Explo-Bullets","Charge of explosive bullets",NUM_EXPLO_BULLETS,1,1); //no bullets when you start
-	jumping = Powerup("Jump","Change the height of the jump",jump_height,1,1); //basic jump when you start
-	fly = Powerup("Fly","You can fly",0,1,1); //you cannot fly when you start
-	ARMOR_DURATION[0] = 500; ARMOR_DURATION[1] = 1000; ARMOR_DURATION[2] = 5000; //different type of Armor duration
+	gun = Powerup("None", "GUNS", 1, 10, 1); //no gun when you start
+	shield = Powerup("Shield", "A shield that blocks damage one time", 0, 15, 1); //no shield when you start
+	hp = Powerup("HP", "Get back on your feet one more time", life, 3, 1);
+	armor = Powerup("Armor", "Become invincible for a limited time", 0, 10, 1); //no armor when you start
+	teleportation = Powerup("Teleport", "Teleport a short distance", 0, 10, 1); //you cannot teleport when you start
+	bullets = Powerup("Bullets","Charge of bullets",NUM_BULLETS,5,1); //no bullets when you start
+	explo_bullets = Powerup("Explo-Bullets","Charge of explosive bullets",NUM_EXPLO_BULLETS,20,1); //no bullets when you start
+	jumping = Powerup("Jump","Change the height of the jump",jump_height,7,1); //basic jump when you start
+	fly = Powerup("Fly","You can fly",0,20,1); //you cannot fly when you start
+	ARMOR_DURATION[0] = 100; ARMOR_DURATION[1] = 200; ARMOR_DURATION[2] = 500; //different type of Armor duration
 	TELEPORT_DISTANCE[0] = dir*20; TELEPORT_DISTANCE[1] = dir*30; TELEPORT_DISTANCE[2] = dir*40; //different teleport distance
 	ACTIVE_ARMOR = false; //no armor when you start
 	ARMOR_ACTIVE_DURATION = 0; //no armor when you start
@@ -274,7 +274,7 @@ void Player::display(){ //display the character
 			mvwaddch(curwin,yLoc,xLoc,'O'); //see armor
 		}
 		if(shield.getQnt()>0) mvwaddch(curwin,yLoc,xLoc-getDir(),character[2]); //see the shield
-		if(shield.getQnt()==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //delete old gun
+		//if(shield.getQnt()==0 && strcmp(gun.getName().c_str(),"Doublegun")==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //delete old gun
 		if(strcmp(gun.getName().c_str(),"None")!=0) mvwaddch(curwin,yLoc,xLoc+getDir(),character[3]); //see the gun
 		if(strcmp(gun.getName().c_str(),"Doublegun")==0) mvwaddch(curwin,yLoc,xLoc-getDir(),character[3]); //see the gun
 		wattroff(curwin,COLOR_PAIR(3)); //color
@@ -286,7 +286,7 @@ void Player::display(){ //display the character
 			mvwaddch(curwin,yLoc,xLoc,'O'); //see armor
 		}
 		if(shield.getQnt()>0) mvwaddch(curwin,yLoc,xLoc-getDir(),character[2]); //see the shield
-		if(shield.getQnt()==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //delete old gun
+		//if(shield.getQnt()==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //delete old gun
 		if(strcmp(gun.getName().c_str(),"None")!=0) mvwaddch(curwin,yLoc,xLoc+getDir(),character[3]); //see the gun
 		if(strcmp(gun.getName().c_str(),"Doublegun")==0) mvwaddch(curwin,yLoc,xLoc-getDir(),character[3]); //see the gun
 		wattroff(curwin,COLOR_PAIR(1));

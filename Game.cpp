@@ -24,6 +24,7 @@ Game::Game(int height,int width){
 	board.initialize(0,0); //initialize the board in 0,0
 	WINDOW* win = board.board_win;
 
+	//variables for the market
 	HEIGHT_MARKET = 15; //height of powerups
 	draw_cost1 = 213;
 	draw_cost2 = 185;
@@ -36,7 +37,7 @@ Game::Game(int height,int width){
 	bought3 = false;
 
 	//start the map
-	difficulty = 1;
+	difficulty = 0;
 	mapList = NULL;
 	nextMap(1, difficulty);
 
@@ -50,27 +51,33 @@ Game::Game(int height,int width){
 
 	//read from save file player powerups
 	ifstream save;
-	save.open("save.txt");
+	save.open("C:/Users/david/eclipse-workspace/Project/src/save.txt"); //open save text
 	string line;
-	getline(save, line);
+	getline(save, line); //take the line
 	if(line != "-"){
 		player.setGun(line); //gun name
 		getline(save, line);
-		player.setBullets(stoi(line)); //bullets qnt
+		player.setBullets(stoi(line,nullptr,0)); //bullets qnt
 		getline(save, line);
-		player.setExplo_Bullets(stoi(line)); //explo bullets qnt
+		player.setExplo_Bullets(stoi(line,nullptr,0)); //explo bullets qnt
 		getline(save, line);
-		player.setHP(stoi(line)); //hp qnt
+		player.setHP(stoi(line,nullptr,0)); //hp qnt
 		getline(save, line);
-		player.setShield(stoi(line)); //shield qnt
+		player.setShield(stoi(line,nullptr,0)); //shield qnt
 		getline(save, line);
-		player.setArmor(stoi(line)); //armor qnt
+		player.setArmor(stoi(line,nullptr,0)); //armor qnt
 		getline(save, line);
-		player.setTeleportation(stoi(line)); //teleportation qnt
+		player.setTeleportation(stoi(line,nullptr,0)); //teleportation qnt
 		getline(save, line);
-		player.setJumping(stoi(line)); //jumping qnt
+		player.setJumping(stoi(line,nullptr,0)); //jumping qnt
 		getline(save, line);
-		player.setFly(stoi(line)); //fly qnt
+		player.setFly(stoi(line,nullptr,0)); //fly qnt
+		getline(save, line);
+		player.updateCash(stoi(line,nullptr,0)); //money
+		getline(save, line);
+		player.updatePoints(stoi(line,nullptr,0)); //points
+		getline(save, line);
+		difficulty = stoi(line,nullptr,0); //difficulty
 	}
 
 	time = 0; //time for the game
@@ -98,6 +105,7 @@ void Game::updateState(){
 	time++;
 
 	if(player.getHP().getQnt() != hp_tmp){
+		save();
 		restartMap(difficulty);
 		PrintMap();
 	}
@@ -114,20 +122,21 @@ void Game::updateState(){
 
 }
 
-void Game::restartMap(int difficulty){
-	if(mapList->prev == NULL){
+void Game::restartMap(int difficulty){ //restart map
+	if(mapList->prev == NULL){ //first level
 		mapList->map = Map(difficulty);
-	}else{
+	}else{ //other levels
 		mapList = mapList->prev;
 		delete mapList->next;
 		mapList->next = new map_el;
 		mapList->next->prev = mapList;
 		mapList = mapList->next;
-		mapList->id=mapList->prev->id+1;
+		mapList->id=mapList->prev->id+1; //update ID
 		mapList->next=NULL;
 		mapList->map = Map(difficulty);
 	}
 	matrix = mapList->map.toString();
+	//rearrange variable fort the game
 	xMin = 5;
 	time = 0;
 }
@@ -149,7 +158,7 @@ void Game::handleCoins(){
 
 void Game::save(){
 	ofstream save;
-	save.open("save.txt");
+	save.open("C:/Users/david/eclipse-workspace/Project/src/save.txt"); //open the file
 	save << player.getGun().getName() << endl; //gun name
 	save << player.getBullets().getQnt() << endl; //bullets qnt
 	save << player.getExplo_Bullets().getQnt() << endl; //explo bullets qnt
@@ -159,6 +168,9 @@ void Game::save(){
 	save << player.getTeleportation().getQnt() << endl; //teleportation qnt
 	save << player.getJumping().getQnt() << endl; //jumping qnt
 	save << player.getFly().getQnt() << endl; //fly qnt
+	save << player.getCoins() << endl; //coins
+	save << player.getPoints() << endl; //points
+	save << difficulty << endl; //difficulty
 	save.close();
 }
 
@@ -181,12 +193,17 @@ void Game::handleMaps(){
 		nextMap(1, difficulty);
 	}
 	else if(player.getx()+xMin == mapList->map.get_trigger_end()){ 	//go to market
-		//teleport player to market
-		Market_Active = true; //you are in the market
-		Market_Build = true; //you have to build the market
+		if(mapList->next ==NULL){ //no new map
+			//teleport player to market
+			Market_Active = true; //you are in the market
+			Market_Build = true; //you have to build the market
 
-		xMin = xMin + 85;
-		PrintMap();
+			xMin = xMin + 85;
+			PrintMap();
+		}
+		else{ //you cannot pass to market when you came back with map
+			nextMap(1, difficulty);
+		}
 	}
 	else if(player.getx()+xMin == mapList->map.get_trigger_start()){
 		nextMap(0,0);
@@ -298,6 +315,7 @@ void Game::market(){
 			if(strcmp(player.getGun().name.c_str(),spawn_powerup[0].getName().c_str())!=0){ //you don't already have this gun
 				player.updateCash(-spawn_powerup[0].price); //update cash of player
 				player.setGun(spawn_powerup[0].getName()); //update powerups of player
+				player.setBullets(player.getBullets().getQnt() + 10); //10 bullets
 				bought1 = true;
 				player.setBuy(false); //you can buy another powerup
 			}
@@ -352,19 +370,19 @@ void Game::market(){
 		if(player.getCoins()-spawn_powerup[2].price>=0 && !bought3  && player.getBuy()){ ////you have enough money and it's the first powerup that you buy
 			//update powerups of player
 			if(strcmp(spawn_powerup[2].getName().c_str(),"Teleport") == 0 && player.getTeleportation().getQnt()<3){ //Teleport
-				player.updateCash(-spawn_powerup[1].price); //update cash of player
+				player.updateCash(-spawn_powerup[2].price); //update cash of player
 				bought3 = true;
 				player.setBuy(false); //you can buy another powerup
 				player.setTeleportation(player.getTeleportation().getQnt() + spawn_powerup[2].getQnt());
 			}
 			else if(strcmp(spawn_powerup[2].getName().c_str(),"Armor") == 0 && player.getArmor().getQnt()<3){ //Armor
-				player.updateCash(-spawn_powerup[1].price); //update cash of player
+				player.updateCash(-spawn_powerup[2].price); //update cash of player
 				bought3 = true;
 				player.setBuy(false); //you can buy another powerup
 				player.setArmor(player.getArmor().getQnt() + spawn_powerup[2].getQnt());
 			}
 			else if(strcmp(spawn_powerup[2].getName().c_str(),"Fly") == 0){ //Fly
-				player.updateCash(-spawn_powerup[1].price); //update cash of player
+				player.updateCash(-spawn_powerup[2].price); //update cash of player
 				bought3 = true;
 				player.setBuy(false); //you can buy another powerup
 				player.setFly(player.getFly().getQnt() + spawn_powerup[2].getQnt());
@@ -494,14 +512,14 @@ void Game::deleteDescription(int j){
 
 void Game::initializePowerUp(){
 	//(quantity of the guns is fixed to 1-->you can have just one gun)
-	guns[0] = Powerup("Pistol", ": You can shoot one bullet", 1, 5, 1);
-	guns[1] = Powerup("Rifle", ": You can shoot two bullets", 1, 10, 1);
-	guns[2] = Powerup("Machinegun", ": You can shoot three bullets", 1, 15, 1);
-	guns[3] = Powerup("Doublegun", ": You can shoot two bullets, one to dx direction and one to sx direction", 1, 15, 1);
+	guns[0] = Powerup("Pistol", ": You can shoot one bullet", 1, 10, 1);
+	guns[1] = Powerup("Rifle", ": You can shoot two bullets", 1, 15, 1);
+	guns[2] = Powerup("Machinegun", ": You can shoot three bullets", 1, 20, 1);
+	guns[3] = Powerup("Doublegun", ": You can shoot two bullets, one to dx direction and one to sx direction", 1, 20, 1);
 
-    bonus[0] = Powerup("HP", ": Additional life (+1)", 1, 1, 1); //quantity corresponds to the number of lives which you have bought
+    bonus[0] = Powerup("HP", ": Additional life (+1)", 1, 3, 1); //quantity corresponds to the number of lives which you have bought
 	bonus[1] = Powerup("Shield", ": It blocks damage one time", 1, 5, 1);//quantity corresponds to the number of protection you have (max 2)
-	bonus[2] = Powerup("Jump",": Change the height of the jump(+2)(max 3)",2,5,1); //quantity corresponds to max (plus with respect to basic jump) height of the jump
+	bonus[2] = Powerup("Jump",": Change the height of the jump(+2)(max 3)",2,7,1); //quantity corresponds to max (plus with respect to basic jump) height of the jump
 	bonus[3] = Powerup("Bullets",": Charge of bullets",100,5,1); //quantity corresponds to the number of bullets
 	bonus[4] = Powerup("Explo_Bullets",": Charge of explosive bullets",1,20,1); //quantity corresponds to the number of explosive bullets
 
@@ -550,16 +568,17 @@ void Game::deletePowerup(Powerup pwp[]){
 
 void Game::updateDifficulty(){
 	//once we exit the market level we update difficulty based on power-ups
-	int diff = player.getGun().getDifficulty();
-	diff += (player.getHP().getQnt()-player.getLife()) * player.getHP().getDifficulty(); //you start with a life
+	int diff = 0;
+	if(strcmp(player.getGun().getName().c_str(),"None") != 0)diff += player.getGun().getDifficulty();
+	//life no
 	diff += player.getShield().getQnt() * player.getShield().getDifficulty();
 	diff += ((player.getJumping().getQnt()-5)/2)* player.getJumping().getDifficulty(); //you buy 2 jumping each time and your height at the beginning is 5
 	diff += player.getArmor().getQnt() * player.getArmor().getDifficulty();
 	diff += player.getTeleportation().getQnt() * player.getTeleportation().getDifficulty();
 	diff += player.getFly().getQnt() * player.getFly().getDifficulty();
-	diff += player.getBullets().getQnt()/100 * player.getBullets().getDifficulty(); //you buy 100 bullets each time
+	if(player.getBullets().getQnt()>10)diff += 1; //you have bought bullets
 	diff += player.getExplo_Bullets().getQnt() * player.getExplo_Bullets().getDifficulty();
-	difficulty = diff;
+	if(difficulty<diff)difficulty = diff; //diffculty can't decrease
 }
 
 void Game::displayGame(){
@@ -1346,17 +1365,25 @@ void Game::mapMovement(){
 					break;
 				case 't': //teleport
 					if(player.getTeleportation().getQnt()>0){ //check if the player has teleport
-						if(player.getDir()==1) //the jump depends on previous player direction
+						if(player.getDir()==1){ //the jump depends on previous player direction
 							for(int i=0;i<player.getTELEPORT_DISTANCE(player.getTeleportation().getQnt()-1);i++){
 								xMin++; //increment the variable
 								if(xMin>mapList->map.getDim_x()-90) xMin--; //avoid exit
 							}
-						else
+							while(mapList->map.isSolid(player.getx()+xMin,player.gety())){
+								xMin--;
+							}
+						}
+						else{
 							for(int i=0;i<player.getTELEPORT_DISTANCE(player.getTeleportation().getQnt()-1);i++){
 								xMin--; //decrement the variable
 								if(xMin<0) xMin = 0; //avoid exit
 							}
-						player.getTeleportation().setQnt(0); //delete teleports you have
+							while(mapList->map.isSolid(player.getx()+xMin,player.gety())){
+								xMin++;
+							}
+						}
+						player.setTeleportation(0); //delete teleports you have
 					}
 					break;
 				default:
@@ -1413,31 +1440,15 @@ void Game::PlayerDown(){
 void Game::PlayerCanFly(int choice){ //Player can or cannot fly
 	switch(choice){
 		case KEY_LEFT: //you went to sx
-			if(strcmp(player.getGun().getName().c_str(),"None")==0){ //no gun
-				if(mapList->map.isSolid(player.getx()+xMin,player.gety())){ //check it there has been collision
-					xMin++; //increment the variable
-					PrintMap(); //see map movement
-				}
-			}
-			else{ //gun
-				if(mapList->map.isSolid(player.getx()+xMin+player.getDir(),player.gety())){ //check it there has been collision
-					xMin++; //increment the variable
-					PrintMap(); //see map movement
-				}
+			if(mapList->map.isSolid(player.getx()+xMin,player.gety())){ //check it there has been collision
+				xMin++; //increment the variable
+				PrintMap(); //see map movement
 			}
 			break;
 		case KEY_RIGHT: //you went to dx
-			if(strcmp(player.getGun().getName().c_str(),"None")==0){ //no gun
-				if(mapList->map.isSolid(player.getx()+xMin,player.gety())){ //check it there has been collision
-					xMin--; //increment the variable
-					PrintMap(); //see map movement
-				}
-			}
-			else{ //gun
-				if(mapList->map.isSolid(player.getx()+xMin+player.getDir(),player.gety())){ //check it there has been collision
-					xMin--; //increment the variable
-					PrintMap(); //see map movement
-				}
+			if(mapList->map.isSolid(player.getx()+xMin,player.gety())){ //check it there has been collision
+				xMin--; //increment the variable
+				PrintMap(); //see map movement
 			}
 			break;
 		case KEY_UP: //you went to up
@@ -1459,106 +1470,51 @@ void Game::PlayerCanMove(int choice){ //Player can or cannot move
 	//bool down;
 	switch(choice){
 	case KEY_LEFT: //you went to sx
-		if(strcmp(player.getGun().getName().c_str(),"None")==0){ //no gun
-			if(mapList->map.isSolid(player.getx()+xMin,player.gety())){ //check it there has been collision
-				xMin++; //increment the variable
-				PrintMap(); //see map movement
-			}
-			else{
-				while(!mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
-					Game::PlayerDown(); //go down
-				}
-			}
+		if(mapList->map.isSolid(player.getx()+xMin,player.gety())){ //check it there has been collision
+			xMin++; //increment the variable
+			PrintMap(); //see map movement
 		}
-		else{ //gun
-			if(mapList->map.isSolid(player.getx()+xMin+player.getDir(),player.gety())){ //check it there has been collision
-				xMin++; //increment the variable
-				PrintMap(); // see map movement
-			}
-			else{
-				while(!mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
-					Game::PlayerDown(); //go down
-				}
+		else{
+			while(!mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
+				Game::PlayerDown(); //go down
 			}
 		}
 		break;
 	case KEY_RIGHT: //you went to dx
-		if(strcmp(player.getGun().getName().c_str(),"None")==0){ //no gun
-			if(mapList->map.isSolid(player.getx()+xMin,player.gety())){ //check it there has been collision
-				xMin--;
-				PrintMap(); //see map movement
-			}
-			else{
-				while(!mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
-					Game::PlayerDown(); //go down
-				}
-			}
+		if(mapList->map.isSolid(player.getx()+xMin,player.gety())){ //check it there has been collision
+			xMin--;
+			PrintMap(); //see map movement
 		}
-		else{ //gun
-			if(mapList->map.isSolid(player.getx()+xMin+player.getDir(),player.gety())){ //check it there has been collision
-				xMin--;
-				PrintMap(); // see map movement
-			}
-			else{
-				while(!mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
-					Game::PlayerDown(); //go down
-				}
+		else{
+			while(!mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
+				Game::PlayerDown(); //go down
 			}
 		}
 		break;
 	case KEY_UP: //you went up
-		if(strcmp(player.getGun().getName().c_str(),"None")==0){ //no gun
-			if(mapList->map.isSolid(player.getx()+xMin,player.gety())){ //check if you reach one piece of one structure
-				if(player.getDir()==1){ //you have to go where you went(it depends on the direction)
-					xMin--;
-					PrintMap(); //see map movement
-				}
-				else{
-					xMin++; //increment the variable
-					PrintMap(); //see map movement
-				}
-				player.SetJump(); //for the next jump
-				while(!mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
-					Game::PlayerDown(); //go down
-				}
+		if(mapList->map.isSolid(player.getx()+xMin,player.gety())){ //check if you reach one piece of one structure
+			if(player.getDir()==1){ //you have to go where you went(it depends on the direction)
+				xMin--;
+				PrintMap(); //see map movement
 			}
-			else if(mapList->map.isSolid(player.getx()+xMin,player.gety()-1) || mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet or over you head
-				player.SetJump(); //for the next jump
-				while(!mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
-					Game::PlayerDown(); //go down
-				}
+			else{
+				xMin++; //increment the variable
+				PrintMap(); //see map movement
 			}
-			else if(player.getActiveJump() == false){
-				while(!mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
-					Game::PlayerDown(); //go down
-				}
+			player.SetJump(); //for the next jump
+			while(!mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
+				Game::PlayerDown(); //go down
 			}
 		}
-		else{ //gun
-			if(mapList->map.isSolid(player.getx()+xMin+player.getDir(),player.gety())){ //check if the gun reaches one piece of one structure
-				if(player.getDir()==1){ //you have to go where you went(it depends on the direction)
-					xMin--;
-					PrintMap(); //see map movement
-				}
-				else{
-					xMin++; //increment the variable
-					PrintMap(); //see -map movement
-				}
-				player.SetJump(); //for the next jump
-				while(!mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
-					Game::PlayerDown(); //go down
-				}
+		else if(mapList->map.isSolid(player.getx()+xMin,player.gety()-1) || mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet or over you head
+			player.SetJump(); //for the next jump
+			while(!mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
+				Game::PlayerDown(); //go down
 			}
-			else if(mapList->map.isSolid(player.getx()+xMin,player.gety()-1) || mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet or over you head
-				player.SetJump(); //for the next jump
-				while(!mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
-					Game::PlayerDown(); //go down
-				}
-			}
-			else if(player.getActiveJump() == false){
-				while(!mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
-					Game::PlayerDown(); //go down
-				}
+		}
+		else if(player.getActiveJump() == false){
+			while(!mapList->map.isSolid(player.getx()+xMin,player.gety()+1)){ //check if you have something under your feet
+				Game::PlayerDown(); //go down
 			}
 		}
 		break;
