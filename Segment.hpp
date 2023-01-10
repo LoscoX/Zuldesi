@@ -2,7 +2,6 @@
 
 using namespace std;
 
-//dimension of one segment
 /**
  * Dimension of one segment.
  */
