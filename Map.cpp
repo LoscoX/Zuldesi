@@ -8,7 +8,7 @@ Map::Map(int difficulty){
 
     //procedural generation
 	int numSeg = 0;
-    Segment seg = Segment("segments/Basic/segstart.txt");//fix before production
+    Segment seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/Basic/segstart.txt");//fix before production
     segList = new segment_el;
     segList->id = numSeg++; //first segment (start)
     segList->next = NULL;
@@ -20,7 +20,7 @@ Map::Map(int difficulty){
         seg_list_ptr tmp = new segment_el; //add new segment
         tmp->id = numSeg++;
         int x = rand()%107;//generate a random number between 0 and num_max of segments
-        tmp->seg = Segment("segments/Segment_pieces/seg"+to_string(x)+".txt"); //map segments
+        tmp->seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/Segment_pieces/seg"+to_string(x)+".txt"); //map segments
         tmp->next = NULL;
         segtmp->next = tmp;
         segtmp = segtmp->next;
@@ -29,7 +29,7 @@ Map::Map(int difficulty){
 	for(int i=0; i<4; i++){
         seg_list_ptr tmp = new segment_el; //add new segment
         tmp->id = numSeg++;
-        tmp->seg = Segment("segments/Basic/segempty.txt"); //empty segments
+        tmp->seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/Basic/segempty.txt"); //empty segments
         tmp->next = NULL;
         segtmp->next = tmp;
         segtmp = segtmp->next;
@@ -38,7 +38,7 @@ Map::Map(int difficulty){
 	//wall at the end
 	seg_list_ptr tmp = new segment_el; //add new segment
 	tmp->id = numSeg++;
-	tmp->seg = Segment("segments/Basic/segend.txt");
+	tmp->seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/Basic/segend.txt");
 	tmp->next = NULL;
 	segtmp->next = tmp;
 	segtmp = segtmp->next;
@@ -47,7 +47,7 @@ Map::Map(int difficulty){
 	for (int i=0; i<4; i++){
 		seg_list_ptr tmp = new segment_el; //add new segment
 		tmp->id = numSeg++;
-		tmp->seg = Segment("segments/Market/segmarket"+to_string(i)+".txt"); //market segments
+		tmp->seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/Market/segmarket"+to_string(i)+".txt"); //market segments
 		tmp->next = NULL;
 		segtmp->next = tmp;
 		segtmp = segtmp->next;
@@ -56,7 +56,7 @@ Map::Map(int difficulty){
 	//wall at the end
 	tmp = new segment_el; //add new segment
 	tmp->id = numSeg++;
-	tmp->seg = Segment("segments/Basic/segend.txt");
+	tmp->seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/Basic/segend.txt");
 	tmp->next = NULL;
 	segtmp->next = tmp;
 	segtmp = segtmp->next;
@@ -64,7 +64,7 @@ Map::Map(int difficulty){
 	for(int i=0; i<4; i++){
         seg_list_ptr tmp = new segment_el; //add new segment
         tmp->id = numSeg++;
-        tmp->seg = Segment("segments/Basic/segempty.txt"); //empty segments
+        tmp->seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/Basic/segempty.txt"); //empty segments
         tmp->next = NULL;
         segtmp->next = tmp;
         segtmp = segtmp->next;
