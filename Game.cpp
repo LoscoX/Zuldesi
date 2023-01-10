@@ -51,7 +51,7 @@ Game::Game(int height,int width){
 
 	//read from save file player powerups
 	ifstream save;
-	save.open("save.txt"); //open save text
+	save.open("C:/Users/david/eclipse-workspace/Project/src/save.txt"); //open save text
 	string line;
 	getline(save, line); //take the line
 	if(line != "-"){
@@ -158,7 +158,7 @@ void Game::handleCoins(){
 
 void Game::save(){
 	ofstream save;
-	save.open("save.txt"); //open the file
+	save.open("C:/Users/david/eclipse-workspace/Project/src/save.txt"); //open the file
 	save << player.getGun().getName() << endl; //gun name
 	save << player.getBullets().getQnt() << endl; //bullets qnt
 	save << player.getExplo_Bullets().getQnt() << endl; //explo bullets qnt
@@ -1355,16 +1355,6 @@ void Game::mapMovement(){
 					xMin++; //increment the variable
 					if(xMin>mapList->map.getDim_x()-90) xMin--; //avoid exit
 					break;
-				case KEY_UP:
-					if(player.getDir()==1){ //the jump depends on previous player direction
-						xMin++; //increment the variable
-						if(xMin>mapList->map.getDim_x()-90) xMin--; //avoid exit
-					}
-					else{
-						xMin--; //decrement the variable
-						if(xMin<0) xMin = 0; //avoid exit
-					}
-					break;
 				case 't': //teleport
 					if(player.getTeleportation().getQnt()>0){ //check if the player has teleport
 						if(player.getDir()==1){ //the jump depends on previous player direction
@@ -1397,12 +1387,11 @@ void Game::mapMovement(){
 			player.jump();
 			if(player.getDir()==1){ //the jump depends on previous player direction
 				xMin++;
-				if(xMin>mapList->map.getDim_x()-90) xMin--; //avoid exit
 			}
 			else{
 				xMin--;
 				if(xMin<0) xMin = 0; //avoid exit
-				}
+			}
 			Game::PlayerCanMove(KEY_UP); //check if you can move (you are jumping)
 			player.display();
 			player.airshoot(); //if you want shoot you have to press h
