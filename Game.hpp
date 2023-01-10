@@ -34,8 +34,8 @@ public:
 	Game(int height,int width); //Constructor
 
 	//Function for the map
-	void restartMap(int difficulty);
-	void nextMap(int dir, int difficulty);
+	void restartMap();
+	void nextMap(int dir);
 	void PrintMap(); //Print map
 
 	//Main functions
