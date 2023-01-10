@@ -296,6 +296,9 @@ public:
 	void setExplo_Bullets(int e); //explosive bullets
 
 	bool getActiveFly(); //take active fly variable
+	void setActiveFly(bool val); //set active fly variable
 	bool getActiveJump(); //take active jump variable
 	int getTELEPORT_DISTANCE(int i); //take the variable i of the vector TELEPORT_DISTANCE
+	int getFlyActiveDuration(); //take fly duration
+	void setFlyActiveDuration(int val); //set fly duration
 };

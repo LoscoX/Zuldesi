@@ -45,7 +45,7 @@ public:
      * @param width
      */
 	Game(int height,int width);
-
+  
     /**
      *
      * Function for the map.
