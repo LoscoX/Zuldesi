@@ -53,7 +53,7 @@ Player::Player(WINDOW * win, int y, int x){
 	ACTIVE_FLY = false; //no fly when you start
 }
 
-Player::Player(){} //default constructor
+Player::Player()= default; //default constructor
 
 void Player::initialize(){
 	display();
@@ -115,18 +115,6 @@ void Player::goup(){ //go up
 	if(strcmp(gun.getName().c_str(),"Doublegun")==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //see gun
 	yLoc = yLoc - 1; //you are lifting
 	if(yLoc<1) yLoc = 1;
-}
-
-void Player::teleport(){
-	mvwaddch(curwin, yLoc, xLoc,' '); //delete character
-	if(armor.getQnt()>0) mvwaddch(curwin,yLoc-1,xLoc,' '); //delete armor
-	if(shield.getQnt()>0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //delete shield
-	if(shield.getQnt()==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //delete old gun
-	if(strcmp(gun.getName().c_str(),"None")!=0) mvwaddch(curwin,yLoc,xLoc+getDir(),' '); //delete gun
-	if(strcmp(gun.getName().c_str(),"Doublegun")==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //see gun
-	yLoc = yMax - 2; //first floor
-	xLoc = xLoc + TELEPORT_DISTANCE[teleportation.getQnt()-1]; //teleport the character
-	if(xLoc > xMax-2) xLoc = xMax - 2; //you reach the wall
 }
 
 int Player::getmv(){ //move the character with gun by user

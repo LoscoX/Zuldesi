@@ -16,58 +16,169 @@
 
 class Player{
 protected:
-	char character[4]; //icon of the player
-	WINDOW * curwin;
-	int life; //life
-	int cash; //money
-	int xLoc,yLoc; //coordinates of the player
-	int xMax,yMax; //coordinates of the box
-	int dir; //save the direction of the movement
-	int points; //points of the player
-	int jump_height;
-	void mvleft();
-	void mvright();
-	bool activejump; //if it is true, you are jumping
-	int conta;
-	int segno;
-	bool buy; //if you want to buy something
+    /**
+     * Player's icon.
+     */
+	char character[4]{};
+	WINDOW * curwin{};
+    /**
+     * Lifepoints.
+     */
+	int life{};
+    /**
+     * Money.
+     */
+	int cash{};
+    /**
+     * Player coordinates position.
+     */
+	int xLoc{},yLoc{};
+    /**
+     * Coordinates of the box.
+     */
+	int xMax{},yMax{};
+    /**
+     * Save the direction of the movement.
+     */
+	int dir{};
+    /**
+     * Points of the player.
+     */
+	int points{};
+	int jump_height{};
+    /**
+     * If it is true, you are jumping.
+     */
+	bool activejump{};
+	int conta{};
+	int segno{};
+    /**
+     * If you want to buy something.
+     */
+	bool buy{};
 
-	//powerup
-	Powerup gun; //type of gun
-	Powerup shield; //shield
-	Powerup hp; //life
-	Powerup armor; //armor
-	Powerup teleportation; //teleport
-	Powerup bullets; //bullets
-	Powerup jumping; //jump
-	Powerup fly; //fly
-	Powerup explo_bullets; //explosive bullets
+    /**
+     * Power-ups.
+     */
 
-	//costant for Powerup
-	int ARMOR_DURATION[3]; //duration of the armor
-	int TELEPORT_DISTANCE[3]; //distance of teleport
-	bool ACTIVE_ARMOR; //you active or not armor
-	int ARMOR_ACTIVE_DURATION; //time duration of actived armor
-	int NUM_BULLETS; //number of bullets
-	int NUM_EXPLO_BULLETS; //number of explosive bullets
-	int FLY_DURATION; //duration of the fly
-	int FLY_ACTIVE_DURATION; //time duration of actived fly
-	bool ACTIVE_FLY; //you activd or not fly
+    /**
+     * Gun type power-up.
+     */
+	Powerup gun;
+    /**
+     * Shield power-up.
+     */
+	Powerup shield;
+    /**
+     * HP Power-up.
+     */
+	Powerup hp;
+    /**
+     * Armor Power-up.
+     */
+	Powerup armor;
+    /**
+     * Teleport power-up.
+     */
+	Powerup teleportation;
+    /**
+     * Bullets power-up.
+     */
+	Powerup bullets;
+    /**
+     * Jump power-up.
+     */
+	Powerup jumping;
+    /**
+     * Fly power-up.
+     */
+	Powerup fly;
+    /**
+     * Explosive bullets power-up.
+     */
+	Powerup explo_bullets;
 
-	//gun magazine
-	Bullet bullet; //bullets magazine
-	Bullet explo_bullet; //explosive bullets magazine
-	int ind; //index for the list of bullets
-	int ind2; //index for the list of explosive bullets
+    /**
+     * Constant for power-ups.
+     */
+
+    /**
+     * Duration of the armor.
+     */
+	int ARMOR_DURATION[3]{};
+    /**
+     * Teleport distance.
+     */
+	int TELEPORT_DISTANCE[3]{};
+    /**
+     * Check if armor is activated.
+     */
+	bool ACTIVE_ARMOR{};
+    /**
+     * Armor time duration.
+     */
+	int ARMOR_ACTIVE_DURATION{};
+    /**
+     *  Quantity of bullets.
+     */
+	int NUM_BULLETS{};
+    /**
+     * Explosive bullets.
+     */
+	int NUM_EXPLO_BULLETS{};
+    /**
+     * Flight duration.
+     */
+	int FLY_DURATION{};
+    /**
+     * Fly time duration remains.
+     */
+	int FLY_ACTIVE_DURATION{};
+    /**
+     * Check if fly power-up is activated.
+     */
+	bool ACTIVE_FLY{};
+
+    /**
+     * Gun magazine.
+     */
+
+    /**
+     * Bullets magazine.
+     */
+	Bullet bullet;
+    /**
+     * Explosive bullets magazine.
+     */
+	Bullet explo_bullet;
+    /**
+     * Bullets list index.
+     */
+	int ind{};
+    /**
+     * Explosive bullets list index.
+     */
+	int ind2{};
 public:
 	Player();
 	Player(WINDOW * win, int y, int x);
-
-	int getmv(); //movement
-	void jump(); //jump
-	int airshoot(); //shoot during the jump movement or the down movement
-	void godown(); //fall
-	void teleport(); //teleport
+    /**
+     * Movement.
+     */
+	int getmv();
+    /**
+     * Jump.
+     */
+	void jump();
+    /**
+     * Shoot during the jump movement or the down movement.
+     * @return
+     */
+	int airshoot();
+    /**
+     * Fall.
+     */
+	void godown();
 	void goup(); //go up
 
 	void display(); //see the player
