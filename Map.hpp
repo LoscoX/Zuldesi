@@ -437,31 +437,180 @@ class Map{
         */
     	listenm9 setEnemies9(listenm9 tmp,int cod);
 
+        /**
+         * Add one enemy type0.
+         * @param h
+         * @param e
+         * @param val
+         * @return
+         */
+    	listenm0 head_insert_enemy0(listenm0 h,Enemy0 e, int val);
+        /**
+         * Add one enemy type1.
+         * @param h
+         * @param e
+         * @param val
+         * @return
+         */
+    	listenm1 head_insert_enemy1(listenm1 h,Enemy1 e, int val);
+        /**
+         * Add one enemy type2.
+         * @param h
+         * @param e
+         * @param val
+         * @return
+         */
+    	listenm2 head_insert_enemy2(listenm2 h,Enemy2 e, int val);
+        /**
+         * Add one enemy type3.
+         * @param h
+         * @param e
+         * @param val
+         * @return
+         */
+    	listenm3 head_insert_enemy3(listenm3 h,Enemy3 e, int val);
+        /**
+         * Add one enemy type4.
+         * @param h
+         * @param e
+         * @param val
+         * @return
+         */
+    	listenm4 head_insert_enemy4(listenm4 h,Enemy4 e, int val);
+        /**
+         * Add one enemy type5.
+         * @param h
+         * @param e
+         * @param val
+         * @return
+         */
+    	listenm5 head_insert_enemy5(listenm5 h,Enemy5 e, int val);
+        /**
+         * Add one enemy type6.
+         * @param h
+         * @param e
+         * @param val
+         * @return
+         */
+    	listenm6 head_insert_enemy6(listenm6 h,Enemy6 e, int val);
+        /**
+         * Add one enemy type7.
+         * @param h
+         * @param e
+         * @param val
+         * @return
+         */
+    	listenm7 head_insert_enemy7(listenm7 h,Enemy7 e, int val);
+        /**
+         * Add one enemy type8.
+         * @param h
+         * @param e
+         * @param val
+         * @return
+         */
+    	listenm8 head_insert_enemy8(listenm8 h,Enemy8 e, int val);
+        /**
+         * Add one enemy type9.
+         * @param h
+         * @param e
+         * @param val
+         * @return
+         */
+    	listenm9 head_insert_enemy9(listenm9 h,Enemy9 e, int val);
 
-    	listenm0 head_insert_enemy0(listenm0 h,Enemy0 e, int val); //add one enemy type0
-    	listenm1 head_insert_enemy1(listenm1 h,Enemy1 e, int val); //add one enemy type1
-    	listenm2 head_insert_enemy2(listenm2 h,Enemy2 e, int val); //add one enemy type2
-    	listenm3 head_insert_enemy3(listenm3 h,Enemy3 e, int val); //add one enemy type3
-    	listenm4 head_insert_enemy4(listenm4 h,Enemy4 e, int val); //add one enemy type4
-    	listenm5 head_insert_enemy5(listenm5 h,Enemy5 e, int val); //add one enemy type5
-    	listenm6 head_insert_enemy6(listenm6 h,Enemy6 e, int val); //add one enemy type6
-    	listenm7 head_insert_enemy7(listenm7 h,Enemy7 e, int val); //add one enemy type7
-    	listenm8 head_insert_enemy8(listenm8 h,Enemy8 e, int val); //add one enemy type8
-    	listenm9 head_insert_enemy9(listenm9 h,Enemy9 e, int val); //add one enemy type9
 
-    	listenm0 obj_remove_enemy0(listenm0 h,int cod,bool head); //delete one enemy type0 (head == true, clean memory when delete an element in the head, otherwise not)
-    	listenm1 obj_remove_enemy1(listenm1 h,int cod,bool head); //delete one enemy type1 (head == true, clean memory when delete an element in the head, otherwise not)
-    	listenm2 obj_remove_enemy2(listenm2 h,int cod,bool head); //delete one enemy type2 (head == true, clean memory when delete an element in the head, otherwise not)
-    	listenm3 obj_remove_enemy3(listenm3 h,int cod,bool head); //delete one enemy type3 (head == true, clean memory when delete an element in the head, otherwise not)
-    	listenm4 obj_remove_enemy4(listenm4 h,int cod,bool head); //delete one enemy type4 (head == true, clean memory when delete an element in the head, otherwise not)
-    	listenm5 obj_remove_enemy5(listenm5 h,int cod,bool head); //delete one enemy type5 (head == true, clean memory when delete an element in the head, otherwise not)
-    	listenm6 obj_remove_enemy6(listenm6 h,int cod,bool head); //delete one enemy type6 (head == true, clean memory when delete an element in the head, otherwise not)
-    	listenm7 obj_remove_enemy7(listenm7 h,int cod,bool head); //delete one enemy type7 (head == true, clean memory when delete an element in the head, otherwise not)
-    	listenm8 obj_remove_enemy8(listenm8 h,int cod,bool head); //delete one enemy type8 (head == true, clean memory when delete an element in the head, otherwise not)
-    	listenm9 obj_remove_enemy9(listenm9 h,int cod,bool head); //delete one enemy type9 (head == true, clean memory when delete an element in the head, otherwise not)
+        /**
+         * delete one enemy type0 (head == true, clean memory when delete an element in the head, otherwise not)
+         * @param h
+         * @param cod
+         * @param head
+         * @return
+         */
+    	listenm0 obj_remove_enemy0(listenm0 h,int cod,bool head);
+        /**
+         * delete one enemy type1 (head == true, clean memory when delete an element in the head, otherwise not)
+         * @param h
+         * @param cod
+         * @param head
+         * @return
+         */
+    	listenm1 obj_remove_enemy1(listenm1 h,int cod,bool head);
+        /**
+         * delete one enemy type2 (head == true, clean memory when delete an element in the head, otherwise not)
+         * @param h
+         * @param cod
+         * @param head
+         * @return
+         */
+    	listenm2 obj_remove_enemy2(listenm2 h,int cod,bool head);
+        /**
+         * delete one enemy type3(head == true, clean memory when delete an element in the head, otherwise not)
+         * @param h
+         * @param cod
+         * @param head
+         * @return
+         */
+    	listenm3 obj_remove_enemy3(listenm3 h,int cod,bool head);
+        /**
+         * delete one enemy type4 (head == true, clean memory when delete an element in the head, otherwise not)
+         * @param h
+         * @param cod
+         * @param head
+         * @return
+         */
+    	listenm4 obj_remove_enemy4(listenm4 h,int cod,bool head);
+        /**
+         * delete one enemy type5 (head == true, clean memory when delete an element in the head, otherwise not)
+         * @param h
+         * @param cod
+         * @param head
+         * @return
+         */
+    	listenm5 obj_remove_enemy5(listenm5 h,int cod,bool head);
+        /**
+         * delete one enemy type6 (head == true, clean memory when delete an element in the head, otherwise not)
+         * @param h
+         * @param cod
+         * @param head
+         * @return
+         */
+    	listenm6 obj_remove_enemy6(listenm6 h,int cod,bool head);
+        /**
+         * delete one enemy type7 (head == true, clean memory when delete an element in the head, otherwise not)
+         * @param h
+         * @param cod
+         * @param head
+         * @return
+         */
+    	listenm7 obj_remove_enemy7(listenm7 h,int cod,bool head);
+        /**
+         * delete one enemy type8 (head == true, clean memory when delete an element in the head, otherwise not)
+         * @param h
+         * @param cod
+         * @param head
+         * @return
+         */
+    	listenm8 obj_remove_enemy8(listenm8 h,int cod,bool head);
+        /**
+         * delete one enemy type9 (head == true, clean memory when delete an element in the head, otherwise not)
+         * @param h
+         * @param cod
+         * @param head
+         * @return
+         */
+    	listenm9 obj_remove_enemy9(listenm9 h,int cod,bool head);
 
-    	string* initializeEnemies(string* mat); //initialize enemies
+        /**
+         * Initialize enemies.
+         * @param mat
+         * @return
+         */
+    	string* initializeEnemies(string* mat);
 
-    	mony getCoins(); //take coins
+        /**
+         * Take coins.
+         * @return coins.
+         */
+    	mony getCoins();
 
 };
