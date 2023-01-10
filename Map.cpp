@@ -393,8 +393,8 @@ mony Map::FallCoins(mony h){ //avoid coins in the air
 
 
 int Map::rand_segment_selection() {
-    return rand()%40;
-
+    return rand() % 40;
+}
 mony Map::getCoins(){
 	return coins;
 
