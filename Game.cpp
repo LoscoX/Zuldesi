@@ -6,6 +6,7 @@
  */
 
 #include "Game.hpp"
+
 #include <fstream>
 
 Game::Game(int height,int width){
@@ -25,7 +26,7 @@ Game::Game(int height,int width){
 	WINDOW* win = board.board_win;
 
 	//variables for the market
-	HEIGHT_MARKET = 15; //height of powerups
+	HEIGHT_MARKET = 15; //height of power-ups
 	draw_cost1 = 213;
 	draw_cost2 = 185;
 	draw_cost3 = 150;
@@ -49,7 +50,7 @@ Game::Game(int height,int width){
 	player = Player(win,height-6,20); //create the player
 	player.initialize(); //initialize the player
 
-	//read from save file player powerups
+	//read from save file player power-ups
 	ifstream save;
 	save.open("C:/Users/david/eclipse-workspace/Project/src/save.txt"); //open save text
 	string line;
@@ -136,7 +137,7 @@ void Game::restartMap(int difficulty){ //restart map
 		mapList->map = Map(difficulty);
 	}
 	matrix = mapList->map.toString();
-	//rearrange variable fort the game
+	//rearrange variable for the game
 	xMin = 5;
 	time = 0;
 }
@@ -182,8 +183,8 @@ void Game::handleMaps(){
 		deleteDescription(0);
 		deleteDescription(1);
 		deleteDescription(2);
-		//delete powerups
-		deletePowerup(spawn_powerup); //you have to raise powerups from the matrix
+		//delete power-ups
+		deletePowerup(spawn_powerup); //you have to raise power-ups from the matrix
 		//update bought variables
 		bought1 = false;
 		bought2 = false;
@@ -233,7 +234,7 @@ void Game::handleDisplay(){
 	displayPoints();
 	//display bullets
 	displayBullets();
-	//display Powerup
+	//display power-up
 	displayPowerup();
 }
 
@@ -241,6 +242,7 @@ void Game::handleDisplay(){
 void Game::redraw(){
 	board.refresh();
 }
+
 
 void Game::UpdateBoard(){
 	board.addBorder(0,0);
@@ -250,10 +252,11 @@ bool Game::isOver(){
 	return game_over;
 }
 
+
 //dir decides the direction, 1 = right (generate next map/go to the next map already existing)
 //0 = go the the previous map
 void Game::nextMap(int dir, int difficulty = 0){//we call this when the player reaches a trigger
-	if(mapList == NULL){//first map generation (you dont' have map
+	if(mapList == NULL){//first map generation (you don't have map)
 		mapList = new map_el;
 		mapList->id=0;
 		mapList->prev=NULL;
@@ -302,89 +305,89 @@ void Game::PrintMap(){ //print your map
 }
 
 void Game::market(){
-	drawPowerUp(spawn_powerup); //draw powerups
+	drawPowerUp(spawn_powerup); //draw power-ups
 
-	//check if the player buy some powerups
-	//first powerup
+	//check if the player buy some power-ups
+	//first power-up
 	if(player.getx()+xMin>=mapList->map.getDim_x()-draw_cost1 && player.getx()+xMin<=mapList->map.getDim_x()-(draw_cost1-10)){
 		//draw description
 		drawDescription(0);
 		deleteDescription(1);
 		deleteDescription(2);
-		if(player.getCoins()-spawn_powerup[0].price>=0 && !bought1  && player.getBuy()){ //you have enough money and it's the first powerup that you buy
+		if(player.getCoins()-spawn_powerup[0].price>=0 && !bought1  && player.getBuy()){ //you have enough money and it's the first power-up that you buy
 			if(strcmp(player.getGun().name.c_str(),spawn_powerup[0].getName().c_str())!=0){ //you don't already have this gun
 				player.updateCash(-spawn_powerup[0].price); //update cash of player
-				player.setGun(spawn_powerup[0].getName()); //update powerups of player
+				player.setGun(spawn_powerup[0].getName()); //update power-ups of player
 				player.setBullets(player.getBullets().getQnt() + 10); //10 bullets
 				bought1 = true;
-				player.setBuy(false); //you can buy another powerup
+				player.setBuy(false); //you can buy another power-up
 			}
 		}
 	}
-	//second powerup
+	//second power-up
 	if(player.getx()+xMin>=mapList->map.getDim_x()-draw_cost2 && player.getx()+xMin<=mapList->map.getDim_x()-(draw_cost2-10)){
 		//draw description
 		drawDescription(1);
 		deleteDescription(0);
 		deleteDescription(2);
-		if(player.getCoins()-spawn_powerup[1].price>=0 && !bought2  && player.getBuy()){ //you have enough money and it's the first powerup that you buy
-			//update powerups of player
+		if(player.getCoins()-spawn_powerup[1].price>=0 && !bought2  && player.getBuy()){ //you have enough money and it's the first power-up that you buy
+			//update power-ups of player
 			if(strcmp(spawn_powerup[1].getName().c_str(),"HP") == 0){ //HP
 				player.updateCash(-spawn_powerup[1].price); //update cash of player
 				bought2 = true;
-				player.setBuy(false); //you can buy another powerup
+				player.setBuy(false); //you can buy another power-up
 				player.setHP(player.getHP().getQnt() + spawn_powerup[1].getQnt());
 			}
 			else if(strcmp(spawn_powerup[1].getName().c_str(),"Shield") == 0){ //Shield
 				player.updateCash(-spawn_powerup[1].price); //update cash of player
 				bought2 = true;
-				player.setBuy(false); //you can buy another powerup
+				player.setBuy(false); //you can buy another power-up
 				player.setShield(player.getShield().getQnt() + spawn_powerup[1].getQnt());
 			}
 			else if(strcmp(spawn_powerup[1].getName().c_str(),"Jump") == 0  && player.getJumping().getQnt()<3){ //Jump
 				player.updateCash(-spawn_powerup[1].price); //update cash of player
 				bought2 = true;
-				player.setBuy(false); //you can buy another powerup
+				player.setBuy(false); //you can buy another power-up
 				player.setJumping(player.getJumping().getQnt() + spawn_powerup[1].getQnt());
 			}
 			else if(strcmp(spawn_powerup[1].getName().c_str(),"Bullets") == 0){ //Bullets
 				player.updateCash(-spawn_powerup[1].price); //update cash of player
 				bought2 = true;
-				player.setBuy(false); //you can buy another powerup
+				player.setBuy(false); //you can buy another power-up
 				player.setBullets(player.getBullets().getQnt() + spawn_powerup[1].getQnt());
 			}
 			else if(strcmp(spawn_powerup[1].getName().c_str(),"Explo_Bullets") == 0){ //Explosive bullets
 				player.updateCash(-spawn_powerup[1].price); //update cash of player
 				bought2 = true;
-				player.setBuy(false); //you can buy another powerup
+				player.setBuy(false); //you can buy another power-up
 				player.setExplo_Bullets(player.getExplo_Bullets().getQnt() + spawn_powerup[1].getQnt());
 			}
 		}
 	}
-	//third powerup
+	//third power-up
 	if(player.getx()+xMin>=mapList->map.getDim_x()-(draw_cost3) && player.getx()+xMin<=mapList->map.getDim_x()-(draw_cost3-10)){
 		//draw description
 		drawDescription(2);
 		deleteDescription(0);
 		deleteDescription(1);
-		if(player.getCoins()-spawn_powerup[2].price>=0 && !bought3  && player.getBuy()){ ////you have enough money and it's the first powerup that you buy
-			//update powerups of player
+		if(player.getCoins()-spawn_powerup[2].price>=0 && !bought3  && player.getBuy()){ ////you have enough money and it's the first power-up that you buy
+			//update power-ups of player
 			if(strcmp(spawn_powerup[2].getName().c_str(),"Teleport") == 0 && player.getTeleportation().getQnt()<3){ //Teleport
 				player.updateCash(-spawn_powerup[2].price); //update cash of player
 				bought3 = true;
-				player.setBuy(false); //you can buy another powerup
+				player.setBuy(false); //you can buy another power-up
 				player.setTeleportation(player.getTeleportation().getQnt() + spawn_powerup[2].getQnt());
 			}
 			else if(strcmp(spawn_powerup[2].getName().c_str(),"Armor") == 0 && player.getArmor().getQnt()<3){ //Armor
 				player.updateCash(-spawn_powerup[2].price); //update cash of player
 				bought3 = true;
-				player.setBuy(false); //you can buy another powerup
+				player.setBuy(false); //you can buy another power-up
 				player.setArmor(player.getArmor().getQnt() + spawn_powerup[2].getQnt());
 			}
 			else if(strcmp(spawn_powerup[2].getName().c_str(),"Fly") == 0){ //Fly
 				player.updateCash(-spawn_powerup[2].price); //update cash of player
 				bought3 = true;
-				player.setBuy(false); //you can buy another powerup
+				player.setBuy(false); //you can buy another power-up
 				player.setFly(player.getFly().getQnt() + spawn_powerup[2].getQnt());
 			}
 		}
@@ -396,14 +399,14 @@ void Game::market_build(){ //build the market
 	int a = rand()%NUM_GUNS;
 	int b = rand()%NUM_BONUS;
 	int c = rand()%NUM_ACTIVE;
-	//update spawned powerups vector
+	//update spawned power-ups vector
 	spawn_powerup[0] = guns[a];
 	spawn_powerup[1] = bonus[b];
 	spawn_powerup[2] = active[c];
 }
 
 void Game::drawDescription(int j){
-	//show the description of powerup
+	//show the description of power-up
 	int s0 = strlen(spawn_powerup[j].getName().c_str());
 	for(int i=0;i<s0;i++){
 		if(j==0)matrix[5][mapList->map.getDim_x()-draw_cost1+i] = spawn_powerup[j].getName().c_str()[i]; //draw name of power up
@@ -457,7 +460,7 @@ void Game::drawDescription(int j){
 	}
 }
 void Game::deleteDescription(int j){
-	//show the description of powerup
+	//show the description of power-up
 	int s0 = strlen(spawn_powerup[j].getName().c_str());
 	for(int i=0;i<s0;i++){
 		if(j==0)matrix[5][mapList->map.getDim_x()-draw_cost1+i] = ' '; //delete name of power up
@@ -529,37 +532,37 @@ void Game::initializePowerUp(){
 }
 
 void Game::drawPowerUp(Powerup pwp[]){ //Draw power-ups which are spawned
-	//FIRST powerup
+	//FIRST power-up
 	int s0 = strlen(pwp[0].getName().c_str());
 	for(int i=0;i<s0;i++){
 		matrix[HEIGHT_MARKET][mapList->map.getDim_x()-draw_cost1+i] = pwp[0].getName().c_str()[i];
 	}
-	//SECOND powerup
+	//SECOND power-up
 	int s1 = strlen(pwp[1].getName().c_str());
 	for(int i=0;i<s1;i++){
 		matrix[HEIGHT_MARKET][mapList->map.getDim_x()-draw_cost2+i] = pwp[1].getName().c_str()[i];
 	}
-	//THIRD powerup
+	//THIRD power-up
 	int s2 = strlen(pwp[2].getName().c_str());
 	for(int i=0;i<s2;i++){
 		matrix[HEIGHT_MARKET][mapList->map.getDim_x()-draw_cost3+i] = pwp[2].getName().c_str()[i];
 	}
 
-	//print description of powerup
+	//print description of power-up
 }
 
 void Game::deletePowerup(Powerup pwp[]){
-	//FIRST powerup
+	//FIRST power-up
 	int s0 = strlen(pwp[0].getName().c_str());
 	for(int i=0;i<s0;i++){
 		matrix[HEIGHT_MARKET][mapList->map.getDim_x()-draw_cost1+i] = ' ';
 	}
-	//SECOND powerup
+	//SECOND power-up
 	int s1 = strlen(pwp[1].getName().c_str());
 	for(int i=0;i<s1;i++){
 		matrix[HEIGHT_MARKET][mapList->map.getDim_x()-draw_cost2+i] = ' ';
 	}
-	//THIRD powerup
+	//THIRD power-up
 	int s2 = strlen(pwp[2].getName().c_str());
 	for(int i=0;i<s2;i++){
 		matrix[HEIGHT_MARKET][mapList->map.getDim_x()-draw_cost3+i] = ' ';
@@ -606,7 +609,7 @@ void Game::displayLife(){ //display life and bullets
 }
 
 void Game::displayPowerup(){
-	//powerups
+	//power-ups
 	wattron(board.board_win,COLOR_PAIR(4)); //color
 	mvwprintw(board.board_win,26,30,"--------------- LIST OF POWER-UP ---------------");
 	wattroff(board.board_win,COLOR_PAIR(4)); //color

@@ -11,6 +11,7 @@
 #include <cstring>
 #include <cmath>
 #include <cstdlib>
+
 #include "Player.hpp" //take information about bullets and player
 
 class Enemy0{
@@ -122,3 +123,4 @@ public:
 	Enemy9();
 	void movement(); //modify the movement
 };
+

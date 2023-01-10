@@ -15,9 +15,9 @@
 #include "Board.hpp"
 #include "Map.hpp"
 
-const int NUM_GUNS = 4; //max number of powerup type gun
-const int NUM_BONUS = 5; //max number of powerup type bonus
-const int NUM_ACTIVE = 3; //max number of powerup type activable
+const int NUM_GUNS = 4; //max number of power-up type gun
+const int NUM_BONUS = 5; //max number of power-up type bonus
+const int NUM_ACTIVE = 3; //max number of power-up type activable
 
 struct map_el{
 	int id;
@@ -44,9 +44,9 @@ public:
 	bool isOver(); //Game is over
 
 	//Market function
-	void initializePowerUp(); //initialize powerup
-	void drawPowerUp(Powerup pwp[]); //draw powerup
-	void deletePowerup(Powerup pwp[]); //delete powerup
+	void initializePowerUp(); //initialize power-up
+	void drawPowerUp(Powerup pwp[]); //draw power-up
+	void deletePowerup(Powerup pwp[]); //delete power-up
 	void updatePowerup();
 	void market(); //activate the market
 	void market_build(); //build the market
@@ -80,7 +80,7 @@ public:
 	void displayBullets(); //Display bullets
 	void displayPoints(); //Display points
 	void displayMarket(); //Display market
-	void displayPowerup(); //Display powerup
+	void displayPowerup(); //Display power-up
 
 	//function for collision
 	void interaction(Enemy0 e); //Game interaction between Enemy without gun and Player
@@ -114,14 +114,14 @@ protected:
 
 	Powerup spawn_powerup[3]; //power up spawned in the market
 
-	//powerup
-	Powerup guns[NUM_GUNS]; //guns powerup
-	Powerup bonus[NUM_BONUS]; //bouns powerup
-	Powerup active[NUM_ACTIVE]; //activable powerup
+	//power-up
+	Powerup guns[NUM_GUNS]; //guns power-up
+	Powerup bonus[NUM_BONUS]; //bouns power-up
+	Powerup active[NUM_ACTIVE]; //activable power-up
 
 	int xMin; //variable for the position of camera
 
-	int HEIGHT_MARKET; //height of market powerups
+	int HEIGHT_MARKET; //height of market power-ups
 	//costants for drawing
 	int draw_cost1;
 	int draw_cost2;
@@ -129,11 +129,11 @@ protected:
 
 	bool Market_Active; //you are in the market
 	bool Market_Build; //you have to build the market
-	bool bought1,bought2,bought3; //tell us if you have bought one powerup
+	bool bought1,bought2,bought3; //tell us if you have bought one power-up
 
 	int time; //time of the game
 
-	int difficulty; //difficulty of the level. It depends on the number of powerup you have. It handles the generation of the map
+	int difficulty; //difficulty of the level. It depends on the number of power-up you have. It handles the generation of the map
 
 	Board board; //board
 
