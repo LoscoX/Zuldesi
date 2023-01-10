@@ -354,7 +354,7 @@ void Enemy9::movement(){
 		yLoc = 25 - 2;
 		Enemy0::setSign(); //change the direction of the lifting
 	}
-	if(conta==5){ //every 5 seconds, the enemy fires two bullets in opposite directions
+	if(conta==10){ //every 5 seconds, the enemy fires two bullets in opposite directions
 		bullet.blt = bullet.head_insert(bullet.blt,segno,xLoc,yLoc,ind); //add the bullet
 		ind = ind + 1; //we want different indexes for the different bullets
 		bullet.blt = bullet.head_insert(bullet.blt,-segno,xLoc,yLoc,ind); //add the bullet

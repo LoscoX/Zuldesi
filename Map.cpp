@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <fstream>
 #include "Map.hpp"
 
 using namespace std;
@@ -115,9 +116,24 @@ Map::Map(int difficulty){
 	enemies8 = NULL; //initialize the list
 	enemies9 = NULL; //initialize the list
 
-	int k = difficulty; //handle the generation of enemies
+	//ofstream myfile;
+	//myfile.open("log.txt");
 
-	n0 = k; //number of enemies of type 0
+	int k = getPrime(difficulty); //handle the generation of enemies
+    //myfile<<k<<endl;
+	int* enemies_quantity = thelast10prime(k); // generate array to define quantity of enemies by type
+
+	/*for(int i=0; i<10; i++){
+		myfile<<enemies_quantity[i]<<endl;
+	}
+	myfile.close();*/
+
+    for (int i = 0; i<9; i++){
+		if(enemies_quantity[i] != 0)
+        	enemies_quantity[i] = rand() % enemies_quantity[i];
+    }
+
+	n0 = enemies_quantity[0]; //number of enemies of type 0
 	for(int i=0;i<n0;i++){
 		//avoid enemy type0 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
@@ -125,7 +141,7 @@ Map::Map(int difficulty){
 		enemies0 = head_insert_enemy0(enemies0,e,i); //add the enemy into the list
 	}
 
-	n1 = rand()%(k+1); //number of enemies of type 1
+	n1 = enemies_quantity[1]; //number of enemies of type 1
 	for(int i=0;i<n1;i++){
 		//avoid enemy type1 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
@@ -133,10 +149,7 @@ Map::Map(int difficulty){
 		enemies1 = head_insert_enemy1(enemies1,e,i); //add the enemy into the list
 	}
 
-	if(k>1) //activate enemies type2 and type3
-		n2 = k-1; //number of enemies of type 2
-	else
-		n2 = 0;
+	n2 = enemies_quantity[2]; //number of enemies of type 2
 	for(int i=0;i<n2;i++){
 		//avoid enemy type2 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
@@ -144,7 +157,7 @@ Map::Map(int difficulty){
 		enemies2 = head_insert_enemy2(enemies2,e,i); //add the enemy into the list
 	}
 
-	n3 = rand()%(n2+1); //number of enemies of type 3
+	n3 = enemies_quantity[3]; //number of enemies of type 3
 	for(int i=0;i<n3;i++){
 		//avoid enemy type3 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
@@ -152,8 +165,7 @@ Map::Map(int difficulty){
 		enemies3 = head_insert_enemy3(enemies3,e,i); //add the enemy into the list
 	}
 
-	if(k>2) n4 = k-2; //number of enemies of type 4
-	else n4 = 0;
+	n4 = enemies_quantity[4];  //number of enemies of type 4
 	for(int i=0;i<n4;i++){
 		//avoid enemy type4 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
@@ -161,8 +173,7 @@ Map::Map(int difficulty){
 		enemies4 = head_insert_enemy4(enemies4,e,i); //add the enemy into the list
 	}
 
-	if(k>3) n5 = k-3; //number of enemies of type 5
-	else n5 = 0;
+	n5 = enemies_quantity[5]; //number of enemies of type 5
 	for(int i=0;i<n5;i++){
 		//avoid enemy type5 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
@@ -170,11 +181,7 @@ Map::Map(int difficulty){
 		enemies5 = head_insert_enemy5(enemies5,e,i); //add the enemy into the list
 	}
 
-	if(k>5) //activate enemies type6 and type7
-		n6 = k-5; //number of enemies of type 6
-	else
-		n6 = 0;
-
+	n6 = enemies_quantity[6]; //number of enemies of type 6
 	for(int i=0;i<n6;i++){
 		//avoid enemy type6 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
@@ -182,7 +189,7 @@ Map::Map(int difficulty){
 		enemies6 = head_insert_enemy6(enemies6,e,i); //add the enemy into the list
 	}
 
-	n7 = rand()%(n6+1); //number of enemies of type 7
+	n7 = enemies_quantity[7]; //number of enemies of type 7
 	for(int i=0;i<n7;i++){
 		//avoid enemy type7 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
@@ -190,11 +197,7 @@ Map::Map(int difficulty){
 		enemies7 = head_insert_enemy7(enemies7,e,i); //add the enemy into the list
 	}
 
-	if(k>8) //activate enemies type8
-		n8 = k-8; //number of enemies of type 8
-	else
-		n8 = 0;
-
+	n8 = enemies_quantity[8]; //number of enemies of type 8
 	for(int i=0;i<n8;i++){
 		//avoid enemy type8 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
@@ -202,11 +205,7 @@ Map::Map(int difficulty){
 		enemies8 = head_insert_enemy8(enemies8,e,i); //add the enemy into the list
 	}
 
-	if(k>10) //activate the last enemy
-		n9 = k-10;
-	else
-		n9 = 0;
-
+	n9 = enemies_quantity[9]; //number of enemies of type 9
 	for(int i=0;i<n9;i++){
 		//avoid enemy type9 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);

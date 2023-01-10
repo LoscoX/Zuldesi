@@ -1,5 +1,6 @@
 #include "Segment.hpp"
 #include "Enemy.hpp"
+#include "Primenumbers.hpp"
 
 //legend for the character in the map
 const char _WALL = '#';
