@@ -39,7 +39,7 @@ Game::Game(int height,int width){
 	//start the map
 	difficulty = 0;
 	mapList = NULL;
-	nextMap(1, difficulty);
+	nextMap(1);
 
 	xMin = 5; //start camera
 
@@ -106,7 +106,7 @@ void Game::updateState(){
 
 	if(player.getHP().getQnt() != hp_tmp){
 		save();
-		restartMap(difficulty);
+		restartMap();
 		PrintMap();
 	}
 	else{
@@ -122,7 +122,7 @@ void Game::updateState(){
 
 }
 
-void Game::restartMap(int difficulty){ //restart map
+void Game::restartMap(){ //restart map
 	if(mapList->prev == NULL){ //first level
 		mapList->map = Map(difficulty);
 	}else{ //other levels
@@ -196,7 +196,7 @@ void Game::handleMaps(){
 		bought3 = false;
 		updateDifficulty();
 		save();
-		nextMap(1, difficulty);
+		nextMap(1);
 	}
 	else if(player.getx()+xMin == mapList->map.get_trigger_end()){ 	//go to market
 		if(mapList->next ==NULL){ //no new map
@@ -208,11 +208,11 @@ void Game::handleMaps(){
 			PrintMap();
 		}
 		else{ //you cannot pass to market when you came back with map
-			nextMap(1, difficulty);
+			nextMap(1);
 		}
 	}
 	else if(player.getx()+xMin == mapList->map.get_trigger_start()){
-		nextMap(0,0);
+		nextMap(0);
 	}
 
 
@@ -258,7 +258,7 @@ bool Game::isOver(){
 
 //dir decides the direction, 1 = right (generate next map/go to the next map already existing)
 //0 = go the the previous map
-void Game::nextMap(int dir, int difficulty = 0){//we call this when the player reaches a trigger
+void Game::nextMap(int dir){//we call this when the player reaches a trigger
 	if(mapList == NULL){//first map generation (you dont' have map
 		mapList = new map_el;
 		mapList->id=0;
