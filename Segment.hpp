@@ -3,14 +3,30 @@
 using namespace std;
 
 //dimension of one segment
-const int MATRIX_SIZE_X=25; //x of the segment
-const int MATRIX_SIZE_Y=25; //y of the segment
+/**
+ * Dimension of one segment.
+ */
+/**
+ * x of the segment
+ */
+const int MATRIX_SIZE_X=25;
+/**
+ * y of the segment
+ */
+const int MATRIX_SIZE_Y=25;
 
 class Segment{
     private:
-        string matrix[MATRIX_SIZE_X]; //matrix of segments
+        /**
+         * Matrix of segments.
+         */
+        string matrix[MATRIX_SIZE_X];
     public:
         Segment();
         Segment(string path);
-        string* getMatrix(); //return the matrix of segments
+        /**
+         *
+         * @return Matrix segments.
+         */
+        string* getMatrix();
 };

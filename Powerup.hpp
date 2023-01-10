@@ -10,13 +10,25 @@ using namespace std;
 class Powerup{
 public:
     /**
-     *
+     * Power-up identifier.
      */
-	string name;//power-up identifier
-	string description; //Description
-	int qnt; //Quantity of power-up
-	int price; //price
-	int difficulty;//measures how much the difficulty should increase when bought
+	string name;
+    /**
+     * Description.
+     */
+	string description;
+    /**
+     * Quantity of power-up.
+     */
+	int qnt;
+    /**
+     * Price.
+     */
+	int price;
+    /**
+     * Measures how much the difficulty should increase when bought.
+     */
+	int difficulty;
 	Powerup();
 	Powerup(string name, string description, int qnt, int price, int difficulty);
 	string getName();
