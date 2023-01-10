@@ -17,7 +17,7 @@
 
 const int NUM_GUNS = 4; //max number of power-up type gun
 const int NUM_BONUS = 5; //max number of power-up type bonus
-const int NUM_ACTIVE = 3; //max number of power-up type activable
+const int NUM_ACTIVE = 3; //max number of power-up type actionable
 
 struct map_el{
 	int id;
@@ -101,13 +101,13 @@ public:
 	//function maps
 	void handleMaps(); //handle maps part, market part
 	//function display
-	void handleDisplay(); //handle displayment
+	void handleDisplay(); //handle displacement
 
 	//Update function
 	void UpdateBoard(); //redraw the board
 	void updateDifficulty();
 
-	//savefile
+	//save file
 	void save();
 
 protected:
@@ -116,13 +116,13 @@ protected:
 
 	//power-up
 	Powerup guns[NUM_GUNS]; //guns power-up
-	Powerup bonus[NUM_BONUS]; //bouns power-up
-	Powerup active[NUM_ACTIVE]; //activable power-up
+	Powerup bonus[NUM_BONUS]; //bounds power-up
+	Powerup active[NUM_ACTIVE]; //actionable power-up
 
 	int xMin; //variable for the position of camera
 
 	int HEIGHT_MARKET; //height of market power-ups
-	//costants for drawing
+	//constants for drawing
 	int draw_cost1;
 	int draw_cost2;
 	int draw_cost3;

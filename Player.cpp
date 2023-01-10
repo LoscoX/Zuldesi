@@ -34,7 +34,7 @@ Player::Player(WINDOW * win, int y, int x){
 	jump_height = 5; //max height of the jump
 	NUM_BULLETS = 0; //number of bullets
 	NUM_EXPLO_BULLETS = 0; //number of exploding bullets
-	//powerup
+	//power-up
 	gun = Powerup("None", "GUNS", 1, 10, 1); //no gun when you start
 	shield = Powerup("Shield", "A shield that blocks damage one time", 0, 15, 1); //no shield when you start
 	hp = Powerup("HP", "Get back on your feet one more time", life, 3, 1);
@@ -51,7 +51,7 @@ Player::Player(WINDOW * win, int y, int x){
 	FLY_ACTIVE_DURATION = 0; //no fly when you start
 	FLY_DURATION = 50; //duration of the fly
 	ACTIVE_FLY = false; //no fly when you start
-};
+}
 
 Player::Player(){} //default constructor
 
@@ -62,7 +62,7 @@ void Player::initialize(){
 void Player::SetJump(){ //Rearrange jump variables
 	conta = 1; //ready for the next jump
 	segno = -1; //ready for the next jump
-	activejump = false; //you reach the ground floor
+	activejump = false; //you reach the first floor
 }
 
 void Player::jump(){ //not move the x
@@ -113,7 +113,7 @@ void Player::goup(){ //go up
 	if(shield.getQnt()==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //old gun
 	if(strcmp(gun.getName().c_str(),"None")!=0) mvwaddch(curwin,yLoc,xLoc+getDir(),' '); //delete gun
 	if(strcmp(gun.getName().c_str(),"Doublegun")==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //see gun
-	yLoc = yLoc - 1; //you are liftfing
+	yLoc = yLoc - 1; //you are lifting
 	if(yLoc<1) yLoc = 1;
 }
 
@@ -124,18 +124,18 @@ void Player::teleport(){
 	if(shield.getQnt()==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //delete old gun
 	if(strcmp(gun.getName().c_str(),"None")!=0) mvwaddch(curwin,yLoc,xLoc+getDir(),' '); //delete gun
 	if(strcmp(gun.getName().c_str(),"Doublegun")==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //see gun
-	yLoc = yMax - 2; //ground floor
+	yLoc = yMax - 2; //first floor
 	xLoc = xLoc + TELEPORT_DISTANCE[teleportation.getQnt()-1]; //teleport the character
 	if(xLoc > xMax-2) xLoc = xMax - 2; //you reach the wall
 }
 
 int Player::getmv(){ //move the character with gun by user
-	if(ACTIVE_ARMOR){ //check if you have actived your armor
-		if(ARMOR_ACTIVE_DURATION>0)ARMOR_ACTIVE_DURATION--; //if you have the armor actived, you have to decrement the time life of armor
+	if(ACTIVE_ARMOR){ //check if you have active your armor
+		if(ARMOR_ACTIVE_DURATION>0)ARMOR_ACTIVE_DURATION--; //if you have the armor active, you have to decrement the time life of armor
 		else ACTIVE_ARMOR = false; //Your armor finishes its life
 	}
-	if(ACTIVE_FLY){ //check if you have actived your fly
-		if(FLY_ACTIVE_DURATION>0)FLY_ACTIVE_DURATION--; //if you have fly actived, you have to decrement the time life of fly
+	if(ACTIVE_FLY){ //check if you have active your fly
+		if(FLY_ACTIVE_DURATION>0)FLY_ACTIVE_DURATION--; //if you have fly active, you have to decrement the time life of fly
 		else{
 			ACTIVE_FLY = false; //Your fly finishes its life
 			while(yLoc<yMax-4)godown(); //fall when you end your fly
@@ -189,7 +189,7 @@ int Player::getmv(){ //move the character with gun by user
 		case 'a': //activate the armor (time_life of armor starts)
 			if(armor.getQnt()>0){ //you have at least on piece of armor
 				ARMOR_ACTIVE_DURATION = ARMOR_DURATION[armor.getQnt()-1]; //thanks to the quantity you get the armor duration. For example if you have two pieces of armor, you have 1000 time duration
-				armor.setQnt(0); //no armor anymore (you lose all piecies)
+				armor.setQnt(0); //no armor anymore (you lose all pieces)
 				ACTIVE_ARMOR = true;
 			}
 			break;
@@ -216,7 +216,7 @@ int Player::getmv(){ //move the character with gun by user
 	return choice;
 }
 
-int Player::airshoot(){ //during jump movement or down movement, you can just shooting
+int Player::airshoot(){ //during jump movement or down movement, you can just shoot
 	int choice = wgetch(curwin);
 	switch(choice){
 		case 'h': //activate the gun
@@ -251,7 +251,7 @@ int Player::airshoot(){ //during jump movement or down movement, you can just sh
 		case 'a': //activate the armor (time_life of armor starts)
 			if(armor.getQnt()>0){ //you have at least on piece of armor
 				ARMOR_ACTIVE_DURATION = ARMOR_DURATION[armor.getQnt()-1]; //thanks to the quantity you get the armor duration. For example if you have two pieces of armor, you have 1000 time duration
-				armor.setQnt(0); //no armor anymore (you lose all piecies)
+				armor.setQnt(0); //no armor anymore (you lose all pieces)
 				ACTIVE_ARMOR = true;
 			}
 			break;
@@ -272,7 +272,7 @@ void Player::display(){ //display the character
 	if(hp.getQnt()>1){
 		wattron(curwin,COLOR_PAIR(3)); //color
 		mvwaddch(curwin,yLoc,xLoc,character[0]); //see the player
-		if(ACTIVE_ARMOR==true){
+		if(ACTIVE_ARMOR){
 			mvwaddch(curwin,yLoc,xLoc,'O'); //see armor
 		}
 		if(shield.getQnt()>0) mvwaddch(curwin,yLoc,xLoc-getDir(),character[2]); //see the shield
@@ -284,7 +284,7 @@ void Player::display(){ //display the character
 	else{ //if you have one life, you become red
 		wattron(curwin,COLOR_PAIR(1)); //color
 		mvwaddch(curwin,yLoc,xLoc,character[0]); //see the player
-		if(ACTIVE_ARMOR==true){
+		if(ACTIVE_ARMOR){
 			mvwaddch(curwin,yLoc,xLoc,'O'); //see armor
 		}
 		if(shield.getQnt()>0) mvwaddch(curwin,yLoc,xLoc-getDir(),character[2]); //see the shield
@@ -306,7 +306,7 @@ void Player::injury(){ //Injury
 	else if(shield.getQnt() > 0 && !ACTIVE_ARMOR){ //check if the player has the shield but not the armor
 		shield.setQnt(shield.getQnt()-1); //you lose one piece of shield
 	}
-	//if you have the armor, you are invicible
+	//if you have the armor, you are invincible
 }
 
 int Player::getx(){
@@ -388,7 +388,7 @@ bullt Player::shoot(bullt tmp){ //move bullets
 	return tmp;
 }
 
-bullt Player::explo_shoot(bullt tmp){ //move exposive bullets
+bullt Player::explo_shoot(bullt tmp){ //move explosive bullets
 	tmp = bullet.shoot(tmp,explo_bullet.blt); //move explosive bullets
 	return tmp;
 }
@@ -405,7 +405,7 @@ int Player::getTELEPORT_DISTANCE(int i){
 
 //Power up
 
-//get Powerups
+//get Power-ups
 Powerup Player::getGun(){
 	return gun;
 }
@@ -434,7 +434,7 @@ Powerup Player::getExplo_Bullets(){
 	return explo_bullets; //explosive bullets
 }
 
-//set Powerups
+//set Power-ups
 void Player::setGun(string g){
 	gun.setName(g); //gun
 }

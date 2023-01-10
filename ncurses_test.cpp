@@ -3,7 +3,6 @@
 //
 
 #include <ncursesw/ncurses.h>
-#include "map_class.h"
 
 using namespace  std;
 
