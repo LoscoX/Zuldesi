@@ -8,12 +8,13 @@
 #include "Board.hpp"
 
 
-Board::Board(){ //default construct
+Board::Board(){ //
 	this->height = 0;
 	this->width = 0;
 
 	construct(0,0);
 }
+
 
 Board::Board(int height,int width){
 
@@ -37,12 +38,6 @@ void Board::initialize(int x,int y){
 	clear();
 	addBorder(x,y);
 	refresh();
-}
-
-
-
-char Board::getInput(){
-	return wgetch(board_win);
 }
 
 
