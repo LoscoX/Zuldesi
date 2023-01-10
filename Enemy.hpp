@@ -19,27 +19,27 @@ protected:
     /**
      * Change the movement.
      */
-	int segno;
+	int segno{};
     /**
      * Coordinates of the enemy.
      */
-	int xLoc,yLoc;
+	int xLoc{},yLoc{};
     /**
      * Life.
      */
-	int life;
+	int life{};
     /**
      * Icon for the enemy.
      */
-	char character;
+	char character{};
     /**
      * Coordinates for the movement of the enemy.
      */
-	int xpern,ypern;
+	int xpern{},ypern{};
     /**
      * Radius of the movement.
      */
-	int cost;
+	int cost{};
 public:
 
     /**
@@ -67,28 +67,28 @@ public:
      *
      * @return x coordinate of the enemy.
      */
-	int getx();
+	int getx() const;
     /**
      *
      * @return y coordinate of the enemy.
      */
-	int gety();
+	int gety() const;
     /**
      *
      * @return Enemy life.
      */
-	int getLife();
+	int getLife() const;
     /**
      *
      * @return Enemy's sign.
      */
-	int getSign();
+	int getSign() const;
 
     /**
      *
      * @return Enemy's graphic displayed symbol.
      */
-	char getChar();
+	char getChar() const;
     /**
      * Change enemy's sign.
      */
@@ -115,7 +115,7 @@ protected:
     /**
      * Direction of the lifting.
      */
-	int up;
+	int up{};
 public:
     /**
      * Constructor with coordinates.
@@ -141,7 +141,7 @@ public:
      *
      * @return Lifting's direction.
      */
-	int getUp();
+	int getUp() const;
     /**
      * Reach one of the two limits of the sin movement, you must go up (or down).
      * @return
@@ -176,11 +176,11 @@ protected:
     /**
      * Counter for the jump's time.
      */
-	int conta;
+	int conta{};
     /**
      * Jump parabola's direction.
      */
-	int up;
+	int up{};
 public:
     /**
      * Constructor with parameters.
@@ -206,12 +206,12 @@ public:
      *
      * @return conta value.
      */
-	int GetConta();
+	int GetConta() const;
 };
 
 class Enemy4 : public Enemy0{
 protected:
-	int conta;
+	int conta{};
 public:
     /**
      * Constructor with parameters.

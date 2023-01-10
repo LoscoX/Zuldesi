@@ -57,11 +57,11 @@ void Enemy0::EnemyGoDown(){ //go down
 	yLoc = yLoc + 1; //Enemy is falling
 }
 
-int Enemy0::getx(){ //Take x
+int Enemy0::getx() const{ //Take x
 	return xLoc;
 }
 
-int Enemy0::gety(){
+int Enemy0::gety() const{
 	return yLoc;
 }
 
@@ -69,11 +69,11 @@ void Enemy0::injury(){ //Injury
 	setLife(getLife()-1);
 }
 
-int Enemy0::getLife(){
+int Enemy0::getLife() const{
 	return life;
 }
 
-int Enemy0::getSign(){
+int Enemy0::getSign() const{
 	return segno;
 }
 
@@ -81,7 +81,7 @@ void Enemy0::setSign(){
 	segno = segno * (-1); //change sign
 }
 
-char Enemy0::getChar(){
+char Enemy0::getChar() const{
 	return character;
 }
 
@@ -130,7 +130,7 @@ void Enemy1::setUp(){
 	up = up * (-1);
 }
 
-int Enemy1::getUp(){
+int Enemy1::getUp() const{
 	return up;
 }
 
@@ -190,7 +190,7 @@ void Enemy3::SetJump(){
 	up = -1;
 }
 
-int Enemy3::GetConta(){
+int Enemy3::GetConta() const{
 	return conta;
 }
 
