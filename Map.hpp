@@ -91,6 +91,7 @@ typedef money* mony;
 
 typedef segment_el* seg_list_ptr;
 
+
 class Map{
     protected:
 		int n0,n1,n2,n3,n4,n5,n6,n7,n8,n9; //number of enemies
@@ -117,24 +118,104 @@ class Map{
 
     public:
         Map();
-        Map(int difficulty); //map depends on difficulty
-        bool isSolid(int x, int y); //check if your movement is ok with the respsect of structures of map
-        bool isDanger(int x,int y); //check if your movement is danger
-        int getDim_x(); //take dimension x
-        int getDim_y(); //take dimension y
-        string* toString(); //return the matrix of the map
-		int get_trigger_start(); //take trigger start
-		int get_trigger_end(); //take trigger end
-		int get_trigger_market(); //take trigger market
-		void generationRandom(int iniz_x,int iniz_y,int fin_x,int fin_y); //generate two admissible coordinates
+
+        /**
+         *
+         * @param difficulty : map depends on difficulty.
+         */
+        Map(int difficulty);
+        /**
+         *
+         * @param x
+         * @param y
+         * @return check if your movement is right within the respect of structures of map.
+         */
+        bool isSolid(int x, int y);
+        /**
+         *
+         * @param x
+         * @param y
+         * @return check if your movement is dangerous.
+         */
+        bool isDanger(int x,int y);
+        /**
+         *
+         * @return x dimension.
+         */
+        int getDim_x();
+        /**
+         *
+         * @return y dimension.
+         */
+        int getDim_y();
+        /**
+         *
+         * @return Matrix of the map.
+         */
+        string* toString();
+        /**
+         *
+         * @return start trigger.
+         */
+		int get_trigger_start();
+        /**
+         *
+         * @return end trigger.
+         */
+		int get_trigger_end();
+        /**
+         *
+         * @return market trigger.
+         */
+		int get_trigger_market();
+        /**
+         * generate two admissible coordinates.
+         * @param iniz_x
+         * @param iniz_y
+         * @param fin_x
+         * @param fin_y
+         */
+		void generationRandom(int iniz_x,int iniz_y,int fin_x,int fin_y);
+        /**
+         *
+         * @return randomly a segment to generate.
+         */
+        int rand_segment_selection();
+
 
         //coins
+        /**
+         *
+         * @param h
+         * @param val
+         * @param x
+         * @param y
+         * @return insert one coin in the list.
+         */
     	mony head_insert_coin(mony h,int val,int x,int y); //insert one coin in the list
-    	bool updateCoins(int x,int y); //check if one coin has to be removed
-    	mony removeCoins(mony h,int cod); //remove one coin
-    	mony FallCoins(mony h); //avoid coins on the air
+        /**
+         *
+         * @param x
+         * @param y
+         * @return check if one coin has to be removed.
+         */
+    	bool updateCoins(int x,int y);
+        /**
+         *
+         * @param h
+         * @param cod
+         * @return remove one coin.
+         */
+    	mony removeCoins(mony h,int cod);
+        /**
+         *
+         * @param h
+         * @return avoid coins in the air.
+         */
+    	mony FallCoins(mony h);
 
         //Enemies
+
     	listenm0 getEnemies0(); //take list of enemies type 0
     	listenm1 getEnemies1(); //take list of enemies type 1
     	listenm2 getEnemies2(); //take list of enemies type 2
@@ -156,6 +237,7 @@ class Map{
     	listenm7 setEnemies7(listenm7 tmp,int cod); //update list of enemies type 7
     	listenm8 setEnemies8(listenm8 tmp,int cod); //update list of enemies type 8
     	listenm9 setEnemies9(listenm9 tmp,int cod); //update list of enemies type 9
+
 
     	listenm0 head_insert_enemy0(listenm0 h,Enemy0 e, int val); //add one enemy type0
     	listenm1 head_insert_enemy1(listenm1 h,Enemy1 e, int val); //add one enemy type1
@@ -179,7 +261,7 @@ class Map{
     	listenm8 obj_remove_enemy8(listenm8 h,int cod,bool head); //delete one enemy type8 (head == true, clean memory when delete an element in the head, otherwise not)
     	listenm9 obj_remove_enemy9(listenm9 h,int cod,bool head); //delete one enemy type9 (head == true, clean memory when delete an element in the head, otherwise not)
 
-    	string* initializeEnemies(string* mat); //initalize enemies
+    	string* initializeEnemies(string* mat); //initialize enemies
 
     	mony getCoins(); //take coins
 
