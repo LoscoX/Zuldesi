@@ -423,10 +423,6 @@ protected:
      */
 	Player player;
     /**
-     * Map.
-     */
-	Map map;
-    /**
      * Map data structure matrix.
      */
 	string* matrix{};

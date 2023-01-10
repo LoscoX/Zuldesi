@@ -9,6 +9,9 @@ using namespace std;
 
 class Powerup{
 public:
+    /**
+     *
+     */
 	string name;//power-up identifier
 	string description; //Description
 	int qnt; //Quantity of power-up

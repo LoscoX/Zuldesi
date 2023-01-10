@@ -259,46 +259,176 @@ public:
      */
 	void updateCoordinates(int x,int y);
     /**
-     *
+     * Change direction.
      * @param dir
      */
-	void setDir(int dir); //change direction
-	void setLife(int val); //change life
+	void setDir(int dir);
 
-	//bullets
-	Bullet getBullet(); //bullets
+    /**
+     * bullets.
+     */
+    /**
+     *
+     * @return bullets.
+     */
+	Bullet getBullet();
+    /**
+     * Set bullets.
+     * @param tmp
+     * @param cod
+     * @return
+     */
 	bullt setBullet(bullt tmp,int cod);
-	Bullet getExploBullet(); //explosive bullets
+    /**
+     *
+     * @return explosive bullets.
+     */
+	Bullet getExploBullet();
+    /**
+     *
+     * @param tmp
+     * @param cod
+     * @return
+     */
 	bullt setExploBullet(bullt tmp,int cod);
 	bullt shoot(bullt tmp);
+    /**
+     *
+     * @param tmp
+     * @return
+     */
 	bullt explo_shoot(bullt tmp);
 
-	//get Powerups
-	Powerup getGun(); //gun
-	Powerup getShield(); //shield
-	Powerup getHP(); //HP
-	Powerup getArmor(); //Armor
-	Powerup getTeleportation(); //teleport
-	Powerup getBullets(); //bullets
-	Powerup getJumping(); //jump
-	Powerup getFly(); //fly
-	Powerup getExplo_Bullets(); //explosive bullets
+    /**
+     * Get power-ups.
+     */
 
-	//set Powerups
-	void setGun(string g); //gun
-	void setShield(int s); //shield
-	void setHP(int h); //HP
-	void setArmor(int a); //Armor
-	void setTeleportation(int t); //teleport
-	void setBullets(int b); //bullets
-	void setJumping(int j); //jump
-	void setFly(int f); //fly
-	void setExplo_Bullets(int e); //explosive bullets
+    /**
+     *
+     * @return Gun.
+     */
+	Powerup getGun();
+    /**
+     *
+     * @return Shield.
+     */
+	Powerup getShield();
+    /**
+     *
+     * @return HP.
+     */
+	Powerup getHP();
+    /**
+     *
+     * @return Armor.
+     */
+	Powerup getArmor();
+    /**
+     *
+     * @return Teleport.
+     */
+	Powerup getTeleportation();
+    /**
+     *
+     * @return Bullets.
+     */
+	Powerup getBullets();
+    /**
+     *
+     * @return Jump.
+     */
+	Powerup getJumping();
+    /**
+     *
+     * @return Fly.
+     */
+	Powerup getFly();
+    /**
+     *
+     * @return explosive bullets.
+     */
+	Powerup getExplo_Bullets();
 
-	bool getActiveFly(); //take active fly variable
-	void setActiveFly(bool val); //set active fly variable
-	bool getActiveJump(); //take active jump variable
-	int getTELEPORT_DISTANCE(int i); //take the variable i of the vector TELEPORT_DISTANCE
-	int getFlyActiveDuration(); //take fly duration
-	void setFlyActiveDuration(int val); //set fly duration
+
+    /**
+     * Set power-ups.
+     */
+
+    /**
+     * Set Gun.
+     * @param g
+     */
+	void setGun(string g);
+    /**
+     * Set Shield.
+     * @param s
+     */
+	void setShield(int s);
+    /**
+     * Set HP.
+     * @param h
+     */
+	void setHP(int h);
+    /**
+     * Set armor.
+     * @param a
+     */
+	void setArmor(int a);
+    /**
+     * Set teleport.
+     * @param t
+     */
+	void setTeleportation(int t);
+    /**
+     * Set bullets.
+     * @param b
+     */
+	void setBullets(int b);
+    /**
+     * Set jump.
+     * @param j
+     */
+	void setJumping(int j);
+    /**
+     * Set fly.
+     * @param f
+     */
+	void setFly(int f);
+    /**
+     * Set explosive bullets.
+     * @param e
+     */
+	void setExplo_Bullets(int e);
+
+    /**
+     * Take active fly variable.
+     * @return
+     */
+	bool getActiveFly();
+    /**
+     * Set active fly variable.
+     * @param val
+     */
+	void setActiveFly(bool val);
+    /**
+     * Take active jump variable.
+     * @return
+     */
+	bool getActiveJump();
+    /**
+     * take the input parameter of the vector TELEPORT_DISTANCE
+     * @param i
+     * @return
+     */
+	int getTELEPORT_DISTANCE(int i);
+    /**
+     * Take fly duration.
+     * @return
+     */
+	int getFlyActiveDuration();
+    /**
+     * Set fly duration.
+     * @param val
+     */
+	void setFlyActiveDuration(int val);
 };
