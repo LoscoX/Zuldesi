@@ -39,10 +39,10 @@ int prevPrime(int n){
 
 int getPrime(int n){
     int x = 0;
-
     for (int i = 0; i<n; i++){
+        x += 1;
         while (!isPrime(x)){
-            x++;
+            x += 1;
         }
     }
     return x;
