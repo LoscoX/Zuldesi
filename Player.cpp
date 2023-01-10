@@ -7,7 +7,9 @@
 
 #include "Player.hpp"
 
+
 Player::Player(WINDOW * win, int y, int x){
+
 	yLoc = y;
 	xLoc = x;
 	curwin = win;

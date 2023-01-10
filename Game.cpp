@@ -6,6 +6,7 @@
  */
 
 #include "Game.hpp"
+
 #include <fstream>
 
 Game::Game(int height,int width){
@@ -242,6 +243,7 @@ void Game::redraw(){
 	board.refresh();
 }
 
+
 void Game::UpdateBoard(){
 	board.addBorder(0,0);
 }
@@ -249,6 +251,7 @@ void Game::UpdateBoard(){
 bool Game::isOver(){
 	return game_over;
 }
+
 
 //dir decides the direction, 1 = right (generate next map/go to the next map already existing)
 //0 = go the the previous map

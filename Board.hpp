@@ -12,6 +12,7 @@
 #include <cmath>
 #include <cstdlib>
 
+
 const int len = 7; //length of one structure
 
 struct platform{ //structure for a platform
@@ -28,11 +29,13 @@ struct wall{ //structure for a wall
 
 const int num_ogg = 30; //number of one type of objects
 
+
 class Board{
 public:
 	WINDOW *board_win;
 	Board();
 	Board(int height, int width);
+
 	void addBorder(int x,int y);
 	void clear();
 	void refresh();
