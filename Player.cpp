@@ -142,21 +142,21 @@ int Player::getmv(){ //move the character with gun by user
 				ind = ind + 1; //we want different indexes for the different bullets
 				bullets.setQnt(bullets.getQnt()-1); //decrement bullets
 			}
-			else if(bullets.getQnt()>1 && strcmp(gun.getName().c_str(),"Rifle") == 0){ //you shoot two bullets
+			else if(bullets.getQnt()>0 && strcmp(gun.getName().c_str(),"Rifle") == 0){ //you shoot two bullets
 				for(int i=0;i<2;i++){
 					bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc+i*dir,yLoc,ind); //add the bullet
 					ind = ind + 1; //we want different indexes for the different bullets
 				}
 				bullets.setQnt(bullets.getQnt()-1); //decrement bullets
 			}
-			else if(bullets.getQnt()>2 && strcmp(gun.getName().c_str(),"Machinegun") == 0){ //you shoot three bullets
+			else if(bullets.getQnt()>0 && strcmp(gun.getName().c_str(),"Machinegun") == 0){ //you shoot three bullets
 				for(int i=0;i<3;i++){
 					bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc+i*dir,yLoc,ind); //add the bullet
 					ind = ind + 1; //we want different indexes for the different bullets
 				}
 				bullets.setQnt(bullets.getQnt()-1); //decrement bullets
 			}
-			else if(bullets.getQnt()>1 && strcmp(gun.getName().c_str(), "Doublegun") == 0){//you shoot two bullets in opposite directions
+			else if(bullets.getQnt()>0 && strcmp(gun.getName().c_str(), "Doublegun") == 0){//you shoot two bullets in opposite directions
 				bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc,yLoc,ind); //add the bullet
 				ind = ind + 1; //we want different indexes for the different bullets
 				bullets.setQnt(bullets.getQnt()-1); //decrement bullets
@@ -203,21 +203,21 @@ int Player::airshoot(){ //during jump movement or down movement, you can just sh
 				ind = ind + 1; //we want different indexes for the different bullets
 				bullets.setQnt(bullets.getQnt()-1); //decrement bullets
 			}
-			else if(bullets.getQnt()>1 && strcmp(gun.getName().c_str(),"Rifle") == 0){ //you shoot two bullets
+			else if(bullets.getQnt()>0 && strcmp(gun.getName().c_str(),"Rifle") == 0){ //you shoot two bullets
 				for(int i=0;i<2;i++){
 					bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc+i*dir,yLoc,ind); //add the bullet
 					ind = ind + 1; //we want different indexes for the different bullets
 				}
 				bullets.setQnt(bullets.getQnt()-1); //decrement bullets
 			}
-			else if(bullets.getQnt()>2 && strcmp(gun.getName().c_str(),"Machinegun") == 0){ //you shoot three bullets
+			else if(bullets.getQnt()>0 && strcmp(gun.getName().c_str(),"Machinegun") == 0){ //you shoot three bullets
 				for(int i=0;i<3;i++){
 					bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc+i*dir,yLoc,ind); //add the bullet
 					ind = ind + 1; //we want different indexes for the different bullets
 				}
 				bullets.setQnt(bullets.getQnt()-1); //decrement bullets
 			}
-			else if(bullets.getQnt()>1 && strcmp(gun.getName().c_str(), "Doublegun") == 0){//you shoot two bullets in opposite directions
+			else if(bullets.getQnt()>0 && strcmp(gun.getName().c_str(), "Doublegun") == 0){//you shoot two bullets in opposite directions
 				bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc,yLoc,ind); //add the bullet
 				ind = ind + 1; //we want different indexes for the different bullets
 				bullets.setQnt(bullets.getQnt()-1); //decrement bullets

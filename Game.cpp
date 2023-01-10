@@ -51,7 +51,7 @@ Game::Game(int height,int width){
 
 	//read from save file player powerups
 	ifstream save;
-	save.open("C:/Users/david/eclipse-workspace/Project/src/save.txt"); //open save text
+	save.open("save.txt"); //open save text
 	string line;
 	getline(save, line); //take the line
 	if(line != "-"){
@@ -164,7 +164,7 @@ void Game::handleCoins(){
 
 void Game::save(){
 	ofstream save;
-	save.open("C:/Users/david/eclipse-workspace/Project/src/save.txt"); //open the file
+	save.open("save.txt"); //open the file
 	save << player.getGun().getName() << endl; //gun name
 	save << player.getBullets().getQnt() << endl; //bullets qnt
 	save << player.getExplo_Bullets().getQnt() << endl; //explo bullets qnt
