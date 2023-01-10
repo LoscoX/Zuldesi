@@ -101,7 +101,7 @@ void Game::updateState(){
 	shooting();
 
 	//enemy movement
-	if(time%8 == 0)enemyMovement(); //you want to slow down enemies
+	if(time%12 == 0)enemyMovement(); //you want to slow down enemies
 	time++;
 
 	if(player.getHP().getQnt() != hp_tmp){
