@@ -248,7 +248,7 @@ void Game::UpdateBoard(){
 	board.addBorder(0,0);
 }
 
-bool Game::isOver() const{
+bool Game::isOver(){
 	return game_over;
 }
 
