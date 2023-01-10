@@ -262,18 +262,49 @@ public:
      *
      * @param dir
      */
-	void setDir(int dir); //change direction
+	void setDir(int dir);
+    /**
+     * Change life.
+     * @param val
+     */
 	void setLife(int val); //change life
 
-	//bullets
-	Bullet getBullet(); //bullets
+	/**
+	 * Bullets.
+	 */
+
+    /**
+     * Bullets.
+     */
+	Bullet getBullet();
+    /**
+     *
+     * @param tmp
+     * @param cod
+     * @return
+     */
 	bullt setBullet(bullt tmp,int cod);
-	Bullet getExploBullet(); //explosive bullets
+    /**
+     * Explosive bullets.
+     * @return
+     */
+	Bullet getExploBullet();
+    /**
+     *
+     * @param tmp
+     * @param cod
+     * @return
+     */
 	bullt setExploBullet(bullt tmp,int cod);
 	bullt shoot(bullt tmp);
 	bullt explo_shoot(bullt tmp);
 
 	//get Powerups
+    /**
+     *
+     * @return
+     */
+
 	Powerup getGun(); //gun
 	Powerup getShield(); //shield
 	Powerup getHP(); //HP
