@@ -10,6 +10,7 @@
 #include <ncurses.h>
 #include <ctime>
 #include <cstring>
+#include <fstream>
 
 #include "Game.hpp"
 
@@ -32,6 +33,12 @@ int main(int argc, char ** argv) {
 		game.updateState();
 		game.redraw();
 	}
+
+	//update save file
+	ofstream save;
+	save.open("C:/Users/david/eclipse-workspace/Project/src/save.txt");
+	save << "-";
+	save.close();
 
 	endwin(); //deallocates memory and ends ncurses
 	return 0;

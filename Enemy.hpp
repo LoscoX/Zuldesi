@@ -98,6 +98,8 @@ public:
 	Enemy6();
 	void movement(); //modify the movement
 	Bullet getBullet(); //take bullet
+	bullt setBullet(bullt tmp,int cod); //set bullet(remove one bullet)
+	bullt Enemyshoot(bullt tmp); //shooting
 };
 
 class Enemy7 : public Enemy6{

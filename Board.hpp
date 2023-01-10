@@ -39,7 +39,9 @@ public:
 	void initialize(int x,int y);
 	void addAt(int y,int x,char ch);
 	char getInput();
-	int height,width; //height and width of the board
+	int getHeight();
+	int getWidth();
 protected:
 	void construct(int height, int width);
+	int height,width; //height and width of the board
 };

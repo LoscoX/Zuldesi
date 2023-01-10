@@ -22,4 +22,5 @@ public:
 	int getPrice();
 	int getDifficulty();
 	void setQnt(int qnt);
+	void setName(string name);
 };

@@ -34,7 +34,7 @@ public:
 	Game(int height,int width); //Constructor
 
 	//Function for the map
-	Map restartMap(int difficulty);
+	void restartMap(int difficulty);
 	void nextMap(int dir, int difficulty);
 	void PrintMap(); //Print map
 
@@ -50,6 +50,8 @@ public:
 	void updatePowerup();
 	void market(); //activate the market
 	void market_build(); //build the market
+	void drawDescription(int i); //draw description of power up
+	void deleteDescription(int i); //draw description of power up
 
 	//Function for the movement
 	void PlayerCanMove(int choice); //Game interaction between player and structure map
@@ -104,6 +106,9 @@ public:
 	//Update function
 	void UpdateBoard(); //redraw the board
 	void updateDifficulty();
+
+	//savefile
+	void save();
 
 protected:
 

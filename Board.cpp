@@ -50,3 +50,11 @@ void Board::clear(){
 void Board::refresh(){
 	wrefresh(board_win);
 }
+
+int Board::getHeight(){
+	return height;
+}
+
+int Board::getWidth(){
+	return width;
+}

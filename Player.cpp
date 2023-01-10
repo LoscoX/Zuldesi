@@ -18,12 +18,13 @@ Player::Player(WINDOW * win, int y, int x){
 	character[2] = '|';
 	character[3] = '-';
 	life = 10;
-	cash = 20;
+	cash = 0;
 	points = 0; //no points when you start
 	dir = 1; //initial direction
 	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
 	ind2 = 0; //explosive bullet
+	buy = false; //nothing to build when you start
 	//jump
 	activejump = false; //start without jump
 	segno = -1; //segno for parabola
@@ -32,16 +33,16 @@ Player::Player(WINDOW * win, int y, int x){
 	NUM_BULLETS = 0; //number of bullets
 	NUM_EXPLO_BULLETS = 0; //number of exploding bullets
 	//powerup
-	gun = Powerup("None", "No gun", 1, 0, 2); //no gun when you start
-	shield = Powerup("Shield", "A shield that blocks damage one time", 0, 1, 1); //no shield when you start
-	hp = Powerup("HP", "Get back on your feet one more time", life, 1, 1);
-	armor = Powerup("Armor", "Become invincible for a limited time", 0, 1, 1); //no armor when you start
-	teleportation = Powerup("Teleport", "Teleport a short distance", 0, 1, 1); //you cannot teleport when you start
-	bullets = Powerup("Bullets","Charge of bullets",NUM_BULLETS,1,1); //no bullets when you start
-	explo_bullets = Powerup("Explo-Bullets","Charge of explosive bullets",NUM_EXPLO_BULLETS,1,1); //no bullets when you start
-	jumping = Powerup("Jump","Change the height of the jump",jump_height,1,1); //basic jump when you start
-	fly = Powerup("Fly","You can fly",0,1,1); //you cannot fly when you start
-	ARMOR_DURATION[0] = 500; ARMOR_DURATION[1] = 1000; ARMOR_DURATION[2] = 5000; //different type of Armor duration
+	gun = Powerup("None", "GUNS", 1, 10, 1); //no gun when you start
+	shield = Powerup("Shield", "A shield that blocks damage one time", 0, 15, 1); //no shield when you start
+	hp = Powerup("HP", "Get back on your feet one more time", life, 3, 1);
+	armor = Powerup("Armor", "Become invincible for a limited time", 0, 10, 1); //no armor when you start
+	teleportation = Powerup("Teleport", "Teleport a short distance", 0, 10, 1); //you cannot teleport when you start
+	bullets = Powerup("Bullets","Charge of bullets",NUM_BULLETS,5,1); //no bullets when you start
+	explo_bullets = Powerup("Explo-Bullets","Charge of explosive bullets",NUM_EXPLO_BULLETS,20,1); //no bullets when you start
+	jumping = Powerup("Jump","Change the height of the jump",jump_height,7,1); //basic jump when you start
+	fly = Powerup("Fly","You can fly",0,20,1); //you cannot fly when you start
+	ARMOR_DURATION[0] = 100; ARMOR_DURATION[1] = 200; ARMOR_DURATION[2] = 500; //different type of Armor duration
 	TELEPORT_DISTANCE[0] = dir*20; TELEPORT_DISTANCE[1] = dir*30; TELEPORT_DISTANCE[2] = dir*40; //different teleport distance
 	ACTIVE_ARMOR = false; //no armor when you start
 	ARMOR_ACTIVE_DURATION = 0; //no armor when you start
@@ -204,6 +205,9 @@ int Player::getmv(){ //move the character with gun by user
 				explo_bullets.setQnt(explo_bullets.getQnt()-1); //decrement bullets
 			}
 			break;
+		case 'b': //buy something in the market
+			buy = true;
+			break;
 		default:
 			break;
 	}
@@ -270,7 +274,7 @@ void Player::display(){ //display the character
 			mvwaddch(curwin,yLoc,xLoc,'O'); //see armor
 		}
 		if(shield.getQnt()>0) mvwaddch(curwin,yLoc,xLoc-getDir(),character[2]); //see the shield
-		if(shield.getQnt()==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //delete old gun
+		//if(shield.getQnt()==0 && strcmp(gun.getName().c_str(),"Doublegun")==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //delete old gun
 		if(strcmp(gun.getName().c_str(),"None")!=0) mvwaddch(curwin,yLoc,xLoc+getDir(),character[3]); //see the gun
 		if(strcmp(gun.getName().c_str(),"Doublegun")==0) mvwaddch(curwin,yLoc,xLoc-getDir(),character[3]); //see the gun
 		wattroff(curwin,COLOR_PAIR(3)); //color
@@ -282,7 +286,7 @@ void Player::display(){ //display the character
 			mvwaddch(curwin,yLoc,xLoc,'O'); //see armor
 		}
 		if(shield.getQnt()>0) mvwaddch(curwin,yLoc,xLoc-getDir(),character[2]); //see the shield
-		if(shield.getQnt()==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //delete old gun
+		//if(shield.getQnt()==0) mvwaddch(curwin,yLoc,xLoc-getDir(),' '); //delete old gun
 		if(strcmp(gun.getName().c_str(),"None")!=0) mvwaddch(curwin,yLoc,xLoc+getDir(),character[3]); //see the gun
 		if(strcmp(gun.getName().c_str(),"Doublegun")==0) mvwaddch(curwin,yLoc,xLoc-getDir(),character[3]); //see the gun
 		wattroff(curwin,COLOR_PAIR(1));
@@ -327,6 +331,14 @@ int Player::getPoints(){
 	return points;
 }
 
+bool Player::getBuy(){
+	return buy;
+}
+
+void Player::setBuy(bool val){
+	this->buy = val;
+}
+
 void Player::updateCash(int money){ //update cash
 	cash = cash + money;
 }
@@ -352,9 +364,33 @@ void Player::setLife(int life){
 Bullet Player::getBullet(){
 	return bullet;; //bullets
 }
+
+bullt Player::setBullet(bullt tmp,int cod){
+	tmp = bullet.obj_remove(tmp,cod,false); //remove from the list (don't clean the memory)
+	bullet.blt = bullet.obj_remove(bullet.blt,cod,true); //remove from the main list (clean the memory);
+	return tmp;
+}
+
 Bullet Player::getExploBullet(){
 	return explo_bullet; //explosive bullets
 }
+
+bullt Player::setExploBullet(bullt tmp,int cod){
+	tmp = explo_bullet.obj_remove(tmp,cod,false); //remove from the list (don't clean the memory)
+	explo_bullet.blt = explo_bullet.obj_remove(explo_bullet.blt,cod,true); //remove from the main list (clean the memory);
+	return tmp;
+}
+
+bullt Player::shoot(bullt tmp){ //move bullets
+	tmp = bullet.shoot(tmp,bullet.blt); //move bullets
+	return tmp;
+}
+
+bullt Player::explo_shoot(bullt tmp){ //move exposive bullets
+	tmp = bullet.shoot(tmp,explo_bullet.blt); //move explosive bullets
+	return tmp;
+}
+
 bool Player::getActiveFly(){
 	return ACTIVE_FLY; //take active fly variable
 }
@@ -372,10 +408,10 @@ Powerup Player::getGun(){
 	return gun;
 }
 Powerup Player::getShield(){
-	return shield;;
+	return shield;
 }
 Powerup Player::getHP(){
-	return hp;;
+	return hp;
 }
 Powerup Player::getArmor(){
 	return armor;
@@ -392,20 +428,37 @@ Powerup Player::getJumping(){
 Powerup Player::getFly(){
 	return fly; //fly
 }
-Powerup Player::getExplo_bullets(){
+Powerup Player::getExplo_Bullets(){
 	return explo_bullets; //explosive bullets
 }
-/*
+
 //set Powerups
-Powerup Player::setGun(Powerup g){
-	;
+void Player::setGun(string g){
+	gun.setName(g); //gun
 }
-Powerup Player::setShield(Powerup s);
-Powerup Player::setHP(Powerup h);
-Powerup Player::setArmor(Powerup a);
-Powerup Player::setTeleportation(Powerup t); //teleport
-Powerup Player::setBullets(Powerup b); //bullets
-Powerup Player::setJumping(Powerup j); //jump
-Powerup Player::setFly(Powerup f); //fly
-Powerup Player::setExplo_bullets(Powerup e); //explosive bullets
-*/
+
+void Player::setShield(int s){
+	shield.setQnt(s); //Shield
+}
+void Player::setHP(int h){
+	hp.setQnt(h); //HP
+}
+void Player::setArmor(int a){
+	armor.setQnt(a); //armor
+}
+void Player::setTeleportation(int t){
+	teleportation.setQnt(t); //teleport
+}
+void Player::setBullets(int b){
+	bullets.setQnt(b); //bullets
+}
+void Player::setJumping(int j){
+	jumping.setQnt(j); //jump
+}
+void Player::setFly(int f){
+	fly.setQnt(f); //fly
+}
+void Player::setExplo_Bullets(int e){
+	explo_bullets.setQnt(e); //explosive bullets
+}
+

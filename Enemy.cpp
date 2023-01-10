@@ -271,6 +271,18 @@ Bullet Enemy6::getBullet(){
 	return bullet;
 }
 
+bullt Enemy6::setBullet(bullt tmp,int cod){
+	tmp = bullet.obj_remove(tmp,cod,false); //remove from the list (don't clean the memory)
+	bullet.blt = bullet.obj_remove(bullet.blt,cod,true); //remove from the main list (clean the memory);
+	return tmp;
+}
+
+bullt Enemy6::Enemyshoot(bullt tmp){
+	tmp = bullet.shoot(tmp,bullet.blt);
+	return tmp;
+}
+
+
 //Enemy type7
 
 Enemy7::Enemy7(int y, int x, char c,int mv) : Enemy6(y,x,c,mv){
