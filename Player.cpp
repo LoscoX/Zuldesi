@@ -146,15 +146,15 @@ int Player::getmv(){ //move the character with gun by user
 				for(int i=0;i<2;i++){
 					bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc+i*dir,yLoc,ind); //add the bullet
 					ind = ind + 1; //we want different indexes for the different bullets
-					bullets.setQnt(bullets.getQnt()-1); //decrement bullets
 				}
+				bullets.setQnt(bullets.getQnt()-1); //decrement bullets
 			}
 			else if(bullets.getQnt()>2 && strcmp(gun.getName().c_str(),"Machinegun") == 0){ //you shoot three bullets
 				for(int i=0;i<3;i++){
 					bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc+i*dir,yLoc,ind); //add the bullet
 					ind = ind + 1; //we want different indexes for the different bullets
-					bullets.setQnt(bullets.getQnt()-1); //decrement bullets
 				}
+				bullets.setQnt(bullets.getQnt()-1); //decrement bullets
 			}
 			else if(bullets.getQnt()>1 && strcmp(gun.getName().c_str(), "Doublegun") == 0){//you shoot two bullets in opposite directions
 				bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc,yLoc,ind); //add the bullet
@@ -162,7 +162,6 @@ int Player::getmv(){ //move the character with gun by user
 				bullets.setQnt(bullets.getQnt()-1); //decrement bullets
 				bullet.blt = bullet.head_insert(bullet.blt,-dir,xLoc,yLoc,ind); //add the bullet
 				ind = ind + 1;
-				bullets.setQnt(bullets.getQnt()-1); //decrement bullets
 			}
 			break;
 		case 'a': //activate the armor (time_life of armor starts)
@@ -208,15 +207,15 @@ int Player::airshoot(){ //during jump movement or down movement, you can just sh
 				for(int i=0;i<2;i++){
 					bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc+i*dir,yLoc,ind); //add the bullet
 					ind = ind + 1; //we want different indexes for the different bullets
-					bullets.setQnt(bullets.getQnt()-1); //decrement bullets
 				}
+				bullets.setQnt(bullets.getQnt()-1); //decrement bullets
 			}
 			else if(bullets.getQnt()>2 && strcmp(gun.getName().c_str(),"Machinegun") == 0){ //you shoot three bullets
 				for(int i=0;i<3;i++){
 					bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc+i*dir,yLoc,ind); //add the bullet
 					ind = ind + 1; //we want different indexes for the different bullets
-					bullets.setQnt(bullets.getQnt()-1); //decrement bullets
 				}
+				bullets.setQnt(bullets.getQnt()-1); //decrement bullets
 			}
 			else if(bullets.getQnt()>1 && strcmp(gun.getName().c_str(), "Doublegun") == 0){//you shoot two bullets in opposite directions
 				bullet.blt = bullet.head_insert(bullet.blt,dir,xLoc,yLoc,ind); //add the bullet
@@ -224,7 +223,6 @@ int Player::airshoot(){ //during jump movement or down movement, you can just sh
 				bullets.setQnt(bullets.getQnt()-1); //decrement bullets
 				bullet.blt = bullet.head_insert(bullet.blt,-dir,xLoc,yLoc,ind); //add the bullet
 				ind = ind + 1;
-				bullets.setQnt(bullets.getQnt()-1); //decrement bullets
 			}
 			break;
 		case 'a': //activate the armor (time_life of armor starts)
