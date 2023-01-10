@@ -224,7 +224,7 @@ Map::Map(int difficulty){
     delete[] enemies_quantity; // delete array to clear dynamic memory
 }
 
-Map::Map(){} //deafult constructor
+Map::Map(){} //default constructor
 
 int Map::get_trigger_start(){
 	return trigger_start;
@@ -393,8 +393,8 @@ mony Map::FallCoins(mony h){ //avoid coins in the air
 
 
 int Map::rand_segment_selection() {
-    return rand()%40;
-
+    return rand() % 40;
+}
 mony Map::getCoins(){
 	return coins;
 

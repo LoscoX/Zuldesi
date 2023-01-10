@@ -11,17 +11,17 @@
 /*List of enemies
 Every enemy, when it dies, it gives to player a number of points proportional to number of life of enemy
 No gun type
-	0- sin movement (life = 5). There is a costant (mv) which determines the radius of the oscillation
+	0- sin movement (life = 5). There is a constant (mv) which determines the radius of the oscillation
 	1- sin movement with lift (life = 7). There is a constant (mv) which determines the height for the lifting
 	2- fixed lift (life = 7). There is a constant (mv) which determines the max height for the lifting
-	3- No fixed jump (life = 2). There is a constant (mv) which determines the height of the jump but the jump is dinamic
+	3- No fixed jump (life = 2). There is a constant (mv) which determines the height of the jump but the jump is dynamic
 	4- random movement (life = 3). Random movement in a constant neighborhood (mv)
 	5- smart movement (life = 2). It follows the player when it is sufficiently near to the enemy
 Gun type (If you touch them, nothing happens)
 	6- It's the enemy type0 but with gun
 	7- It's the enemy type5 but with gun
-	8- Enemy can't move but he can shoot, when the player reaches a specific place (life 5)
-	9- Is's the enemy type2 but with two guns
+	8- Enemy can't move, but he can shoot, when the player reaches a specific place (life 5)
+	9- As's the enemy type2 but with two guns
 */
 
 //Enemy type 0
@@ -126,7 +126,7 @@ void Enemy1::movement(){
 		xLoc = xpern - cost;
 		Enemy0::setSign(); //change the direction of the movement
 	}
-	else if(yLoc < 25 - 2 - cost){ //lifting depends from cost
+	else if(yLoc < 25 - 2 - cost){ //lifting depends on from cost
 		yLoc = 25 - 2 - cost;
 		Enemy1::setUp(); //change the direction of the lifting
 	}
@@ -160,7 +160,7 @@ Enemy2::Enemy2() : Enemy0(){
 
 void Enemy2::movement(){
 	Enemy0::updateCoordinates(0,segno);
-	if(yLoc < 25 - 2 - cost){ //lifting depends from cost
+	if(yLoc < 25 - 2 - cost){ //lifting depends on from cost
 		yLoc = 25 - 2 - cost;
 		Enemy0::setSign(); //change the direction of the lifting
 	}
@@ -346,7 +346,7 @@ Enemy9::Enemy9() : Enemy6(){
 void Enemy9::movement(){
 	conta++; //increment time for the shot
 	Enemy0::updateCoordinates(0,segno);
-	if(yLoc < 25 - 2 - cost){ //lifting depends from cost
+	if(yLoc < 25 - 2 - cost){ //lifting depends on from cost
 		yLoc = 25 - 2 - cost;
 		Enemy0::setSign(); //change the direction of the lifting
 	}

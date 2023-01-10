@@ -17,14 +17,14 @@ bool isPrime(int n);
 /**
  *
  * @param n
- * @return bool value which indicates if the number is a prime number.
+ * @return the next prime number than the input number.
  */
 int nextPrime(int n);
 
 /**
  *
  * @param n
- * @return the previous prime number to the input.
+ * @return the previous prime number than the input.
  * @attention if n is equal or less than 2 it will return 2.
  */
 int prevPrime(int n);

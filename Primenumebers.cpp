@@ -39,10 +39,10 @@ int prevPrime(int n){
 
 int getPrime(int n){
     int x = 0;
-
     for (int i = 0; i<n; i++){
+        x += 1;
         while (!isPrime(x)){
-            x++;
+            x += 1;
         }
     }
     return x;
@@ -62,9 +62,9 @@ int* thelast10prime(int n){
     int* arr = new int[10];
     int y;
     if (countPrime(n)<10){
-        y = n -1;
+        y = 0;
         for (int i = 0; i<10; i++){
-            if (y<=n){
+            if (nextPrime(y)<=n){
                 arr[i] = nextPrime(y);
                 y = arr[i];
             }else{

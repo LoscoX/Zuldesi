@@ -13,10 +13,10 @@ Bullet::Bullet(){
 
 bullt Bullet::head_insert(bullt h,int dir,int x,int y,int ind){ //add the bullet
 	bullt tmp = new bullet;
-	tmp->xB = x + dir; //bullet starts where is the player and it depends on his direction
+	tmp->xB = x + dir; //bullet starts where is the player, so it depends on his direction.
 	tmp->yB = y;
 	tmp->dir = dir; //direction of the bullet
-	tmp->cod = ind; //ID --> It's unic
+	tmp->cod = ind; //ID --> It's unique
 	tmp->next = h;
 	return tmp;
 }
@@ -24,7 +24,7 @@ bullt Bullet::head_insert(bullt h,int dir,int x,int y,int ind){ //add the bullet
 bullt Bullet::obj_remove(bullt h,int e,bool head){ //remove the e bullet
 	if (h==NULL) return h;
 	else if(h->cod == e){ //if the bullet is in the head of the list
-		if(head == true){ //we need because we have a problem if we delete the list and use again the element pointed by the list
+		if(head){ //we need because we have a problem if we delete the list and use again the element pointed by the list
 			bullt tmp = h;
 			h = h->next;  //ok also if h has one element
 			delete tmp;
