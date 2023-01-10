@@ -210,7 +210,7 @@ public:
      *
      * @return coins of player.
      */
-	int getCoins();
+	int getCoins() const;
     /**
      *
      * @return dir of player.
@@ -220,7 +220,7 @@ public:
      * Points of the player.
      * @return
      */
-	int getPoints();
+	int getPoints() const;
     /**
      * Life of player.
      * @return
@@ -274,15 +274,15 @@ public:
 	bullt explo_shoot(bullt tmp);
 
 	//get Powerups
-	Powerup getGun(); //gun
-	Powerup getShield(); //shield
-	Powerup getHP(); //HP
-	Powerup getArmor(); //Armor
-	Powerup getTeleportation(); //teleport
-	Powerup getBullets(); //bullets
-	Powerup getJumping(); //jump
-	Powerup getFly(); //fly
-	Powerup getExplo_Bullets(); //explosive bullets
+	Powerup getGun() const; //gun
+	Powerup getShield() const; //shield
+	Powerup getHP() const; //HP
+	Powerup getArmor() const; //Armor
+	Powerup getTeleportation() const; //teleport
+	Powerup getBullets() const; //bullets
+	Powerup getJumping() const; //jump
+	Powerup getFly() const; //fly
+	Powerup getExplo_Bullets() const; //explosive bullets
 
 	//set Powerups
 	void setGun(string g); //gun

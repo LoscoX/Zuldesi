@@ -284,7 +284,7 @@ int Player::getLife(){
 	return life;
 }
 
-int Player::getCoins(){
+int Player::getCoins() const{
 	return cash;
 }
 
@@ -292,7 +292,7 @@ int Player::getDir(){
 	return dir;
 }
 
-int Player::getPoints(){
+int Player::getPoints() const{
 	return points;
 }
 
@@ -378,31 +378,31 @@ void Player::setFlyActiveDuration(int val){
 //Power up
 
 //get Power-ups
-Powerup Player::getGun(){
+Powerup Player::getGun() const{
 	return gun;
 }
-Powerup Player::getShield(){
+Powerup Player::getShield() const{
 	return shield;
 }
-Powerup Player::getHP(){
+Powerup Player::getHP() const{
 	return hp;
 }
-Powerup Player::getArmor(){
+Powerup Player::getArmor() const{
 	return armor;
 }
-Powerup Player::getTeleportation(){
+Powerup Player::getTeleportation() const{
 	return teleportation; //teleport
 }
-Powerup Player::getBullets(){
+Powerup Player::getBullets() const{
 	return bullets; //bullets
 }
-Powerup Player::getJumping(){
+Powerup Player::getJumping() const{
 	return jumping; //jump
 }
-Powerup Player::getFly(){
+Powerup Player::getFly() const{
 	return fly; //fly
 }
-Powerup Player::getExplo_Bullets(){
+Powerup Player::getExplo_Bullets() const{
 	return explo_bullets; //explosive bullets
 }
 

@@ -54,13 +54,13 @@ public:
      * Restart the map.
      * @param difficulty
      */
-	void restartMap(int difficulty);
+	void restartMap();
     /**
      * Switch to the next map.
      * @param dir
      * @param difficulty
      */
-	void nextMap(int dir, int difficulty);
+	void nextMap(int dir);
     /**
      * Print the map.
      */
