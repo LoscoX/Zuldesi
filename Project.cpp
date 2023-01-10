@@ -20,7 +20,7 @@ using namespace std;
 int main(int argc, char ** argv) {
 	srand(time(0));
 	//initialize the screen
-	//sets up the memory and clears the screen
+	//sets up the memory and clears the screen 
 	initscr();
 	refresh();
 
