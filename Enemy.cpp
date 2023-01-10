@@ -11,17 +11,17 @@
 /*List of enemies
 Every enemy, when it dies, it gives to player a number of points proportional to number of life of enemy
 No gun type
-	0- sin movement (life = 5). There is a costant (mv) which determines the radius of the oscillation
-	1- sin movement with lift (life = 7). There is a constant (mv) which determines the height for the lifting
-	2- fixed lift (life = 7). There is a constant (mv) which determines the max height for the lifting
-	3- No fixed jump (life = 2). There is a constant (mv) which determines the height of the jump but the jump is dinamic
-	4- random movement (life = 3). Random movement in a constant neighborhood (mv)
-	5- smart movement (life = 2). It follows the player when it is sufficiently near to the enemy
+	0- sin movement (life = 2). There is a costant (mv) which determines the radius of the oscillation
+	1- sin movement with lift (life = 2). There is a constant (mv) which determines the height for the lifting
+	2- fixed lift (life = 3). There is a constant (mv) which determines the max height for the lifting
+	3- No fixed jump (life = 4). There is a constant (mv) which determines the height of the jump but the jump is dinamic
+	4- random movement (life = 5). Random movement in a constant neighborhood (mv)
+	5- smart movement (life = 5). It follows the player when it is sufficiently near to the enemy
 Gun type (If you touch them, nothing happens)
-	6- It's the enemy type0 but with gun
-	7- It's the enemy type5 but with gun
-	8- Enemy can't move but he can shoot, when the player reaches a specific place (life 5)
-	9- Is's the enemy type2 but with two guns
+	6- It's the enemy type0 but with gun (life 8)
+	7- It's the enemy type5 but with gun (life 8)
+	8- Enemy can't move but he can shoot, when the player reaches a specific place (life 8)
+	9- Is's the enemy type2 but with two guns (life 10)
 */
 
 //Enemy type 0
@@ -30,7 +30,7 @@ Enemy0::Enemy0(int y, int x, char c, int mv){
 	yLoc = y;
 	xLoc = x;
 	character = c;
-	life = 5;
+	life = 2;
 	xpern = x; //save coordinates
 	ypern = y; //save coordinates
 	cost = mv;
@@ -107,7 +107,7 @@ void Enemy0::updateCoordinates(int x,int y){ //update coordinates
 //Enemy type 1
 
 Enemy1::Enemy1(int y, int x, char c,int mv) : Enemy0(y,x,c,mv){
-	life = 7;
+	life = 2;
 	up = -1;
 }
 
@@ -152,7 +152,7 @@ bool Enemy1::ReachAngles(){
 //Enemy type 2
 
 Enemy2::Enemy2(int y, int x, char c,int mv) : Enemy0(y,x,c,mv){
-	life = 7;
+	life = 3;
 }
 
 Enemy2::Enemy2() : Enemy0(){
@@ -173,7 +173,7 @@ void Enemy2::movement(){
 //Enemy type 3
 
 Enemy3::Enemy3(int y, int x, char c,int mv) : Enemy0(y,x,c,mv){
-	life = 2;
+	life = 3;
 	conta = 1;
 	up = -1;
 }
@@ -207,7 +207,7 @@ int Enemy3::GetConta(){
 //Enemy type 4
 
 Enemy4::Enemy4(int y, int x, char c,int mv) : Enemy0(y,x,c,mv){
-	life = 3;
+	life = 4;
 	conta = 0; //handle delay of the movement
 }
 
@@ -225,7 +225,7 @@ void Enemy4::movement(){
 //Enemy type 5
 
 Enemy5::Enemy5(int y, int x, char c,int mv) : Enemy0(y,x,c,mv){
-	life = 2;
+	life = 5;
 }
 
 Enemy5::Enemy5() : Enemy0(){
@@ -239,7 +239,7 @@ void Enemy5::movement(int direction){
 //Enemy type 6
 
 Enemy6::Enemy6(int y, int x, char c,int mv) : Enemy0(y,x,c,mv){
-	life = 5;
+	life = 8;
 	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
 	conta = 0; //no shots
@@ -286,7 +286,7 @@ bullt Enemy6::Enemyshoot(bullt tmp){
 //Enemy type7
 
 Enemy7::Enemy7(int y, int x, char c,int mv) : Enemy6(y,x,c,mv){
-	life = 5;
+	life = 8;
 	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
 	conta = 0; //no shots
@@ -310,7 +310,7 @@ void Enemy7::movement(int direction){
 //Enemy type8
 
 Enemy8::Enemy8(int y, int x, char c,int mv) : Enemy6(y,x,c,mv){
-	life = 5;
+	life = 8;
 	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
 	conta = 0; //no shots
@@ -333,7 +333,7 @@ void Enemy8::movement(int direction){
 //Enemy type9
 
 Enemy9::Enemy9(int y, int x, char c,int mv) : Enemy6(y,x,c,mv){
-	life = 5;
+	life = 10;
 	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
 	conta = 0; //no shots

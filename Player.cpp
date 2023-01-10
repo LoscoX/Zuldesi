@@ -296,9 +296,6 @@ void Player::display(){ //display the character
 
 void Player::injury(){ //Injury
 	if(shield.getQnt() == 0 && !ACTIVE_ARMOR){ //check if the player has the shield and the armor
-		//mvwaddch(curwin,yLoc,xLoc,' ');
-		//xLoc = 20; //back to beginning
-		//yLoc = yMax - 2; //back to beginning
 		hp.setQnt(hp.getQnt()-1); // one point
 	}
 	else if(shield.getQnt() > 0 && !ACTIVE_ARMOR){ //check if the player has the shield but not the armor
