@@ -233,7 +233,6 @@ Enemy6::Enemy6(int y, int x, char c,int mv) : Enemy0(y,x,c,mv){
 	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
 	conta = 0; //no shots
-	gun = '-'; //gun
 }
 
 Enemy6::Enemy6() : Enemy0(){
@@ -280,7 +279,6 @@ Enemy7::Enemy7(int y, int x, char c,int mv) : Enemy6(y,x,c,mv){
 	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
 	conta = 0; //no shots
-	gun = '-'; //gun
 }
 
 Enemy7::Enemy7() : Enemy6(){
@@ -304,7 +302,6 @@ Enemy8::Enemy8(int y, int x, char c,int mv) : Enemy6(y,x,c,mv){
 	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
 	conta = 0; //no shots
-	gun = '-'; //gun
 }
 
 Enemy8::Enemy8() : Enemy6(){
@@ -327,7 +324,6 @@ Enemy9::Enemy9(int y, int x, char c,int mv) : Enemy6(y,x,c,mv){
 	bullet = Bullet(); //initialize the bullet
 	ind = 0; //no bullet
 	conta = 0; //no shots
-	gun = '-'; //gun
 }
 
 Enemy9::Enemy9() : Enemy6(){
