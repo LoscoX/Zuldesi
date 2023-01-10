@@ -121,13 +121,6 @@ int Player::getmv(){ //move the character with gun by user
 		if(ARMOR_ACTIVE_DURATION>0)ARMOR_ACTIVE_DURATION--; //if you have the armor actived, you have to decrement the time life of armor
 		else ACTIVE_ARMOR = false; //Your armor finishes its life
 	}
-	if(ACTIVE_FLY){ //check if you have actived your fly
-		if(FLY_ACTIVE_DURATION>0)FLY_ACTIVE_DURATION--; //if you have fly actived, you have to decrement the time life of fly
-		else{
-			ACTIVE_FLY = false; //Your fly finishes its life
-			yLoc=yMax-6; //come back to the floor when you end your fly (ground floor)
-		}
-	}
 	int choice = wgetch(curwin);
 	switch (choice){
 		case KEY_UP: //just go up
@@ -377,11 +370,20 @@ bullt Player::explo_shoot(bullt tmp){ //move exposive bullets
 bool Player::getActiveFly(){
 	return ACTIVE_FLY; //take active fly variable
 }
+void Player::setActiveFly(bool val){
+	ACTIVE_FLY = val; //set active fly variable
+}
 bool Player::getActiveJump(){
 	return activejump; //take active jump variable
 }
 int Player::getTELEPORT_DISTANCE(int i){
 	return TELEPORT_DISTANCE[i];
+}
+int Player::getFlyActiveDuration(){
+	return FLY_ACTIVE_DURATION; //take fly duration
+}
+void Player::setFlyActiveDuration(int val){
+	FLY_ACTIVE_DURATION = val; //set fly duration
 }
 
 //Power up

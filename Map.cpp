@@ -115,6 +115,8 @@ Map::Map(int difficulty){
 	enemies8 = NULL; //initialize the list
 	enemies9 = NULL; //initialize the list
 
+	difficulty = 1;
+
 	int k = difficulty; //handle the generation of enemies
 
 	n0 = k; //number of enemies of type 0
