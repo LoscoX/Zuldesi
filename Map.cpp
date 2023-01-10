@@ -19,7 +19,7 @@ Map::Map(int difficulty){
     for(int i=0; i<5; i++){ //fixed number of segments
         seg_list_ptr tmp = new segment_el; //add new segment
         tmp->id = numSeg++;
-        int x = rand()%82;//generate a random number between 0 and num_max of segments
+        int x = rand()%100;//generate a random number between 0 and num_max of segments
         tmp->seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/Segment_pieces/seg"+to_string(x)+".txt"); //map segments
         tmp->next = NULL;
         segtmp->next = tmp;
