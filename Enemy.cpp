@@ -81,22 +81,12 @@ void Enemy0::setSign(){
 	segno = segno * (-1); //change sign
 }
 
-int Enemy0::getXpern()
-{
-	return xpern;
-}
-
 char Enemy0::getChar(){
 	return character;
 }
 
 void Enemy0::setLife(int life){
 	this->life = life;
-}
-
-void Enemy0::setXpern(int x)
-{
-	xpern = x;
 }
 
 void Enemy0::updateCoordinates(int x,int y){ //update coordinates

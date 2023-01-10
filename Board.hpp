@@ -77,16 +77,7 @@ public:
      * @param y Height of the window.
      */
 	void initialize(int x,int y);
-    /**
-     *
-     * @return Height of the window.
-     */
-	int getHeight();
-    /**
-     *
-     * @return Width of the window.
-     */
-	int getWidth();
+
 protected:
     /**
      * Make the board with size parameters.

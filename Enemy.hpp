@@ -16,47 +16,144 @@
 
 class Enemy0{
 protected:
-	int segno; //change the movement
-	int xLoc,yLoc; //coordinates of the enemy
-	int life; //life
-	char character; //icon for the enemy
-	int xpern,ypern; //coordinates for the movement of the enemy
-	int cost; //radius of the movement
+    /**
+     * Change the movement.
+     */
+	int segno;
+    /**
+     * Coordinates of the enemy.
+     */
+	int xLoc,yLoc;
+    /**
+     * Life.
+     */
+	int life;
+    /**
+     * Icon for the enemy.
+     */
+	char character;
+    /**
+     * Coordinates for the movement of the enemy.
+     */
+	int xpern,ypern;
+    /**
+     * Radius of the movement.
+     */
+	int cost;
 public:
+
+    /**
+     * Constructor with coordinates.
+     * @param y
+     * @param x
+     * @param c
+     * @param mv
+     */
 	Enemy0(int y, int x, char c,int mv);
+    /**
+     * Default constractor.
+     */
 	Enemy0();
-	void movement(); //movement
-	void EnemyGoDown(); //fall
-	int getx(); //x coordinate of the enemy
-	int gety(); //y coordinate of the enemy
-	int getLife(); //enemy life
-	int getSign(); //enemy segn
-	char getChar(); //enemy symbol
-	void setSign(); //change enemy sign
-	void updateCoordinates(int x,int y); //update coordinates of enemy
-	int getXpern(); //take xpern
-	void setXpern(int x); //change xpern
-	void setLife(int life); //change life
-	void injury(); //damage
+
+    virtual /**
+     * Manage enemy movement.
+     */
+	void movement();
+    /**
+     * Manage enemy's gravity.
+     */
+	void EnemyGoDown();
+    /**
+     *
+     * @return x coordinate of the enemy.
+     */
+	int getx();
+    /**
+     *
+     * @return y coordinate of the enemy.
+     */
+	int gety();
+    /**
+     *
+     * @return Enemy life.
+     */
+	int getLife();
+    /**
+     *
+     * @return Enemy's sign.
+     */
+	int getSign();
+
+    /**
+     *
+     * @return Enemy's graphic displayed symbol.
+     */
+	char getChar();
+    /**
+     * Change enemy's sign.
+     */
+	void setSign();
+    /**
+     * Update coordinates of the enemy.
+     * @param x
+     * @param y
+     */
+	void updateCoordinates(int x,int y);
+    /**
+     *  Change life value.
+     * @param life
+     */
+	void setLife(int life);
+    /**
+     * give damage to the enemy.
+     */
+	void injury();
 };
 
 class Enemy1 : public Enemy0{
 protected:
-	int up; //direction of the lifting
+    /**
+     * Direction of the lifting.
+     */
+	int up;
 public:
+    /**
+     * Constructor with coordinates.
+     * @param y
+     * @param x
+     * @param c
+     * @param mv
+     */
 	Enemy1(int y, int x, char c, int mv);
+    /**
+     * Default constructor.
+     */
 	Enemy1();
-	void movement(); //modify the movement
-	void setUp(); //change the direction of the lifting
-	int getUp(); //take the direction of the lifting
-	bool ReachAngles(); //reach one of the two limits of the sin movement, you must go up (or down)
+    /**
+     * Edit the movement.
+     */
+	void movement() override;
+    /**
+     * Change the direction of the lifting.
+     */
+	void setUp();
+    /**
+     *
+     * @return Lifting's direction.
+     */
+	int getUp();
+    /**
+     * Reach one of the two limits of the sin movement, you must go up (or down).
+     * @return
+     */
+	bool ReachAngles();
 };
 
 class Enemy2 : public Enemy0{
 public:
 	Enemy2(int y, int x, char c, int mv);
 	Enemy2();
-	void movement(); //modify the movement
+	void movement() override; //modify the movement
 };
 
 
@@ -68,7 +165,7 @@ public:
 	Enemy3(int y, int x, char c, int mv);
 	Enemy3();
 	void SetJump(); //starts the jump
-	void movement(); //modify the movement
+	void movement() override; //modify the movement
 	int GetConta(); //take conta
 };
 
@@ -78,7 +175,7 @@ protected:
 public:
 	Enemy4(int y, int x, char c, int mv);
 	Enemy4();
-	void movement(); //modify the movement
+	void movement() override; //modify the movement
 };
 
 class Enemy5 : public Enemy0{
@@ -97,7 +194,7 @@ protected:
 public:
 	Enemy6(int y, int x, char c, int mv);
 	Enemy6();
-	void movement(); //modify the movement
+	void movement() override; //modify the movement
 	Bullet getBullet(); //take bullet
 	bullt setBullet(bullt tmp,int cod); //set bullet(remove one bullet)
 	bullt Enemyshoot(bullt tmp); //shooting
@@ -121,6 +218,6 @@ class Enemy9 : public Enemy6{
 public:
 	Enemy9(int y, int x, char c, int mv);
 	Enemy9();
-	void movement(); //modify the movement
+	void movement() override; //modify the movement
 };
 
