@@ -51,7 +51,7 @@ Game::Game(int height,int width){
 
 	//read from save file player powerups
 	ifstream save;
-	save.open("C:/Users/david/eclipse-workspace/Project/src/save.txt"); //open save text
+	save.open("save.txt"); //open save text
 	string line;
 	getline(save, line); //take the line
 	if(line != "-"){
@@ -126,18 +126,24 @@ void Game::restartMap(int difficulty){ //restart map
 	if(mapList->prev == NULL){ //first level
 		mapList->map = Map(difficulty);
 	}else{ //other levels
-		mapList = mapList->prev;
-		delete mapList->next;
-		mapList->next = new map_el;
-		mapList->next->prev = mapList;
-		mapList = mapList->next;
-		mapList->id=mapList->prev->id+1; //update ID
-		mapList->next=NULL;
-		mapList->map = Map(difficulty);
+		while(mapList->next!=NULL)
+            mapList=mapList->next;
+		while (mapList->prev!=NULL)
+		{
+			mapList=mapList->prev;
+			delete mapList->next;
+		}
+        delete mapList;
+        mapList = new map_el;
+        mapList->id=0;
+        mapList->prev=NULL;
+        mapList->next=NULL;
+        mapList->map = Map(difficulty);
 	}
 	matrix = mapList->map.toString();
 	//rearrange variable fort the game
 	xMin = 5;
+	player.updateCoordinates(0, (player.gety()-23)*-1);
 	time = 0;
 }
 
@@ -158,7 +164,7 @@ void Game::handleCoins(){
 
 void Game::save(){
 	ofstream save;
-	save.open("C:/Users/david/eclipse-workspace/Project/src/save.txt"); //open the file
+	save.open("save.txt"); //open the file
 	save << player.getGun().getName() << endl; //gun name
 	save << player.getBullets().getQnt() << endl; //bullets qnt
 	save << player.getExplo_Bullets().getQnt() << endl; //explo bullets qnt
@@ -280,12 +286,14 @@ void Game::nextMap(int dir, int difficulty = 0){//we call this when the player r
 			}
 			//restart also the variables of the game
 			xMin = 5;
+			player.updateCoordinates(0, (player.gety()-23)*-1);
 			time = 0;
 		}
 		else if(dir == 0){//left
 			if(mapList->prev != NULL){//if this is not the first map
 				mapList = mapList->prev;
 				xMin = mapList->map.get_trigger_end()-(player.getx()+3);
+				player.updateCoordinates(0, (player.gety()-23)*-1);
 				time = 0;
 				matrix = mapList->map.toString();
 			}
