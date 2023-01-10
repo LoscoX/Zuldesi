@@ -304,9 +304,26 @@ string* Map::toString(){ //build matrix
     mat = initializeEnemies(mat);
 
     //symbol for teleport points
-	mat[22][trigger_end] = 'X';
-	mat[22][trigger_start] = 'X';
-	mat[22][trigger_market] = 'X';
+	mat[23][trigger_start+1] = ' ';
+	mat[22][trigger_start+1] = '\\';
+	mat[23][trigger_start] = ' ';
+	mat[22][trigger_start] = '-';
+	mat[23][trigger_start-1] = '|';
+	mat[22][trigger_start-1] = '/';
+	
+	mat[23][trigger_market-1] = ' ';
+	mat[22][trigger_market-1] = '/';
+	mat[23][trigger_market] = ' ';
+	mat[22][trigger_market] = '-';
+	mat[23][trigger_market+1] = '|';
+	mat[22][trigger_market+1] = '\\';
+
+	mat[23][trigger_end-1] = ' ';
+	mat[22][trigger_end-1] = '/';
+	mat[23][trigger_end] = ' ';
+	mat[22][trigger_end] = '-';
+	mat[23][trigger_end+1] = '|';
+	mat[22][trigger_end+1] = '\\';
 
     return mat;
 }
