@@ -1,0 +1,98 @@
+.TH "Bullet" 3 "Tue Jan 10 2023" "Version 1" "Zuldesi" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Bullet
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBBullet\fP ()"
+.br
+.ti -1c
+.RI "\fBbullt\fP \fBhead_insert\fP (\fBbullt\fP h, int dir, int x, int y, int ind)"
+.br
+.ti -1c
+.RI "\fBbullt\fP \fBobj_remove\fP (\fBbullt\fP h, int e, bool head)"
+.br
+.ti -1c
+.RI "\fBbullt\fP \fBshoot\fP (\fBbullt\fP h, \fBbullt\fP \fBblt\fP)"
+.br
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBbullt\fP \fBblt\fP"
+.br
+.in -1c
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "Bullet::Bullet ()"
+Default constructor\&. 
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBbullt\fP Bullet::head_insert (\fBbullt\fP h, int dir, int x, int y, int ind)"
+Create new bullet and add it in the gun magazine\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.br
+\fIdir\fP 
+.br
+\fIx\fP 
+.br
+\fIy\fP 
+.br
+\fIind\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBbullt\fP Bullet::obj_remove (\fBbullt\fP h, int e, bool head)"
+Destroy the first bullet and remove from the gun magazine\&. Just if head is equal to true, memory will be cleaned\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.br
+\fIe\fP 
+.br
+\fIhead\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBbullt\fP Bullet::shoot (\fBbullt\fP h, \fBbullt\fP blt)"
+Handle the dynamic of the bullet\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.br
+\fIblt\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBbullt\fP Bullet::blt"
+List of bullet that you are using\&. 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Zuldesi from the source code\&.

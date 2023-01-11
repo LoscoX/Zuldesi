@@ -1,0 +1,1108 @@
+.TH "Map" 3 "Tue Jan 10 2023" "Version 1" "Zuldesi" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Map
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBMap\fP ()"
+.br
+.ti -1c
+.RI "\fBMap\fP (int difficulty)"
+.br
+.ti -1c
+.RI "bool \fBisSolid\fP (int x, int y)"
+.br
+.ti -1c
+.RI "bool \fBisDanger\fP (int x, int y)"
+.br
+.ti -1c
+.RI "int \fBgetDim_x\fP ()"
+.br
+.ti -1c
+.RI "int \fBgetDim_y\fP ()"
+.br
+.ti -1c
+.RI "string * \fBtoString\fP ()"
+.br
+.ti -1c
+.RI "int \fBget_trigger_start\fP ()"
+.br
+.ti -1c
+.RI "int \fBget_trigger_end\fP ()"
+.br
+.ti -1c
+.RI "int \fBget_trigger_market\fP ()"
+.br
+.ti -1c
+.RI "void \fBgenerationRandom\fP (int iniz_x, int iniz_y, int fin_x, int fin_y)"
+.br
+.ti -1c
+.RI "\fBmony\fP \fBhead_insert_coin\fP (\fBmony\fP h, int val, int x, int y)"
+.br
+.ti -1c
+.RI "bool \fBupdateCoins\fP (int x, int y)"
+.br
+.ti -1c
+.RI "\fBmony\fP \fBremoveCoins\fP (\fBmony\fP h, int cod)"
+.br
+.ti -1c
+.RI "\fBmony\fP \fBFallCoins\fP (\fBmony\fP h)"
+.br
+.ti -1c
+.RI "\fBlistenm0\fP \fBgetEnemies0\fP ()"
+.br
+.ti -1c
+.RI "\fBlistenm1\fP \fBgetEnemies1\fP ()"
+.br
+.ti -1c
+.RI "\fBlistenm2\fP \fBgetEnemies2\fP ()"
+.br
+.ti -1c
+.RI "\fBlistenm3\fP \fBgetEnemies3\fP ()"
+.br
+.ti -1c
+.RI "\fBlistenm4\fP \fBgetEnemies4\fP ()"
+.br
+.ti -1c
+.RI "\fBlistenm5\fP \fBgetEnemies5\fP ()"
+.br
+.ti -1c
+.RI "\fBlistenm6\fP \fBgetEnemies6\fP ()"
+.br
+.ti -1c
+.RI "\fBlistenm7\fP \fBgetEnemies7\fP ()"
+.br
+.ti -1c
+.RI "\fBlistenm8\fP \fBgetEnemies8\fP ()"
+.br
+.ti -1c
+.RI "\fBlistenm9\fP \fBgetEnemies9\fP ()"
+.br
+.ti -1c
+.RI "\fBlistenm0\fP \fBsetEnemies0\fP (\fBlistenm0\fP tmp, int cod)"
+.br
+.ti -1c
+.RI "\fBlistenm1\fP \fBsetEnemies1\fP (\fBlistenm1\fP tmp, int cod)"
+.br
+.ti -1c
+.RI "\fBlistenm2\fP \fBsetEnemies2\fP (\fBlistenm2\fP tmp, int cod)"
+.br
+.ti -1c
+.RI "\fBlistenm3\fP \fBsetEnemies3\fP (\fBlistenm3\fP tmp, int cod)"
+.br
+.ti -1c
+.RI "\fBlistenm4\fP \fBsetEnemies4\fP (\fBlistenm4\fP tmp, int cod)"
+.br
+.ti -1c
+.RI "\fBlistenm5\fP \fBsetEnemies5\fP (\fBlistenm5\fP tmp, int cod)"
+.br
+.ti -1c
+.RI "\fBlistenm6\fP \fBsetEnemies6\fP (\fBlistenm6\fP tmp, int cod)"
+.br
+.ti -1c
+.RI "\fBlistenm7\fP \fBsetEnemies7\fP (\fBlistenm7\fP tmp, int cod)"
+.br
+.ti -1c
+.RI "\fBlistenm8\fP \fBsetEnemies8\fP (\fBlistenm8\fP tmp, int cod)"
+.br
+.ti -1c
+.RI "\fBlistenm9\fP \fBsetEnemies9\fP (\fBlistenm9\fP tmp, int cod)"
+.br
+.ti -1c
+.RI "\fBlistenm0\fP \fBhead_insert_enemy0\fP (\fBlistenm0\fP h, \fBEnemy0\fP e, int val)"
+.br
+.ti -1c
+.RI "\fBlistenm1\fP \fBhead_insert_enemy1\fP (\fBlistenm1\fP h, \fBEnemy1\fP e, int val)"
+.br
+.ti -1c
+.RI "\fBlistenm2\fP \fBhead_insert_enemy2\fP (\fBlistenm2\fP h, \fBEnemy2\fP e, int val)"
+.br
+.ti -1c
+.RI "\fBlistenm3\fP \fBhead_insert_enemy3\fP (\fBlistenm3\fP h, \fBEnemy3\fP e, int val)"
+.br
+.ti -1c
+.RI "\fBlistenm4\fP \fBhead_insert_enemy4\fP (\fBlistenm4\fP h, \fBEnemy4\fP e, int val)"
+.br
+.ti -1c
+.RI "\fBlistenm5\fP \fBhead_insert_enemy5\fP (\fBlistenm5\fP h, \fBEnemy5\fP e, int val)"
+.br
+.ti -1c
+.RI "\fBlistenm6\fP \fBhead_insert_enemy6\fP (\fBlistenm6\fP h, \fBEnemy6\fP e, int val)"
+.br
+.ti -1c
+.RI "\fBlistenm7\fP \fBhead_insert_enemy7\fP (\fBlistenm7\fP h, \fBEnemy7\fP e, int val)"
+.br
+.ti -1c
+.RI "\fBlistenm8\fP \fBhead_insert_enemy8\fP (\fBlistenm8\fP h, \fBEnemy8\fP e, int val)"
+.br
+.ti -1c
+.RI "\fBlistenm9\fP \fBhead_insert_enemy9\fP (\fBlistenm9\fP h, \fBEnemy9\fP e, int val)"
+.br
+.ti -1c
+.RI "\fBlistenm0\fP \fBobj_remove_enemy0\fP (\fBlistenm0\fP h, int cod, bool head)"
+.br
+.ti -1c
+.RI "\fBlistenm1\fP \fBobj_remove_enemy1\fP (\fBlistenm1\fP h, int cod, bool head)"
+.br
+.ti -1c
+.RI "\fBlistenm2\fP \fBobj_remove_enemy2\fP (\fBlistenm2\fP h, int cod, bool head)"
+.br
+.ti -1c
+.RI "\fBlistenm3\fP \fBobj_remove_enemy3\fP (\fBlistenm3\fP h, int cod, bool head)"
+.br
+.ti -1c
+.RI "\fBlistenm4\fP \fBobj_remove_enemy4\fP (\fBlistenm4\fP h, int cod, bool head)"
+.br
+.ti -1c
+.RI "\fBlistenm5\fP \fBobj_remove_enemy5\fP (\fBlistenm5\fP h, int cod, bool head)"
+.br
+.ti -1c
+.RI "\fBlistenm6\fP \fBobj_remove_enemy6\fP (\fBlistenm6\fP h, int cod, bool head)"
+.br
+.ti -1c
+.RI "\fBlistenm7\fP \fBobj_remove_enemy7\fP (\fBlistenm7\fP h, int cod, bool head)"
+.br
+.ti -1c
+.RI "\fBlistenm8\fP \fBobj_remove_enemy8\fP (\fBlistenm8\fP h, int cod, bool head)"
+.br
+.ti -1c
+.RI "\fBlistenm9\fP \fBobj_remove_enemy9\fP (\fBlistenm9\fP h, int cod, bool head)"
+.br
+.ti -1c
+.RI "string * \fBinitializeEnemies\fP (string *mat)"
+.br
+.ti -1c
+.RI "\fBmony\fP \fBgetCoins\fP ()"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "int \fBn0\fP"
+.br
+.ti -1c
+.RI "int \fBn1\fP"
+.br
+.ti -1c
+.RI "int \fBn2\fP"
+.br
+.ti -1c
+.RI "int \fBn3\fP"
+.br
+.ti -1c
+.RI "int \fBn4\fP"
+.br
+.ti -1c
+.RI "int \fBn5\fP"
+.br
+.ti -1c
+.RI "int \fBn6\fP"
+.br
+.ti -1c
+.RI "int \fBn7\fP"
+.br
+.ti -1c
+.RI "int \fBn8\fP"
+.br
+.ti -1c
+.RI "int \fBn9\fP"
+.br
+.ti -1c
+.RI "int \fBnc\fP"
+.br
+.ti -1c
+.RI "int \fBdim_x\fP"
+.br
+.ti -1c
+.RI "int \fBdim_y\fP"
+.br
+.ti -1c
+.RI "int \fBtrigger_start\fP"
+.br
+.ti -1c
+.RI "int \fBtrigger_end\fP"
+.br
+.ti -1c
+.RI "int \fBtrigger_market\fP"
+.br
+.ti -1c
+.RI "\fBseg_list_ptr\fP \fBsegList\fP"
+.br
+.ti -1c
+.RI "int \fBgen_x\fP"
+.br
+.ti -1c
+.RI "int \fBgen_y\fP"
+.br
+.ti -1c
+.RI "\fBlistenm0\fP \fBenemies0\fP"
+.br
+.ti -1c
+.RI "\fBlistenm1\fP \fBenemies1\fP"
+.br
+.ti -1c
+.RI "\fBlistenm2\fP \fBenemies2\fP"
+.br
+.ti -1c
+.RI "\fBlistenm3\fP \fBenemies3\fP"
+.br
+.ti -1c
+.RI "\fBlistenm4\fP \fBenemies4\fP"
+.br
+.ti -1c
+.RI "\fBlistenm5\fP \fBenemies5\fP"
+.br
+.ti -1c
+.RI "\fBlistenm6\fP \fBenemies6\fP"
+.br
+.ti -1c
+.RI "\fBlistenm7\fP \fBenemies7\fP"
+.br
+.ti -1c
+.RI "\fBlistenm8\fP \fBenemies8\fP"
+.br
+.ti -1c
+.RI "\fBlistenm9\fP \fBenemies9\fP"
+.br
+.ti -1c
+.RI "\fBmony\fP \fBcoins\fP"
+.br
+.in -1c
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "Map::Map ()"
+Constructor\&. 
+.SS "Map::Map (int difficulty)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIdifficulty\fP : map depends on difficulty\&. 
+.RE
+.PP
+
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBmony\fP Map::FallCoins (\fBmony\fP h)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+avoid coins in the air\&. 
+.RE
+.PP
+
+.SS "void Map::generationRandom (int iniz_x, int iniz_y, int fin_x, int fin_y)"
+generate two admissible coordinates\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIiniz_x\fP 
+.br
+\fIiniz_y\fP 
+.br
+\fIfin_x\fP 
+.br
+\fIfin_y\fP 
+.RE
+.PP
+
+.SS "int Map::get_trigger_end ()"
+
+.PP
+\fBReturns\fP
+.RS 4
+end trigger\&. 
+.RE
+.PP
+
+.SS "int Map::get_trigger_market ()"
+
+.PP
+\fBReturns\fP
+.RS 4
+market trigger\&. 
+.RE
+.PP
+
+.SS "int Map::get_trigger_start ()"
+
+.PP
+\fBReturns\fP
+.RS 4
+start trigger\&. 
+.RE
+.PP
+
+.SS "\fBmony\fP Map::getCoins ()"
+Take coins\&. 
+.PP
+\fBReturns\fP
+.RS 4
+coins\&. 
+.RE
+.PP
+
+.SS "int Map::getDim_x ()"
+
+.PP
+\fBReturns\fP
+.RS 4
+x dimension\&. 
+.RE
+.PP
+
+.SS "int Map::getDim_y ()"
+
+.PP
+\fBReturns\fP
+.RS 4
+y dimension\&. 
+.RE
+.PP
+
+.SS "\fBlistenm0\fP Map::getEnemies0 ()"
+Enemies\&. 
+.PP
+\fBReturns\fP
+.RS 4
+list of enemies type 0\&. 
+.RE
+.PP
+
+.SS "\fBlistenm1\fP Map::getEnemies1 ()"
+
+.PP
+\fBReturns\fP
+.RS 4
+list of enemies type 1\&. 
+.RE
+.PP
+
+.SS "\fBlistenm2\fP Map::getEnemies2 ()"
+
+.PP
+\fBReturns\fP
+.RS 4
+list of enemies type 2\&. 
+.RE
+.PP
+
+.SS "\fBlistenm3\fP Map::getEnemies3 ()"
+
+.PP
+\fBReturns\fP
+.RS 4
+list of enemies type 3\&. 
+.RE
+.PP
+
+.SS "\fBlistenm4\fP Map::getEnemies4 ()"
+
+.PP
+\fBReturns\fP
+.RS 4
+list of enemies type 4\&. 
+.RE
+.PP
+
+.SS "\fBlistenm5\fP Map::getEnemies5 ()"
+
+.PP
+\fBReturns\fP
+.RS 4
+list of enemies type 5\&. 
+.RE
+.PP
+
+.SS "\fBlistenm6\fP Map::getEnemies6 ()"
+
+.PP
+\fBReturns\fP
+.RS 4
+list of enemies type 6\&. 
+.RE
+.PP
+
+.SS "\fBlistenm7\fP Map::getEnemies7 ()"
+
+.PP
+\fBReturns\fP
+.RS 4
+list of enemies type 7\&. 
+.RE
+.PP
+
+.SS "\fBlistenm8\fP Map::getEnemies8 ()"
+
+.PP
+\fBReturns\fP
+.RS 4
+list of enemies type 8\&. 
+.RE
+.PP
+
+.SS "\fBlistenm9\fP Map::getEnemies9 ()"
+
+.PP
+\fBReturns\fP
+.RS 4
+list of enemies type 9\&. 
+.RE
+.PP
+
+.SS "\fBmony\fP Map::head_insert_coin (\fBmony\fP h, int val, int x, int y)"
+
+.PP
+\fBReturns\fP
+.RS 4
+randomly a segment to generate\&. Coins\&. 
+.RE
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.br
+\fIval\fP 
+.br
+\fIx\fP 
+.br
+\fIy\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+insert one coin in the list\&. 
+.RE
+.PP
+
+.SS "\fBlistenm0\fP Map::head_insert_enemy0 (\fBlistenm0\fP h, \fBEnemy0\fP e, int val)"
+Add one enemy type0\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.br
+\fIe\fP 
+.br
+\fIval\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBlistenm1\fP Map::head_insert_enemy1 (\fBlistenm1\fP h, \fBEnemy1\fP e, int val)"
+Add one enemy type1\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.br
+\fIe\fP 
+.br
+\fIval\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBlistenm2\fP Map::head_insert_enemy2 (\fBlistenm2\fP h, \fBEnemy2\fP e, int val)"
+Add one enemy type2\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.br
+\fIe\fP 
+.br
+\fIval\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBlistenm3\fP Map::head_insert_enemy3 (\fBlistenm3\fP h, \fBEnemy3\fP e, int val)"
+Add one enemy type3\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.br
+\fIe\fP 
+.br
+\fIval\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBlistenm4\fP Map::head_insert_enemy4 (\fBlistenm4\fP h, \fBEnemy4\fP e, int val)"
+Add one enemy type4\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.br
+\fIe\fP 
+.br
+\fIval\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBlistenm5\fP Map::head_insert_enemy5 (\fBlistenm5\fP h, \fBEnemy5\fP e, int val)"
+Add one enemy type5\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.br
+\fIe\fP 
+.br
+\fIval\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBlistenm6\fP Map::head_insert_enemy6 (\fBlistenm6\fP h, \fBEnemy6\fP e, int val)"
+Add one enemy type6\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.br
+\fIe\fP 
+.br
+\fIval\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBlistenm7\fP Map::head_insert_enemy7 (\fBlistenm7\fP h, \fBEnemy7\fP e, int val)"
+Add one enemy type7\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.br
+\fIe\fP 
+.br
+\fIval\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBlistenm8\fP Map::head_insert_enemy8 (\fBlistenm8\fP h, \fBEnemy8\fP e, int val)"
+Add one enemy type8\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.br
+\fIe\fP 
+.br
+\fIval\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBlistenm9\fP Map::head_insert_enemy9 (\fBlistenm9\fP h, \fBEnemy9\fP e, int val)"
+Add one enemy type9\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.br
+\fIe\fP 
+.br
+\fIval\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "string * Map::initializeEnemies (string * mat)"
+Initialize enemies\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fImat\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "bool Map::isDanger (int x, int y)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIx\fP 
+.br
+\fIy\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+check if your movement is dangerous\&. 
+.RE
+.PP
+
+.SS "bool Map::isSolid (int x, int y)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIx\fP 
+.br
+\fIy\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+check if your movement is right within the respect of structures of map\&. 
+.RE
+.PP
+
+.SS "\fBlistenm0\fP Map::obj_remove_enemy0 (\fBlistenm0\fP h, int cod, bool head)"
+delete one enemy type0 (head == true, clean memory when delete an element in the head, otherwise not) 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.br
+\fIcod\fP 
+.br
+\fIhead\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBlistenm1\fP Map::obj_remove_enemy1 (\fBlistenm1\fP h, int cod, bool head)"
+delete one enemy type1 (head == true, clean memory when delete an element in the head, otherwise not) 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.br
+\fIcod\fP 
+.br
+\fIhead\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBlistenm2\fP Map::obj_remove_enemy2 (\fBlistenm2\fP h, int cod, bool head)"
+delete one enemy type2 (head == true, clean memory when delete an element in the head, otherwise not) 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.br
+\fIcod\fP 
+.br
+\fIhead\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBlistenm3\fP Map::obj_remove_enemy3 (\fBlistenm3\fP h, int cod, bool head)"
+delete one enemy type3(head == true, clean memory when delete an element in the head, otherwise not) 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.br
+\fIcod\fP 
+.br
+\fIhead\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBlistenm4\fP Map::obj_remove_enemy4 (\fBlistenm4\fP h, int cod, bool head)"
+delete one enemy type4 (head == true, clean memory when delete an element in the head, otherwise not) 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.br
+\fIcod\fP 
+.br
+\fIhead\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBlistenm5\fP Map::obj_remove_enemy5 (\fBlistenm5\fP h, int cod, bool head)"
+delete one enemy type5 (head == true, clean memory when delete an element in the head, otherwise not) 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.br
+\fIcod\fP 
+.br
+\fIhead\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBlistenm6\fP Map::obj_remove_enemy6 (\fBlistenm6\fP h, int cod, bool head)"
+delete one enemy type6 (head == true, clean memory when delete an element in the head, otherwise not) 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.br
+\fIcod\fP 
+.br
+\fIhead\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBlistenm7\fP Map::obj_remove_enemy7 (\fBlistenm7\fP h, int cod, bool head)"
+delete one enemy type7 (head == true, clean memory when delete an element in the head, otherwise not) 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.br
+\fIcod\fP 
+.br
+\fIhead\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBlistenm8\fP Map::obj_remove_enemy8 (\fBlistenm8\fP h, int cod, bool head)"
+delete one enemy type8 (head == true, clean memory when delete an element in the head, otherwise not) 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.br
+\fIcod\fP 
+.br
+\fIhead\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBlistenm9\fP Map::obj_remove_enemy9 (\fBlistenm9\fP h, int cod, bool head)"
+delete one enemy type9 (head == true, clean memory when delete an element in the head, otherwise not) 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.br
+\fIcod\fP 
+.br
+\fIhead\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBmony\fP Map::removeCoins (\fBmony\fP h, int cod)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.br
+\fIcod\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+remove one coin\&. 
+.RE
+.PP
+
+.SS "\fBlistenm0\fP Map::setEnemies0 (\fBlistenm0\fP tmp, int cod)"
+Update list of enemies type 0\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItmp\fP 
+.br
+\fIcod\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBlistenm1\fP Map::setEnemies1 (\fBlistenm1\fP tmp, int cod)"
+Update list of enemies type 0\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItmp\fP 
+.br
+\fIcod\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBlistenm2\fP Map::setEnemies2 (\fBlistenm2\fP tmp, int cod)"
+Update list of enemies type 0\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItmp\fP 
+.br
+\fIcod\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBlistenm3\fP Map::setEnemies3 (\fBlistenm3\fP tmp, int cod)"
+Update list of enemies type 0\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItmp\fP 
+.br
+\fIcod\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBlistenm4\fP Map::setEnemies4 (\fBlistenm4\fP tmp, int cod)"
+Update list of enemies type 0\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItmp\fP 
+.br
+\fIcod\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBlistenm5\fP Map::setEnemies5 (\fBlistenm5\fP tmp, int cod)"
+Update list of enemies type 0\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItmp\fP 
+.br
+\fIcod\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBlistenm6\fP Map::setEnemies6 (\fBlistenm6\fP tmp, int cod)"
+Update list of enemies type 0\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItmp\fP 
+.br
+\fIcod\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBlistenm7\fP Map::setEnemies7 (\fBlistenm7\fP tmp, int cod)"
+Update list of enemies type 0\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItmp\fP 
+.br
+\fIcod\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBlistenm8\fP Map::setEnemies8 (\fBlistenm8\fP tmp, int cod)"
+Update list of enemies type 0\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItmp\fP 
+.br
+\fIcod\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBlistenm9\fP Map::setEnemies9 (\fBlistenm9\fP tmp, int cod)"
+Update list of enemies type 0\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItmp\fP 
+.br
+\fIcod\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "string * Map::toString ()"
+
+.PP
+\fBReturns\fP
+.RS 4
+Matrix of the map\&. 
+.RE
+.PP
+
+.SS "bool Map::updateCoins (int x, int y)"
+
+.PP
+\fBParameters\fP
+.RS 4
+\fIx\fP 
+.br
+\fIy\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+check if one coin has to be removed\&. 
+.RE
+.PP
+
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBmony\fP Map::coins\fC [protected]\fP"
+Coins\&. 
+.SS "int Map::dim_x\fC [protected]\fP"
+\fBMap\fP size\&. 
+.SS "\fBlistenm0\fP Map::enemies0\fC [protected]\fP"
+Enemies\&. List of enemies type 0l 
+.SS "\fBlistenm1\fP Map::enemies1\fC [protected]\fP"
+List of type 1 enemies\&. 
+.SS "\fBlistenm2\fP Map::enemies2\fC [protected]\fP"
+List of type 2 enemies\&. 
+.SS "\fBlistenm3\fP Map::enemies3\fC [protected]\fP"
+List of type 3 enemies\&. 
+.SS "\fBlistenm4\fP Map::enemies4\fC [protected]\fP"
+List of type 4 enemies\&. 
+.SS "\fBlistenm5\fP Map::enemies5\fC [protected]\fP"
+List of type 5 enemies\&. 
+.SS "\fBlistenm6\fP Map::enemies6\fC [protected]\fP"
+List of type 6 enemies\&. 
+.SS "\fBlistenm7\fP Map::enemies7\fC [protected]\fP"
+List of type 7 enemies\&. 
+.SS "\fBlistenm8\fP Map::enemies8\fC [protected]\fP"
+List of type 8 enemies\&. 
+.SS "\fBlistenm9\fP Map::enemies9\fC [protected]\fP"
+List of type 9 enemies\&. 
+.SS "int Map::gen_x\fC [protected]\fP"
+Variables enemies and coins generation\&. 
+.SS "int Map::n0\fC [protected]\fP"
+number of enemies\&. 
+.SS "int Map::nc\fC [protected]\fP"
+coins quantity\&. 
+.SS "\fBseg_list_ptr\fP Map::segList\fC [protected]\fP"
+List of segments\&. 
+.SS "int Map::trigger_market\fC [protected]\fP"
+Market level trigger\&. 
+.SS "int Map::trigger_start\fC [protected]\fP"
+Trigger points (to pass from one map to another one)\&. 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Zuldesi from the source code\&.
