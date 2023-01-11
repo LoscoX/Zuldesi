@@ -1,0 +1,694 @@
+.TH "Game" 3 "Tue Jan 10 2023" "Version 1" "Zuldesi" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Game
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBGame\fP (int height, int width)"
+.br
+.ti -1c
+.RI "void \fBrestartMap\fP (int \fBdifficulty\fP)"
+.br
+.ti -1c
+.RI "void \fBnextMap\fP (int dir, int \fBdifficulty\fP)"
+.br
+.ti -1c
+.RI "void \fBPrintMap\fP ()"
+.br
+.ti -1c
+.RI "void \fBupdateState\fP ()"
+.br
+.ti -1c
+.RI "void \fBredraw\fP ()"
+.br
+.ti -1c
+.RI "bool \fBisOver\fP ()"
+.br
+.ti -1c
+.RI "void \fBinitializePowerUp\fP ()"
+.br
+.ti -1c
+.RI "void \fBdrawPowerUp\fP (\fBPowerup\fP pwp[])"
+.br
+.ti -1c
+.RI "void \fBdeletePowerup\fP (\fBPowerup\fP pwp[])"
+.br
+.ti -1c
+.RI "void \fBmarket\fP ()"
+.br
+.ti -1c
+.RI "void \fBmarket_build\fP ()"
+.br
+.ti -1c
+.RI "void \fBdrawDescription\fP (int i)"
+.br
+.ti -1c
+.RI "void \fBdeleteDescription\fP (int i)"
+.br
+.ti -1c
+.RI "void \fBPlayerCanMove\fP (int choice)"
+.br
+.ti -1c
+.RI "void \fBPlayerCanFly\fP (int choice)"
+.br
+.ti -1c
+.RI "void \fBEnemy0CanMove\fP (\fBlistenm0\fP h)"
+.br
+.ti -1c
+.RI "void \fBEnemy1CanMove\fP (\fBlistenm1\fP h)"
+.br
+.ti -1c
+.RI "void \fBEnemy2CanMove\fP (\fBlistenm2\fP h)"
+.br
+.ti -1c
+.RI "void \fBEnemy3CanMove\fP (\fBlistenm3\fP h)"
+.br
+.ti -1c
+.RI "void \fBEnemy4CanMove\fP (\fBlistenm4\fP h)"
+.br
+.ti -1c
+.RI "void \fBEnemy5CanMove\fP (\fBlistenm5\fP h)"
+.br
+.ti -1c
+.RI "void \fBEnemy6CanMove\fP (\fBlistenm6\fP h)"
+.br
+.ti -1c
+.RI "void \fBEnemy7CanMove\fP (\fBlistenm7\fP h)"
+.br
+.ti -1c
+.RI "void \fBEnemy8CanMove\fP (\fBlistenm8\fP h)"
+.br
+.ti -1c
+.RI "void \fBEnemy9CanMove\fP (\fBlistenm9\fP h)"
+.br
+.ti -1c
+.RI "void \fBmapMovement\fP ()"
+.br
+.ti -1c
+.RI "void \fBenemyMovement\fP ()"
+.br
+.ti -1c
+.RI "void \fBPlayerDown\fP ()"
+.br
+.ti -1c
+.RI "int \fBdirectionSmartEnemy5\fP (\fBEnemy5\fP e)"
+.br
+.ti -1c
+.RI "int \fBdirectionSmartEnemy7\fP (\fBEnemy7\fP e)"
+.br
+.ti -1c
+.RI "int \fBdirectionSmartEnemy8\fP (\fBEnemy8\fP e)"
+.br
+.ti -1c
+.RI "void \fBdisplayLife\fP ()"
+.br
+.ti -1c
+.RI "void \fBdisplayCoins\fP ()"
+.br
+.ti -1c
+.RI "void \fBdisplayGame\fP ()"
+.br
+.ti -1c
+.RI "void \fBdisplayBullets\fP ()"
+.br
+.ti -1c
+.RI "void \fBdisplayPoints\fP ()"
+.br
+.ti -1c
+.RI "void \fBdisplayMarket\fP ()"
+.br
+.ti -1c
+.RI "void \fBdisplayPowerup\fP ()"
+.br
+.ti -1c
+.RI "void \fBinteraction\fP (\fBEnemy0\fP e)"
+.br
+.ti -1c
+.RI "bool \fBenemydeath\fP (\fBbullt\fP tmp)"
+.br
+.ti -1c
+.RI "bool \fBenemydeath2\fP (\fBbullt\fP tmp)"
+.br
+.ti -1c
+.RI "bool \fBinteractionBullet\fP (\fBbullt\fP tmp)"
+.br
+.ti -1c
+.RI "void \fBshooting\fP ()"
+.br
+.ti -1c
+.RI "\fBbullt\fP \fBdeletePlayerBullets\fP (\fBbullt\fP tmp)"
+.br
+.ti -1c
+.RI "\fBbullt\fP \fBdeletePlayerExplosiveBullets\fP (\fBbullt\fP tmp)"
+.br
+.ti -1c
+.RI "\fBbullt\fP \fBdeleteEnemy6Bullets\fP (\fBbullt\fP tmp, \fBlistenm6\fP e)"
+.br
+.ti -1c
+.RI "\fBbullt\fP \fBdeleteEnemy7Bullets\fP (\fBbullt\fP tmp, \fBlistenm7\fP e)"
+.br
+.ti -1c
+.RI "\fBbullt\fP \fBdeleteEnemy8Bullets\fP (\fBbullt\fP tmp, \fBlistenm8\fP e)"
+.br
+.ti -1c
+.RI "\fBbullt\fP \fBdeleteEnemy9Bullets\fP (\fBbullt\fP tmp, \fBlistenm9\fP e)"
+.br
+.ti -1c
+.RI "void \fBhandleCoins\fP ()"
+.br
+.ti -1c
+.RI "void \fBhandleMaps\fP ()"
+.br
+.ti -1c
+.RI "void \fBhandleDisplay\fP ()"
+.br
+.ti -1c
+.RI "void \fBUpdateBoard\fP ()"
+.br
+.ti -1c
+.RI "void \fBupdateDifficulty\fP ()"
+.br
+.ti -1c
+.RI "void \fBsave\fP () const"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBPowerup\fP \fBspawn_powerup\fP [3]"
+.br
+.ti -1c
+.RI "\fBPowerup\fP \fBguns\fP [NUM_GUNS]"
+.br
+.ti -1c
+.RI "\fBPowerup\fP \fBbonus\fP [NUM_BONUS]"
+.br
+.ti -1c
+.RI "\fBPowerup\fP \fBactive\fP [NUM_ACTIVE]"
+.br
+.ti -1c
+.RI "int \fBxMin\fP"
+.br
+.ti -1c
+.RI "int \fBHEIGHT_MARKET\fP"
+.br
+.ti -1c
+.RI "int \fBdraw_cost1\fP"
+.br
+.ti -1c
+.RI "int \fBdraw_cost2\fP"
+.br
+.ti -1c
+.RI "int \fBdraw_cost3\fP"
+.br
+.ti -1c
+.RI "bool \fBMarket_Active\fP"
+.br
+.ti -1c
+.RI "bool \fBMarket_Build\fP"
+.br
+.ti -1c
+.RI "bool \fBbought1\fP"
+.br
+.ti -1c
+.RI "bool \fBbought2\fP"
+.br
+.ti -1c
+.RI "bool \fBbought3\fP"
+.br
+.ti -1c
+.RI "int \fBtime\fP"
+.br
+.ti -1c
+.RI "int \fBdifficulty\fP"
+.br
+.ti -1c
+.RI "\fBBoard\fP \fBboard\fP"
+.br
+.ti -1c
+.RI "\fBPlayer\fP \fBplayer\fP"
+.br
+.ti -1c
+.RI "string * \fBmatrix\fP {}"
+.br
+.ti -1c
+.RI "bool \fBgame_over\fP"
+.br
+.ti -1c
+.RI "\fBmap_list\fP \fBmapList\fP"
+.br
+.in -1c
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "Game::Game (int height, int width)"
+Constructor with parameters\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIheight\fP 
+.br
+\fIwidth\fP 
+.RE
+.PP
+
+.SH "Member Function Documentation"
+.PP 
+.SS "void Game::deleteDescription (int i)"
+Remove power's up description\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIi\fP 
+.RE
+.PP
+
+.SS "\fBbullt\fP Game::deleteEnemy6Bullets (\fBbullt\fP tmp, \fBlistenm6\fP e)"
+Delete \fBEnemy6\fP's bullets\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItmp\fP 
+.br
+\fIe\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBbullt\fP Game::deleteEnemy7Bullets (\fBbullt\fP tmp, \fBlistenm7\fP e)"
+Delete \fBEnemy7\fP's bullets\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItmp\fP 
+.br
+\fIe\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBbullt\fP Game::deleteEnemy8Bullets (\fBbullt\fP tmp, \fBlistenm8\fP e)"
+Delete \fBEnemy8\fP's bullets\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItmp\fP 
+.br
+\fIe\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBbullt\fP Game::deleteEnemy9Bullets (\fBbullt\fP tmp, \fBlistenm9\fP e)"
+Delete \fBEnemy9\fP's bullets\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItmp\fP 
+.br
+\fIe\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBbullt\fP Game::deletePlayerBullets (\fBbullt\fP tmp)"
+Delete bullets of the \fBPlayer\fP\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItmp\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "\fBbullt\fP Game::deletePlayerExplosiveBullets (\fBbullt\fP tmp)"
+Delete explosive bullets of the \fBPlayer\fP\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItmp\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "void Game::deletePowerup (\fBPowerup\fP pwp[])"
+Delete power-up\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIpwp\fP 
+.RE
+.PP
+
+.SS "int Game::directionSmartEnemy5 (\fBEnemy5\fP e)"
+Handle the direction of the enemy based on the position of the player\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIe\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "int Game::directionSmartEnemy7 (\fBEnemy7\fP e)"
+Handle the direction of the enemy based on the position of the player\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIe\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "int Game::directionSmartEnemy8 (\fBEnemy8\fP e)"
+Handle the direction of the enemy based on the position of the player\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIe\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "void Game::displayBullets ()"
+Display bullets quantity parameter user interface\&. 
+.SS "void Game::displayCoins ()"
+Display wallet parameter user interface\&. 
+.SS "void Game::displayGame ()"
+Display title user interface\&. 
+.SS "void Game::displayLife ()"
+Graphic function\&. Display life parameter user interface\&. 
+.SS "void Game::displayMarket ()"
+Display market title user interface\&. 
+.SS "void Game::displayPoints ()"
+Display points parameter user interface\&. 
+.SS "void Game::displayPowerup ()"
+Display power-up user interface\&. 
+.SS "void Game::drawDescription (int i)"
+Write power up's description\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIi\fP 
+.RE
+.PP
+
+.SS "void Game::drawPowerUp (\fBPowerup\fP pwp[])"
+Draw power-up\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIpwp\fP 
+.RE
+.PP
+
+.SS "void Game::Enemy0CanMove (\fBlistenm0\fP h)"
+\fBGame\fP interaction between enemy0 and structure map\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.RE
+.PP
+
+.SS "void Game::Enemy1CanMove (\fBlistenm1\fP h)"
+\fBGame\fP interaction between enemy1 and structure map\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.RE
+.PP
+
+.SS "void Game::Enemy2CanMove (\fBlistenm2\fP h)"
+\fBGame\fP interaction between enemy2 and structure map\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.RE
+.PP
+
+.SS "void Game::Enemy3CanMove (\fBlistenm3\fP h)"
+\fBGame\fP interaction between enemy3 and structure map\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.RE
+.PP
+
+.SS "void Game::Enemy4CanMove (\fBlistenm4\fP h)"
+\fBGame\fP interaction between enemy4 and structure map\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.RE
+.PP
+
+.SS "void Game::Enemy5CanMove (\fBlistenm5\fP h)"
+\fBGame\fP interaction between enemy5 and structure map\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.RE
+.PP
+
+.SS "void Game::Enemy6CanMove (\fBlistenm6\fP h)"
+\fBGame\fP interaction between enemy6 and structure map\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.RE
+.PP
+
+.SS "void Game::Enemy7CanMove (\fBlistenm7\fP h)"
+\fBGame\fP interaction between enemy7 and structure map\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.RE
+.PP
+
+.SS "void Game::Enemy8CanMove (\fBlistenm8\fP h)"
+\fBGame\fP interaction between enemy8 and structure map\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.RE
+.PP
+
+.SS "void Game::Enemy9CanMove (\fBlistenm9\fP h)"
+\fBGame\fP interaction between enemy9 and structure map\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIh\fP 
+.RE
+.PP
+
+.SS "bool Game::enemydeath (\fBbullt\fP tmp)"
+Enemy death for bullets\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItmp\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "bool Game::enemydeath2 (\fBbullt\fP tmp)"
+Enemy death for explosive bullets\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItmp\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "void Game::enemyMovement ()"
+Enemies movement\&. 
+.SS "void Game::handleCoins ()"
+Handle coins part\&. 
+.SS "void Game::handleDisplay ()"
+Handle displacement\&. 
+.SS "void Game::handleMaps ()"
+Handle maps part, market part\&. 
+.SS "void Game::initializePowerUp ()"
+Market function\&. Initialize power-up\&. 
+.SS "void Game::interaction (\fBEnemy0\fP e)"
+function for collision \fBGame\fP interaction between Enemy without gun and \fBPlayer\fP\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIe\fP 
+.RE
+.PP
+
+.SS "bool Game::interactionBullet (\fBbullt\fP tmp)"
+Function for bullets collision\&. \fBGame\fP interaction between Enemy with gun and \fBPlayer\fP\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItmp\fP 
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.SS "bool Game::isOver ()"
+
+.PP
+\fBReturns\fP
+.RS 4
+If the game is over\&. 
+.RE
+.PP
+
+.SS "void Game::mapMovement ()"
+\fBMap\fP movement\&. 
+.SS "void Game::market ()"
+Activate market\&. 
+.SS "void Game::market_build ()"
+Build market\&. 
+.SS "void Game::nextMap (int dir, int difficulty)"
+Switch to the next map\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIdir\fP 
+.br
+\fIdifficulty\fP 
+.RE
+.PP
+
+.SS "void Game::PlayerCanFly (int choice)"
+\fBGame\fP interaction between player and structure map when you fly\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIchoice\fP 
+.RE
+.PP
+
+.SS "void Game::PlayerCanMove (int choice)"
+Function for the movement \fBGame\fP interaction between player and structure map\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIchoice\fP 
+.RE
+.PP
+
+.SS "void Game::PlayerDown ()"
+Manage player's gravity\&. 
+.SS "void Game::PrintMap ()"
+Print the map\&. 
+.SS "void Game::redraw ()"
+Refresh the board\&. 
+.SS "void Game::restartMap (int difficulty)"
+Function for the map\&. Restart the map\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIdifficulty\fP 
+.RE
+.PP
+
+.SS "void Game::save () const"
+Save file\&. 
+.SS "void Game::shooting ()"
+Handle shooting\&. 
+.SS "void Game::UpdateBoard ()"
+Update functions\&. Redraw the board\&. 
+.SS "void Game::updateDifficulty ()"
+Update difficulty value\&. 
+.SS "void Game::updateState ()"
+Main functions\&. Main game\&. 
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBPowerup\fP Game::active[NUM_ACTIVE]\fC [protected]\fP"
+Actionable power-up\&. 
+.SS "\fBBoard\fP Game::board\fC [protected]\fP"
+\fBBoard\fP\&. 
+.SS "\fBPowerup\fP Game::bonus[NUM_BONUS]\fC [protected]\fP"
+Bounds power-up\&. 
+.SS "bool Game::bought1\fC [protected]\fP"
+Check if you have bought one power-up\&. 
+.SS "int Game::difficulty\fC [protected]\fP"
+Level difficulty parameter\&. It depends on the number of power-up you have\&. It handles the generation of the map\&. 
+.SS "int Game::draw_cost1\fC [protected]\fP"
+Constants for drawing\&. 
+.SS "bool Game::game_over\fC [protected]\fP"
+Check if game is over\&. 
+.SS "\fBPowerup\fP Game::guns[NUM_GUNS]\fC [protected]\fP"
+Power-ups Guns power-up\&. 
+.SS "int Game::HEIGHT_MARKET\fC [protected]\fP"
+Height of market power-ups\&. 
+.SS "\fBmap_list\fP Game::mapList\fC [protected]\fP"
+List of maps\&. 
+.SS "bool Game::Market_Active\fC [protected]\fP"
+Check if you're in the market\&. 
+.SS "bool Game::Market_Build\fC [protected]\fP"
+Check if you have to build the market\&. 
+.SS "string* Game::matrix {}\fC [protected]\fP"
+\fBMap\fP data structure matrix\&. 
+.SS "\fBPlayer\fP Game::player\fC [protected]\fP"
+\fBPlayer\fP\&. 
+.SS "\fBPowerup\fP Game::spawn_powerup[3]\fC [protected]\fP"
+Power up spawned in the market\&. 
+.SS "int Game::time\fC [protected]\fP"
+\fBGame\fP time parameter\&. 
+.SS "int Game::xMin\fC [protected]\fP"
+Variable for camera position\&. 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Zuldesi from the source code\&.
