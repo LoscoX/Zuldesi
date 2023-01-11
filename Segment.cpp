@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <cstring>
 #include "Segment.hpp"
 
 using namespace std;
@@ -18,7 +17,6 @@ Segment::Segment(string path){ //create the segment
     for (int i=0; i<MATRIX_SIZE_X; i++){
         this->matrix[i] = mat[i].c_str();
     }
-
 }
 
 string* Segment::getMatrix(){

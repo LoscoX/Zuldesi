@@ -15,136 +15,427 @@
 #include "Board.hpp"
 #include "Map.hpp"
 
-const int NUM_GUNS = 4; //max number of power-up type gun
-const int NUM_BONUS = 5; //max number of power-up type bonus
-const int NUM_ACTIVE = 3; //max number of power-up type actionable
+/**
+ * Max number of power-up type gun.
+ */
+const int NUM_GUNS = 4;
+/**
+ * Max number of power-up type bonus.
+ */
+const int NUM_BONUS = 5;
+/**
+ * Max number of power-up type actionable.
+ */
+const int NUM_ACTIVE = 3;
 
 struct map_el{
-	int id;
+	int id{};
 	Map map;
-	map_el* next;
-	map_el* prev;
+	map_el* next{};
+	map_el* prev{};
 };
 
 typedef map_el* map_list;
 
 class Game{
 public:
+    /**
+     * Constructor with parameters.
+     * @param height
+     * @param width
+     */
+	Game(int height,int width);
+  
+    /**
+     *
+     * Function for the map.
+     */
+    /**
+     * Restart the map.
+     * @param difficulty
+     */
+	void restartMap();
+    /**
+     * Switch to the next map.
+     * @param dir
+     * @param difficulty
+     */
+	void nextMap(int dir);
+    /**
+     * Print the map.
+     */
+	void PrintMap();
 
-	Game(int height,int width); //Constructor
+	/**
+	 * Main functions.
+	 */
 
-	//Function for the map
-	void restartMap(int difficulty);
-	void nextMap(int dir, int difficulty);
-	void PrintMap(); //Print map
+    /**
+     * Main game.
+     */
+	void updateState();
+    /**
+     * Refresh the board.
+     */
+	void redraw();
+    /**
+     *
+     * @return If the game is over.
+     */
+	bool isOver();
 
-	//Main functions
-	void updateState(); //Main game
-	void redraw(); //
-	bool isOver(); //Game is over
+	/**
+	 * Market function.
+	 */
+    /**
+     * Initialize power-up.
+     */
+	void initializePowerUp();
+    /**
+     * Draw power-up.
+     * @param pwp
+     */
+	void drawPowerUp(Powerup pwp[]);
+    /**
+     * Delete power-up.
+     * @param pwp
+     */
+	void deletePowerup(Powerup pwp[]);
+    /**
+     * Activate market.
+     */
+	void market();
+    /**
+     * Build market.
+     */
+	void market_build();
+    /**
+     * Write power up's description.
+     * @param i
+     */
+	void drawDescription(int i);
+    /**
+     * Remove power's up description.
+     * @param i
+     */
+	void deleteDescription(int i);
 
-	//Market function
-	void initializePowerUp(); //initialize power-up
-	void drawPowerUp(Powerup pwp[]); //draw power-up
-	void deletePowerup(Powerup pwp[]); //delete power-up
-	void updatePowerup();
-	void market(); //activate the market
-	void market_build(); //build the market
-	void drawDescription(int i); //draw description of power up
-	void deleteDescription(int i); //draw description of power up
+    /**
+     * Function for the movement
+     */
 
-	//Function for the movement
-	void PlayerCanMove(int choice); //Game interaction between player and structure map
-	void PlayerCanFly(int choice); //Game interaction between player and structure map when you fly
-	void Enemy0CanMove(listenm0 h); //Game interaction between enemy0 and structure map
-	void Enemy1CanMove(listenm1 h); //Game interaction between enemy1 and structure map
-	void Enemy2CanMove(listenm2 h); //Game interaction between enemy2 and structure map
-	void Enemy3CanMove(listenm3 h); //Game interaction between enemy3 and structure map
-	void Enemy4CanMove(listenm4 h); //Game interaction between enemy4 and structure map
-	void Enemy5CanMove(listenm5 h); //Game interaction between enemy5 and structure map
-	void Enemy6CanMove(listenm6 h); //Game interaction between enemy6 and structure map
-	void Enemy7CanMove(listenm7 h); //Game interaction between enemy7 and structure map
+    /**
+     * Game interaction between player and structure map.
+     * @param choice
+     */
+	void PlayerCanMove(int choice);
+    /**
+     * Game interaction between player and structure map when you fly.
+     * @param choice
+     */
+	void PlayerCanFly(int choice);
+    /**
+     * Game interaction between enemy0 and structure map.
+     * @param h
+     */
+	void Enemy0CanMove(listenm0 h);
+    /**
+     * Game interaction between enemy1 and structure map.
+     * @param h
+     */
+	void Enemy1CanMove(listenm1 h);
+    /**
+     * Game interaction between enemy2 and structure map.
+     * @param h
+     */
+	void Enemy2CanMove(listenm2 h);
+    /**
+     * Game interaction between enemy3 and structure map.
+     * @param h
+     */
+	void Enemy3CanMove(listenm3 h);
+    /**
+     * Game interaction between enemy4 and structure map.
+     * @param h
+     */
+	void Enemy4CanMove(listenm4 h);
+    /**
+     * Game interaction between enemy5 and structure map.
+     * @param h
+     */
+	void Enemy5CanMove(listenm5 h);
+    /**
+     * Game interaction between enemy6 and structure map.
+     * @param h
+     */
+	void Enemy6CanMove(listenm6 h);
+    /**
+     * Game interaction between enemy7 and structure map.
+     * @param h
+     */
+	void Enemy7CanMove(listenm7 h);
+    /**
+     * Game interaction between enemy8 and structure map.
+     * @param h
+     */
 	void Enemy8CanMove(listenm8 h);
-	void Enemy9CanMove(listenm9 h); //Game interaction between enemy9 and structure map
-	void mapMovement(); //map movement
-	void enemyMovement(); //enemies movement
-	void PlayerDown(); //player goes down
-	int directionSmartEnemy5(Enemy5 e); //Handle the direction of the enemy based on the position of the player
-	int directionSmartEnemy7(Enemy7 e); //Handle the direction of the enemy based on the position of the player
-	int directionSmartEnemy8(Enemy8 e); //Handle the direction of the enemy based on the position of the player
+    /**
+     * Game interaction between enemy9 and structure map.
+     * @param h
+     */
+	void Enemy9CanMove(listenm9 h);
+    /**
+     * Map movement.
+     */
+	void mapMovement();
+    /**
+     * Enemies movement.
+     */
+	void enemyMovement();
+    /**
+     * Manage player's gravity.
+     */
+	void PlayerDown();
+    /**
+     * Handle the direction of the enemy based on the position of the player.
+     * @param e
+     * @return
+     */
+	int directionSmartEnemy5(Enemy5 e);
+    /**
+     * Handle the direction of the enemy based on the position of the player.
+     * @param e
+     * @return
+     */
+	int directionSmartEnemy7(Enemy7 e);
+    /**
+     * Handle the direction of the enemy based on the position of the player.
+     * @param e
+     * @return
+     */
+	int directionSmartEnemy8(Enemy8 e);
 
-	//graphic function
-	void displayLife(); //Display life
-	void displayCoins(); //Display wallet
-	void displayGame(); //Display Title
-	void displayBullets(); //Display bullets
-	void displayPoints(); //Display points
-	void displayMarket(); //Display market
-	void displayPowerup(); //Display power-up
+    /**
+     * Graphic function.
+     */
 
-	//function for collision
-	void interaction(Enemy0 e); //Game interaction between Enemy without gun and Player
-	bool enemydeath(bullt tmp); //enemy death for bullets
-	bool enemydeath2(bullt tmp); //enemy death for explosive bullets
-	//function for bullets collision
-	bool interactionBullet(bullt tmp); //Game interaction between Enemy with gun and Player
-	void shooting(); //handle the shooting
-	bullt deletePlayerBullets(bullt tmp); //delete bullets of the Player
-	bullt deletePlayerExplosiveBullets(bullt tmp); //delete explosive bullets of the Player
-	bullt deleteEnemy6Bullets(bullt tmp,listenm6 e); //delete bullets of Enemy6
-	bullt deleteEnemy7Bullets(bullt tmp,listenm7 e); //delete bullets of Enemy7
-	bullt deleteEnemy8Bullets(bullt tmp,listenm8 e); //delete bullets of Enemy8
-	bullt deleteEnemy9Bullets(bullt tmp,listenm9 e); //delete bullets of Enemy9
+    /**
+     * Display life parameter user interface.
+     */
+	void displayLife();
+    /**
+     * Display wallet parameter user interface.
+     */
+	void displayCoins();
+    /**
+     * Display title user interface.
+     */
+	void displayGame();
+    /**
+     * Display bullets quantity parameter user interface.
+     */
+	void displayBullets();
+    /**
+     * Display points parameter user interface.
+     */
+	void displayPoints();
+    /**
+     * Display market title user interface.
+     */
+	void displayMarket();
+    /**
+     * Display power-up user interface.
+     */
+	void displayPowerup();
 
-	//function coins
-	void handleCoins(); //handle coins part
-	//function maps
-	void handleMaps(); //handle maps part, market part
-	//function display
-	void handleDisplay(); //handle displacement
+	/**
+	 * function for collision
+	 */
 
-	//Update function
-	void UpdateBoard(); //redraw the board
+    /**
+     * Game interaction between Enemy without gun and Player.
+     * @param e
+     */
+	void interaction(Enemy0 e);
+
+    /**
+     * Enemy death for bullets.
+     * @param tmp
+     * @return
+     */
+	bool enemydeath(bullt tmp);
+    /**
+     * Enemy death for explosive bullets.
+     * @param tmp
+     * @return
+     */
+	bool enemydeath2(bullt tmp);
+
+    /**
+     * Function for bullets collision.
+     */
+
+    /**
+     * Game interaction between Enemy with gun and Player.
+     * @param tmp
+     * @return
+     */
+	bool interactionBullet(bullt tmp);
+    /**
+     * Handle shooting.
+     */
+	void shooting();
+    /**
+     * Delete bullets of the Player.
+     * @param tmp
+     * @return
+     */
+	bullt deletePlayerBullets(bullt tmp);
+    /**
+     * Delete explosive bullets of the Player.
+     * @param tmp
+     * @return
+     */
+	bullt deletePlayerExplosiveBullets(bullt tmp);
+    /**
+     * Delete Enemy6's bullets.
+     * @param tmp
+     * @param e
+     * @return
+     */
+	bullt deleteEnemy6Bullets(bullt tmp,listenm6 e);
+    /**
+     * Delete Enemy7's bullets.
+     * @param tmp
+     * @param e
+     * @return
+     */
+	bullt deleteEnemy7Bullets(bullt tmp,listenm7 e);
+    /**
+     * Delete Enemy8's bullets.
+     * @param tmp
+     * @param e
+     * @return
+     */
+	bullt deleteEnemy8Bullets(bullt tmp,listenm8 e);
+    /**
+     * Delete Enemy9's bullets.
+     * @param tmp
+     * @param e
+     * @return
+     */
+	bullt deleteEnemy9Bullets(bullt tmp,listenm9 e);
+
+	/**
+	 * Handle coins part.
+	 */
+	void handleCoins();
+    /**
+     * Handle maps part, market part.
+     */
+	void handleMaps();
+    /**
+     * Handle displacement.
+     */
+	void handleDisplay();
+
+    /**
+     * Update functions.
+     */
+
+    /**
+     * Redraw the board.
+     */
+	void UpdateBoard();
+    /**
+     * Update difficulty value.
+     */
 	void updateDifficulty();
 
-	//save file
-	void save();
+	/**
+	 * Save file.
+	 */
+	void save() const;
 
 protected:
+    /**
+     * Power up spawned in the market.
+     */
+	Powerup spawn_powerup[3];
 
-	Powerup spawn_powerup[3]; //power up spawned in the market
+    /**
+     * Power-ups
+     */
 
-	//power-up
-	Powerup guns[NUM_GUNS]; //guns power-up
-	Powerup bonus[NUM_BONUS]; //bounds power-up
-	Powerup active[NUM_ACTIVE]; //actionable power-up
+    /**
+     * Guns power-up.
+     */
+	Powerup guns[NUM_GUNS];
+    /**
+     * Bounds power-up.
+     */
+	Powerup bonus[NUM_BONUS];
+    /**
+     * Actionable power-up.
+     */
+	Powerup active[NUM_ACTIVE];
 
-	int xMin; //variable for the position of camera
-
-	int HEIGHT_MARKET; //height of market power-ups
-	//constants for drawing
+    /**
+     * Variable for camera position.
+     */
+	int xMin;
+    /**
+     * Height of market power-ups.
+     */
+	int HEIGHT_MARKET;
+	/**
+	 * Constants for drawing.
+	 */
 	int draw_cost1;
 	int draw_cost2;
 	int draw_cost3;
-
-	bool Market_Active; //you are in the market
-	bool Market_Build; //you have to build the market
-	bool bought1,bought2,bought3; //tell us if you have bought one power-up
-
-	int time; //time of the game
-
-	int difficulty; //difficulty of the level. It depends on the number of power-up you have. It handles the generation of the map
-
-	Board board; //board
-
-	Player player; //player
-
-	Map map; //map
-
-	string* matrix; //matrix for the map
-
+    /**
+     * Check if you're in the market.
+     */
+	bool Market_Active;
+    /**
+     * Check if you have to build the market.
+     */
+	bool Market_Build;
+    /**
+     * Check if you have bought one power-up.
+     */
+	bool bought1,bought2,bought3;
+    /**
+     * Game time parameter.
+     */
+	int time;
+    /**
+     * Level difficulty parameter. It depends on the number of power-up you have. It handles the generation of the map.
+     */
+	int difficulty;
+    /**
+     * Board.
+     */
+	Board board;
+    /**
+     * Player.
+     */
+	Player player;
+    /**
+     * Map.
+     */
+	Map map;
+    /**
+     * Map data structure matrix.
+     */
+	string* matrix{};
+    /**
+     * Check if game is over.
+     */
 	bool game_over;
-
-	map_list mapList; //list of maps
-
+    /**
+     * List of maps.
+     */
+	map_list mapList;
 };

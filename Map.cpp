@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstring>
+#include <fstream>
 #include "Map.hpp"
-#include "Primenumebers.hpp"
 
 using namespace std;
 
@@ -18,11 +18,11 @@ Map::Map(int difficulty){
 
     seg_list_ptr segtmp = segList;
 
-    for(int i=0; i<5; i++){ //fixed number of segments
+    for(int i=0; i<5+difficulty; i++){ //fixed number of segments
         seg_list_ptr tmp = new segment_el; //add new segment
         tmp->id = numSeg++;
-        int x = rand()%82;//generate a random number between 0 and num_max of segments
-        tmp->seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/Segment_pieces/seg"+to_string(x)+".txt"); //map segments
+        int x = rand()%107;//generate a random number between 0 and num_max of segments
+        tmp->seg = Segment("segments/Segment_pieces/seg"+to_string(x)+".txt"); //map segments
         tmp->next = NULL;
         segtmp->next = tmp;
         segtmp = segtmp->next;
@@ -118,20 +118,12 @@ Map::Map(int difficulty){
 	enemies9 = NULL; //initialize the list
 
 	int k = getPrime(difficulty); //handle the generation of enemies
-
-    int* enemies_quantity = thelast10prime(k); // generate array to define quantity of enemies by type
-
-    for (int i = 0; i<5; i++){
-        int aux = enemies_quantity[9-i];
-        enemies_quantity[9-i] = enemies_quantity[i];
-        enemies_quantity[i] = aux;
-    }
+	int* enemies_quantity = thelast10prime(k); // generate array to define quantity of enemies by type
 
     for (int i = 0; i<9; i++){
-        enemies_quantity[i] = ::rand() % enemies_quantity[i];
+		if(enemies_quantity[i] != 0)
+        	enemies_quantity[i] = rand() % enemies_quantity[i];
     }
-
-
 	n0 = enemies_quantity[0]; //number of enemies of type 0
 	for(int i=0;i<n0;i++){
 		//avoid enemy type0 inside a structure
@@ -140,9 +132,7 @@ Map::Map(int difficulty){
 		enemies0 = head_insert_enemy0(enemies0,e,i); //add the enemy into the list
 	}
 
-
 	n1 = enemies_quantity[1]; //number of enemies of type 1
-
 	for(int i=0;i<n1;i++){
 		//avoid enemy type1 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
@@ -150,7 +140,8 @@ Map::Map(int difficulty){
 		enemies1 = head_insert_enemy1(enemies1,e,i); //add the enemy into the list
 	}
 
-	n2 = enemies_quantity[2];
+	n2 = enemies_quantity[2]; //number of enemies of type 2
+
 	for(int i=0;i<n2;i++){
 		//avoid enemy type2 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
@@ -166,7 +157,6 @@ Map::Map(int difficulty){
 		enemies3 = head_insert_enemy3(enemies3,e,i); //add the enemy into the list
 	}
 
-
 	n4 = enemies_quantity[4]; //number of enemies of type 4
 	for(int i=0;i<n4;i++){
 		//avoid enemy type4 inside a structure
@@ -174,8 +164,7 @@ Map::Map(int difficulty){
 		Enemy4 e = Enemy4(gen_y, gen_x,'4',7); //create one enemy
 		enemies4 = head_insert_enemy4(enemies4,e,i); //add the enemy into the list
 	}
-
-
+  
 	n5 = enemies_quantity[5]; //number of enemies of type 5
 	for(int i=0;i<n5;i++){
 		//avoid enemy type5 inside a structure
@@ -184,8 +173,8 @@ Map::Map(int difficulty){
 		enemies5 = head_insert_enemy5(enemies5,e,i); //add the enemy into the list
 	}
 
+	n6 = enemies_quantity[6]; //number of enemies of type 6
 
-    n6 = enemies_quantity[6];
 	for(int i=0;i<n6;i++){
 		//avoid enemy type6 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
@@ -193,8 +182,7 @@ Map::Map(int difficulty){
 		enemies6 = head_insert_enemy6(enemies6,e,i); //add the enemy into the list
 	}
 
-
-	n7= enemies_quantity[7];
+	n7 = enemies_quantity[7]; //number of enemies of type 7
 
 	for(int i=0;i<n7;i++){
 		//avoid enemy type7 inside a structure
@@ -203,8 +191,8 @@ Map::Map(int difficulty){
 		enemies7 = head_insert_enemy7(enemies7,e,i); //add the enemy into the list
 	}
 
+	n8 = enemies_quantity[8]; //number of enemies of type 8
 
-    n8= enemies_quantity[8];
 	for(int i=0;i<n8;i++){
 		//avoid enemy type8 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
@@ -212,8 +200,8 @@ Map::Map(int difficulty){
 		enemies8 = head_insert_enemy8(enemies8,e,i); //add the enemy into the list
 	}
 
+	n9 = enemies_quantity[9]; //number of enemies of type 9
 
-    n9= enemies_quantity[9];
 	for(int i=0;i<n9;i++){
 		//avoid enemy type9 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
@@ -312,9 +300,26 @@ string* Map::toString(){ //build matrix
     mat = initializeEnemies(mat);
 
     //symbol for teleport points
-	mat[22][trigger_end] = 'X';
-	mat[22][trigger_start] = 'X';
-	mat[22][trigger_market] = 'X';
+	mat[23][trigger_start+1] = ' ';
+	mat[22][trigger_start+1] = '\\';
+	mat[23][trigger_start] = ' ';
+	mat[22][trigger_start] = '-';
+	mat[23][trigger_start-1] = '|';
+	mat[22][trigger_start-1] = '/';
+	
+	mat[23][trigger_market-1] = ' ';
+	mat[22][trigger_market-1] = '/';
+	mat[23][trigger_market] = ' ';
+	mat[22][trigger_market] = '-';
+	mat[23][trigger_market+1] = '|';
+	mat[22][trigger_market+1] = '\\';
+
+	mat[23][trigger_end-1] = ' ';
+	mat[22][trigger_end-1] = '/';
+	mat[23][trigger_end] = ' ';
+	mat[22][trigger_end] = '-';
+	mat[23][trigger_end+1] = '|';
+	mat[22][trigger_end+1] = '\\';
 
     return mat;
 }
@@ -392,9 +397,6 @@ mony Map::FallCoins(mony h){ //avoid coins in the air
 }
 
 
-int Map::rand_segment_selection() {
-    return rand() % 40;
-}
 mony Map::getCoins(){
 	return coins;
 

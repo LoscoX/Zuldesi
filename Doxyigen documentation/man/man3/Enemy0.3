@@ -1,0 +1,195 @@
+.TH "Enemy0" 3 "Tue Jan 10 2023" "Version 1" "Zuldesi" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Enemy0
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherited by \fBEnemy1\fP, \fBEnemy2\fP, \fBEnemy3\fP, \fBEnemy4\fP, \fBEnemy5\fP, and \fBEnemy6\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBEnemy0\fP (int y, int x, char c, int mv)"
+.br
+.ti -1c
+.RI "\fBEnemy0\fP ()"
+.br
+.ti -1c
+.RI "virtual void \fBmovement\fP ()"
+.br
+.ti -1c
+.RI "void \fBEnemyGoDown\fP ()"
+.br
+.ti -1c
+.RI "int \fBgetx\fP () const"
+.br
+.ti -1c
+.RI "int \fBgety\fP () const"
+.br
+.ti -1c
+.RI "int \fBgetLife\fP () const"
+.br
+.ti -1c
+.RI "int \fBgetSign\fP () const"
+.br
+.ti -1c
+.RI "char \fBgetChar\fP () const"
+.br
+.ti -1c
+.RI "void \fBsetSign\fP ()"
+.br
+.ti -1c
+.RI "void \fBupdateCoordinates\fP (int x, int y)"
+.br
+.ti -1c
+.RI "void \fBsetLife\fP (int \fBlife\fP)"
+.br
+.ti -1c
+.RI "void \fBinjury\fP ()"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "int \fBsegno\fP {}"
+.br
+.ti -1c
+.RI "int \fBxLoc\fP {}"
+.br
+.ti -1c
+.RI "int \fByLoc\fP {}"
+.br
+.ti -1c
+.RI "int \fBlife\fP {}"
+.br
+.ti -1c
+.RI "char \fBcharacter\fP {}"
+.br
+.ti -1c
+.RI "int \fBxpern\fP {}"
+.br
+.ti -1c
+.RI "int \fBypern\fP {}"
+.br
+.ti -1c
+.RI "int \fBcost\fP {}"
+.br
+.in -1c
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "Enemy0::Enemy0 (int y, int x, char c, int mv)"
+Constructor with coordinates\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIy\fP 
+.br
+\fIx\fP 
+.br
+\fIc\fP 
+.br
+\fImv\fP 
+.RE
+.PP
+
+.SS "Enemy0::Enemy0 ()"
+Default constractor\&. 
+.SH "Member Function Documentation"
+.PP 
+.SS "void Enemy0::EnemyGoDown ()"
+Manage enemy's gravity\&. 
+.SS "char Enemy0::getChar () const"
+
+.PP
+\fBReturns\fP
+.RS 4
+Enemy's graphic displayed symbol\&. 
+.RE
+.PP
+
+.SS "int Enemy0::getLife () const"
+
+.PP
+\fBReturns\fP
+.RS 4
+Enemy life\&. 
+.RE
+.PP
+
+.SS "int Enemy0::getSign () const"
+
+.PP
+\fBReturns\fP
+.RS 4
+Enemy's sign\&. 
+.RE
+.PP
+
+.SS "int Enemy0::getx () const"
+
+.PP
+\fBReturns\fP
+.RS 4
+x coordinate of the enemy\&. 
+.RE
+.PP
+
+.SS "int Enemy0::gety () const"
+
+.PP
+\fBReturns\fP
+.RS 4
+y coordinate of the enemy\&. 
+.RE
+.PP
+
+.SS "void Enemy0::injury ()"
+give damage to the enemy\&. 
+.SS "void Enemy0::movement ()\fC [virtual]\fP"
+Manage enemy movement\&. 
+.PP
+Reimplemented in \fBEnemy1\fP, \fBEnemy2\fP, \fBEnemy3\fP, \fBEnemy4\fP, \fBEnemy6\fP, and \fBEnemy9\fP\&.
+.SS "void Enemy0::setLife (int life)"
+Change life value\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIlife\fP 
+.RE
+.PP
+
+.SS "void Enemy0::setSign ()"
+Change enemy's sign\&. 
+.SS "void Enemy0::updateCoordinates (int x, int y)"
+Update coordinates of the enemy\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIx\fP 
+.br
+\fIy\fP 
+.RE
+.PP
+
+.SH "Member Data Documentation"
+.PP 
+.SS "char Enemy0::character {}\fC [protected]\fP"
+Icon for the enemy\&. 
+.SS "int Enemy0::cost {}\fC [protected]\fP"
+Radius of the movement\&. 
+.SS "int Enemy0::life {}\fC [protected]\fP"
+Life\&. 
+.SS "int Enemy0::segno {}\fC [protected]\fP"
+Change the movement\&. 
+.SS "int Enemy0::xLoc {}\fC [protected]\fP"
+Coordinates of the enemy\&. 
+.SS "int Enemy0::xpern {}\fC [protected]\fP"
+Coordinates for the movement of the enemy\&. 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Zuldesi from the source code\&.
