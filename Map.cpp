@@ -2,7 +2,6 @@
 #include <cstring>
 #include <fstream>
 #include "Map.hpp"
-#include "Primenumebers.hpp"
 
 using namespace std;
 
