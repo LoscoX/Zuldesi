@@ -1,0 +1,121 @@
+.TH "Board" 3 "Tue Jan 10 2023" "Version 1" "Zuldesi" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Board
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Board\&.hpp>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBBoard\fP ()"
+.br
+.ti -1c
+.RI "\fBBoard\fP (int \fBheight\fP, int width)"
+.br
+.ti -1c
+.RI "void \fBaddBorder\fP (int x, int y)"
+.br
+.ti -1c
+.RI "void \fBclear\fP ()"
+.br
+.ti -1c
+.RI "void \fBrefresh\fP ()"
+.br
+.ti -1c
+.RI "void \fBinitialize\fP (int x, int y)"
+.br
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "WINDOW * \fBboard_win\fP"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBconstruct\fP (int \fBheight\fP, int width)"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "int \fBheight\fP"
+.br
+.ti -1c
+.RI "int \fBwidth\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Manage game borders\&. 
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "Board::Board ()"
+Default constructor\&. 
+.SS "Board::Board (int height, int width)"
+Constructor with size parameters\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIheight\fP 
+.br
+\fIwidth\fP 
+.RE
+.PP
+
+.SH "Member Function Documentation"
+.PP 
+.SS "void Board::addBorder (int x, int y)"
+create a border in the input coordinate\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIx\fP 
+.br
+\fIy\fP 
+.RE
+.PP
+
+.SS "void Board::clear ()"
+Clear the borders window\&. 
+.SS "void Board::construct (int height, int width)\fC [protected]\fP"
+Make the board with size parameters\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIheight\fP 
+.br
+\fIwidth\fP 
+.RE
+.PP
+
+.SS "void Board::initialize (int x, int y)"
+Initialize the window getting in inputs its width and high\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIx\fP Width of the window\&. 
+.br
+\fIy\fP Height of the window\&. 
+.RE
+.PP
+
+.SS "void Board::refresh ()"
+Refresh the borders window\&. 
+.SH "Member Data Documentation"
+.PP 
+.SS "int Board::height\fC [protected]\fP"
+Height and width of the board\&. 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Zuldesi from the source code\&.

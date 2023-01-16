@@ -1,0 +1,229 @@
+\hypertarget{class_enemy0}{}\doxysection{Enemy0 Class Reference}
+\label{class_enemy0}\index{Enemy0@{Enemy0}}
+Inheritance diagram for Enemy0\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_enemy0}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_enemy0_a082a27d6210fdd6d4ddef19392b661d6}{Enemy0}} (int y, int x, char c, int mv)
+\item 
+\mbox{\hyperlink{class_enemy0_af78e8f52a720b8baf0be2afd4c44b505}{Enemy0}} ()
+\item 
+virtual void \mbox{\hyperlink{class_enemy0_a52516e48e4fde59be3d4f775b86574b6}{movement}} ()
+\item 
+void \mbox{\hyperlink{class_enemy0_ac00c4137d81056525bd643035da0e392}{Enemy\+Go\+Down}} ()
+\item 
+int \mbox{\hyperlink{class_enemy0_a803e9cc182c284feee55c774622ab145}{getx}} () const
+\item 
+int \mbox{\hyperlink{class_enemy0_a54e9c545c392713d5101bc58cbd41038}{gety}} () const
+\item 
+int \mbox{\hyperlink{class_enemy0_a64862e81236b72818fac27451fa6b87e}{get\+Life}} () const
+\item 
+int \mbox{\hyperlink{class_enemy0_ac923ff8b16e4448dca78d072b21b9b33}{get\+Sign}} () const
+\item 
+char \mbox{\hyperlink{class_enemy0_aa7ff9271f271245336347589a1f02ae9}{get\+Char}} () const
+\item 
+void \mbox{\hyperlink{class_enemy0_a2f78542e7ca1707f43c89ee8c1545c63}{set\+Sign}} ()
+\item 
+void \mbox{\hyperlink{class_enemy0_acc27bd3f1a3a2b8e421686e7bf3f2440}{update\+Coordinates}} (int x, int y)
+\item 
+void \mbox{\hyperlink{class_enemy0_a679bba7f4e52c58aec3d5af0bf5d9844}{set\+Life}} (int \mbox{\hyperlink{class_enemy0_aeb1e1a2c86fed781e38b3e8f16131825}{life}})
+\item 
+void \mbox{\hyperlink{class_enemy0_ab6daf9746ebd4a74ecd23f6ffc1555ac}{injury}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{class_enemy0_ab2c5fe4e323865f4d716ceb62a9931cc}{segno}} \{\}
+\item 
+int \mbox{\hyperlink{class_enemy0_a0994b90d9e09d12f23435ec2c6b33076}{x\+Loc}} \{\}
+\item 
+\mbox{\Hypertarget{class_enemy0_a7b356bf0efae0b8fd3b5c67c225317e0}\label{class_enemy0_a7b356bf0efae0b8fd3b5c67c225317e0}} 
+int {\bfseries y\+Loc} \{\}
+\item 
+int \mbox{\hyperlink{class_enemy0_aeb1e1a2c86fed781e38b3e8f16131825}{life}} \{\}
+\item 
+char \mbox{\hyperlink{class_enemy0_a427de008ecefa2fef26018379c31e97e}{character}} \{\}
+\item 
+int \mbox{\hyperlink{class_enemy0_a3520308e11de42f940e9fb39277c7719}{xpern}} \{\}
+\item 
+\mbox{\Hypertarget{class_enemy0_adf4053ed24a16b12ec34035ce689732b}\label{class_enemy0_adf4053ed24a16b12ec34035ce689732b}} 
+int {\bfseries ypern} \{\}
+\item 
+int \mbox{\hyperlink{class_enemy0_ab8de1750ada6eac9e4e328f87b34adae}{cost}} \{\}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_enemy0_a082a27d6210fdd6d4ddef19392b661d6}\label{class_enemy0_a082a27d6210fdd6d4ddef19392b661d6}} 
+\index{Enemy0@{Enemy0}!Enemy0@{Enemy0}}
+\index{Enemy0@{Enemy0}!Enemy0@{Enemy0}}
+\doxysubsubsection{\texorpdfstring{Enemy0()}{Enemy0()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Enemy0\+::\+Enemy0 (\begin{DoxyParamCaption}\item[{int}]{y,  }\item[{int}]{x,  }\item[{char}]{c,  }\item[{int}]{mv }\end{DoxyParamCaption})}
+
+Constructor with coordinates. 
+\begin{DoxyParams}{Parameters}
+{\em y} & \\
+\hline
+{\em x} & \\
+\hline
+{\em c} & \\
+\hline
+{\em mv} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_enemy0_af78e8f52a720b8baf0be2afd4c44b505}\label{class_enemy0_af78e8f52a720b8baf0be2afd4c44b505}} 
+\index{Enemy0@{Enemy0}!Enemy0@{Enemy0}}
+\index{Enemy0@{Enemy0}!Enemy0@{Enemy0}}
+\doxysubsubsection{\texorpdfstring{Enemy0()}{Enemy0()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Enemy0\+::\+Enemy0 (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Default constractor. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_enemy0_ac00c4137d81056525bd643035da0e392}\label{class_enemy0_ac00c4137d81056525bd643035da0e392}} 
+\index{Enemy0@{Enemy0}!EnemyGoDown@{EnemyGoDown}}
+\index{EnemyGoDown@{EnemyGoDown}!Enemy0@{Enemy0}}
+\doxysubsubsection{\texorpdfstring{EnemyGoDown()}{EnemyGoDown()}}
+{\footnotesize\ttfamily void Enemy0\+::\+Enemy\+Go\+Down (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Manage enemy\textquotesingle{}s gravity. \mbox{\Hypertarget{class_enemy0_aa7ff9271f271245336347589a1f02ae9}\label{class_enemy0_aa7ff9271f271245336347589a1f02ae9}} 
+\index{Enemy0@{Enemy0}!getChar@{getChar}}
+\index{getChar@{getChar}!Enemy0@{Enemy0}}
+\doxysubsubsection{\texorpdfstring{getChar()}{getChar()}}
+{\footnotesize\ttfamily char Enemy0\+::get\+Char (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+\begin{DoxyReturn}{Returns}
+Enemy\textquotesingle{}s graphic displayed symbol. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_enemy0_a64862e81236b72818fac27451fa6b87e}\label{class_enemy0_a64862e81236b72818fac27451fa6b87e}} 
+\index{Enemy0@{Enemy0}!getLife@{getLife}}
+\index{getLife@{getLife}!Enemy0@{Enemy0}}
+\doxysubsubsection{\texorpdfstring{getLife()}{getLife()}}
+{\footnotesize\ttfamily int Enemy0\+::get\+Life (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+\begin{DoxyReturn}{Returns}
+Enemy life. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_enemy0_ac923ff8b16e4448dca78d072b21b9b33}\label{class_enemy0_ac923ff8b16e4448dca78d072b21b9b33}} 
+\index{Enemy0@{Enemy0}!getSign@{getSign}}
+\index{getSign@{getSign}!Enemy0@{Enemy0}}
+\doxysubsubsection{\texorpdfstring{getSign()}{getSign()}}
+{\footnotesize\ttfamily int Enemy0\+::get\+Sign (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+\begin{DoxyReturn}{Returns}
+Enemy\textquotesingle{}s sign. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_enemy0_a803e9cc182c284feee55c774622ab145}\label{class_enemy0_a803e9cc182c284feee55c774622ab145}} 
+\index{Enemy0@{Enemy0}!getx@{getx}}
+\index{getx@{getx}!Enemy0@{Enemy0}}
+\doxysubsubsection{\texorpdfstring{getx()}{getx()}}
+{\footnotesize\ttfamily int Enemy0\+::getx (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+\begin{DoxyReturn}{Returns}
+x coordinate of the enemy. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_enemy0_a54e9c545c392713d5101bc58cbd41038}\label{class_enemy0_a54e9c545c392713d5101bc58cbd41038}} 
+\index{Enemy0@{Enemy0}!gety@{gety}}
+\index{gety@{gety}!Enemy0@{Enemy0}}
+\doxysubsubsection{\texorpdfstring{gety()}{gety()}}
+{\footnotesize\ttfamily int Enemy0\+::gety (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+\begin{DoxyReturn}{Returns}
+y coordinate of the enemy. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_enemy0_ab6daf9746ebd4a74ecd23f6ffc1555ac}\label{class_enemy0_ab6daf9746ebd4a74ecd23f6ffc1555ac}} 
+\index{Enemy0@{Enemy0}!injury@{injury}}
+\index{injury@{injury}!Enemy0@{Enemy0}}
+\doxysubsubsection{\texorpdfstring{injury()}{injury()}}
+{\footnotesize\ttfamily void Enemy0\+::injury (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+give damage to the enemy. \mbox{\Hypertarget{class_enemy0_a52516e48e4fde59be3d4f775b86574b6}\label{class_enemy0_a52516e48e4fde59be3d4f775b86574b6}} 
+\index{Enemy0@{Enemy0}!movement@{movement}}
+\index{movement@{movement}!Enemy0@{Enemy0}}
+\doxysubsubsection{\texorpdfstring{movement()}{movement()}}
+{\footnotesize\ttfamily void Enemy0\+::movement (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Manage enemy movement. 
+
+Reimplemented in \mbox{\hyperlink{class_enemy1_a9f145a38ac8ea0ecd5ce20cbc6cb4589}{Enemy1}}, \mbox{\hyperlink{class_enemy2_ac2a11240416914ef91a4f896ab0390c3}{Enemy2}}, \mbox{\hyperlink{class_enemy3_a5b97a2cfaf6508e7b92ffb69eb7cf79c}{Enemy3}}, \mbox{\hyperlink{class_enemy4_a2a83a1cac5dc13f4dd2c91a793d506a3}{Enemy4}}, \mbox{\hyperlink{class_enemy6_a31b89313468a14a328d4186336d6495b}{Enemy6}}, and \mbox{\hyperlink{class_enemy9_aca3205c4e3db28bc13d119dcd2910f8d}{Enemy9}}.
+
+\mbox{\Hypertarget{class_enemy0_a679bba7f4e52c58aec3d5af0bf5d9844}\label{class_enemy0_a679bba7f4e52c58aec3d5af0bf5d9844}} 
+\index{Enemy0@{Enemy0}!setLife@{setLife}}
+\index{setLife@{setLife}!Enemy0@{Enemy0}}
+\doxysubsubsection{\texorpdfstring{setLife()}{setLife()}}
+{\footnotesize\ttfamily void Enemy0\+::set\+Life (\begin{DoxyParamCaption}\item[{int}]{life }\end{DoxyParamCaption})}
+
+Change life value. 
+\begin{DoxyParams}{Parameters}
+{\em life} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_enemy0_a2f78542e7ca1707f43c89ee8c1545c63}\label{class_enemy0_a2f78542e7ca1707f43c89ee8c1545c63}} 
+\index{Enemy0@{Enemy0}!setSign@{setSign}}
+\index{setSign@{setSign}!Enemy0@{Enemy0}}
+\doxysubsubsection{\texorpdfstring{setSign()}{setSign()}}
+{\footnotesize\ttfamily void Enemy0\+::set\+Sign (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Change enemy\textquotesingle{}s sign. \mbox{\Hypertarget{class_enemy0_acc27bd3f1a3a2b8e421686e7bf3f2440}\label{class_enemy0_acc27bd3f1a3a2b8e421686e7bf3f2440}} 
+\index{Enemy0@{Enemy0}!updateCoordinates@{updateCoordinates}}
+\index{updateCoordinates@{updateCoordinates}!Enemy0@{Enemy0}}
+\doxysubsubsection{\texorpdfstring{updateCoordinates()}{updateCoordinates()}}
+{\footnotesize\ttfamily void Enemy0\+::update\+Coordinates (\begin{DoxyParamCaption}\item[{int}]{x,  }\item[{int}]{y }\end{DoxyParamCaption})}
+
+Update coordinates of the enemy. 
+\begin{DoxyParams}{Parameters}
+{\em x} & \\
+\hline
+{\em y} & \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_enemy0_a427de008ecefa2fef26018379c31e97e}\label{class_enemy0_a427de008ecefa2fef26018379c31e97e}} 
+\index{Enemy0@{Enemy0}!character@{character}}
+\index{character@{character}!Enemy0@{Enemy0}}
+\doxysubsubsection{\texorpdfstring{character}{character}}
+{\footnotesize\ttfamily char Enemy0\+::character \{\}\hspace{0.3cm}{\ttfamily [protected]}}
+
+Icon for the enemy. \mbox{\Hypertarget{class_enemy0_ab8de1750ada6eac9e4e328f87b34adae}\label{class_enemy0_ab8de1750ada6eac9e4e328f87b34adae}} 
+\index{Enemy0@{Enemy0}!cost@{cost}}
+\index{cost@{cost}!Enemy0@{Enemy0}}
+\doxysubsubsection{\texorpdfstring{cost}{cost}}
+{\footnotesize\ttfamily int Enemy0\+::cost \{\}\hspace{0.3cm}{\ttfamily [protected]}}
+
+Radius of the movement. \mbox{\Hypertarget{class_enemy0_aeb1e1a2c86fed781e38b3e8f16131825}\label{class_enemy0_aeb1e1a2c86fed781e38b3e8f16131825}} 
+\index{Enemy0@{Enemy0}!life@{life}}
+\index{life@{life}!Enemy0@{Enemy0}}
+\doxysubsubsection{\texorpdfstring{life}{life}}
+{\footnotesize\ttfamily int Enemy0\+::life \{\}\hspace{0.3cm}{\ttfamily [protected]}}
+
+Life. \mbox{\Hypertarget{class_enemy0_ab2c5fe4e323865f4d716ceb62a9931cc}\label{class_enemy0_ab2c5fe4e323865f4d716ceb62a9931cc}} 
+\index{Enemy0@{Enemy0}!segno@{segno}}
+\index{segno@{segno}!Enemy0@{Enemy0}}
+\doxysubsubsection{\texorpdfstring{segno}{segno}}
+{\footnotesize\ttfamily int Enemy0\+::segno \{\}\hspace{0.3cm}{\ttfamily [protected]}}
+
+Change the movement. \mbox{\Hypertarget{class_enemy0_a0994b90d9e09d12f23435ec2c6b33076}\label{class_enemy0_a0994b90d9e09d12f23435ec2c6b33076}} 
+\index{Enemy0@{Enemy0}!xLoc@{xLoc}}
+\index{xLoc@{xLoc}!Enemy0@{Enemy0}}
+\doxysubsubsection{\texorpdfstring{xLoc}{xLoc}}
+{\footnotesize\ttfamily int Enemy0\+::x\+Loc \{\}\hspace{0.3cm}{\ttfamily [protected]}}
+
+Coordinates of the enemy. \mbox{\Hypertarget{class_enemy0_a3520308e11de42f940e9fb39277c7719}\label{class_enemy0_a3520308e11de42f940e9fb39277c7719}} 
+\index{Enemy0@{Enemy0}!xpern@{xpern}}
+\index{xpern@{xpern}!Enemy0@{Enemy0}}
+\doxysubsubsection{\texorpdfstring{xpern}{xpern}}
+{\footnotesize\ttfamily int Enemy0\+::xpern \{\}\hspace{0.3cm}{\ttfamily [protected]}}
+
+Coordinates for the movement of the enemy. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Enemy.\+hpp\item 
+Enemy.\+cpp\end{DoxyCompactItemize}

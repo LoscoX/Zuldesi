@@ -16,79 +16,252 @@
 
 class Player{
 protected:
-	char character[4]; //icon of the player
-	WINDOW * curwin;
-	int life; //life
-	int cash; //money
-	int xLoc,yLoc; //coordinates of the player
-	int xMax,yMax; //coordinates of the box
-	int dir; //save the direction of the movement
-	int points; //points of the player
-	int jump_height;
-	void mvleft();
-	void mvright();
-	bool activejump; //if it is true, you are jumping
-	int conta;
-	int segno;
-	bool buy; //if you want to buy something
+    /**
+     * Player's icon.
+     */
+	char character[4]{};
+	WINDOW * curwin{};
+    /**
+     * Lifepoints.
+     */
+	int life{};
+    /**
+     * Money.
+     */
+	int cash{};
+    /**
+     * Player coordinates position.
+     */
+	int xLoc{},yLoc{};
+    /**
+     * Coordinates of the box.
+     */
+	int xMax{},yMax{};
+    /**
+     * Save the direction of the movement.
+     */
+	int dir{};
+    /**
+     * Points of the player.
+     */
+	int points{};
+	int jump_height{};
+    /**
+     * If it is true, you are jumping.
+     */
+	bool activejump{};
+	int conta{};
+	int segno{};
+    /**
+     * If you want to buy something.
+     */
+	bool buy{};
 
-	//powerup
-	Powerup gun; //type of gun
-	Powerup shield; //shield
-	Powerup hp; //life
-	Powerup armor; //armor
-	Powerup teleportation; //teleport
-	Powerup bullets; //bullets
-	Powerup jumping; //jump
-	Powerup fly; //fly
-	Powerup explo_bullets; //explosive bullets
+    /**
+     * Power-ups.
+     */
 
-	//costant for Powerup
-	int ARMOR_DURATION[3]; //duration of the armor
-	int TELEPORT_DISTANCE[3]; //distance of teleport
-	bool ACTIVE_ARMOR; //you active or not armor
-	int ARMOR_ACTIVE_DURATION; //time duration of actived armor
-	int NUM_BULLETS; //number of bullets
-	int NUM_EXPLO_BULLETS; //number of explosive bullets
-	int FLY_DURATION; //duration of the fly
-	int FLY_ACTIVE_DURATION; //time duration of actived fly
-	bool ACTIVE_FLY; //you activd or not fly
+    /**
+     * Gun type power-up.
+     */
+	Powerup gun;
+    /**
+     * Shield power-up.
+     */
+	Powerup shield;
+    /**
+     * HP Power-up.
+     */
+	Powerup hp;
+    /**
+     * Armor Power-up.
+     */
+	Powerup armor;
+    /**
+     * Teleport power-up.
+     */
+	Powerup teleportation;
+    /**
+     * Bullets power-up.
+     */
+	Powerup bullets;
+    /**
+     * Jump power-up.
+     */
+	Powerup jumping;
+    /**
+     * Fly power-up.
+     */
+	Powerup fly;
+    /**
+     * Explosive bullets power-up.
+     */
+	Powerup explo_bullets;
 
-	//gun magazine
-	Bullet bullet; //bullets magazine
-	Bullet explo_bullet; //explosive bullets magazine
-	int ind; //index for the list of bullets
-	int ind2; //index for the list of explosive bullets
+    /**
+     * Constant for power-ups.
+     */
+
+    /**
+     * Duration of the armor.
+     */
+	int ARMOR_DURATION[3]{};
+    /**
+     * Teleport distance.
+     */
+	int TELEPORT_DISTANCE[3]{};
+    /**
+     * Check if armor is activated.
+     */
+	bool ACTIVE_ARMOR{};
+    /**
+     * Armor time duration.
+     */
+	int ARMOR_ACTIVE_DURATION{};
+    /**
+     *  Quantity of bullets.
+     */
+	int NUM_BULLETS{};
+    /**
+     * Explosive bullets.
+     */
+	int NUM_EXPLO_BULLETS{};
+    /**
+     * Flight duration.
+     */
+	int FLY_DURATION{};
+    /**
+     * Fly time duration remains.
+     */
+	int FLY_ACTIVE_DURATION{};
+    /**
+     * Check if fly power-up is activated.
+     */
+	bool ACTIVE_FLY{};
+
+    /**
+     * Gun magazine.
+     */
+
+    /**
+     * Bullets magazine.
+     */
+	Bullet bullet;
+    /**
+     * Explosive bullets magazine.
+     */
+	Bullet explo_bullet;
+    /**
+     * Bullets list index.
+     */
+	int ind{};
+    /**
+     * Explosive bullets list index.
+     */
+	int ind2{};
 public:
 	Player();
 	Player(WINDOW * win, int y, int x);
+    /**
+     * Movement.
+     */
+	int getmv();
+    /**
+     * Jump.
+     */
+	void jump();
+    /**
+     * Shoot during the jump movement or the down movement.
+     * @return
+     */
+	int airshoot();
+    /**
+     * Fall.
+     */
+	void godown();
+    /**
+     * Go up.
+     */
+	void goup();
+    /**
+     * See the player.
+     */
+	void display();
+    /**
+     * Start the player.
+     */
+	void initialize();
 
-	int getmv(); //movement
-	void jump(); //jump
-	int airshoot(); //shoot during the jump movement or the down movement
-	void godown(); //fall
-	void teleport(); //teleport
-	void goup(); //go up
+    /**
+     * Damage.
+     */
+	void injury();
+    /**
+     * X coordinate of the player.
+     * @return
+     */
+	int getx();
+    /**
+     * y coordinate of the player.
+     * @return
+     */
+	int gety();
+    /**
+     *
+     * @return coins of player.
+     */
+	int getCoins() const;
+    /**
+     *
+     * @return dir of player.
+     */
+	int getDir();
+    /**
+     * Points of the player.
+     * @return
+     */
+	int getPoints() const;
+    /**
+     * Life of player.
+     * @return
+     */
+	int getLife();
+    /**
+     * Take buy variable.
+     * @return
+     */
+	bool getBuy();
+    /**
+     * Set buy variable.
+     * @param val
+     */
+	void setBuy(bool val);
 
-	void display(); //see the player
-	void initialize(); //start the player
+    /**
+     * Reset jump variable.
+     */
+	void SetJump();
 
-	void injury(); //damage
-
-	int getx(); //x coordinate of the player
-	int gety(); //y coordinate of the player
-	int getCoins(); //return coins of player
-	int getDir(); //return dir of player
-	int getPoints(); //points of the player
-	int getLife(); //life of player
-	bool getBuy(); //take buy variable
-	void setBuy(bool val); //set buy variable
-
-	void SetJump(); //restart the variable of jump
-
-	void updatePoints(int points); //when you kill one enemy you take points
-	void updateCash(int money); //update your wallet
-	void updateCoordinates(int x,int y); //Update your x and y when you went in a not-possible place
+    /**
+     * When you kill one enemy you take points.
+     * @param points
+     */
+	void updatePoints(int points);
+    /**
+     * Update your wallet.
+     * @param money
+     */
+	void updateCash(int money);
+    /**
+     * Update your x and y when you went in a not-possible place.
+     * @param x
+     * @param y
+     */
+	void updateCoordinates(int x,int y);
+    /**
+     *
+     * @param dir
+     */
 	void setDir(int dir); //change direction
 	void setLife(int val); //change life
 
@@ -101,15 +274,15 @@ public:
 	bullt explo_shoot(bullt tmp);
 
 	//get Powerups
-	Powerup getGun(); //gun
-	Powerup getShield(); //shield
-	Powerup getHP(); //HP
-	Powerup getArmor(); //Armor
-	Powerup getTeleportation(); //teleport
-	Powerup getBullets(); //bullets
-	Powerup getJumping(); //jump
-	Powerup getFly(); //fly
-	Powerup getExplo_Bullets(); //explosive bullets
+	Powerup getGun() const; //gun
+	Powerup getShield() const; //shield
+	Powerup getHP() const; //HP
+	Powerup getArmor() const; //Armor
+	Powerup getTeleportation() const; //teleport
+	Powerup getBullets() const; //bullets
+	Powerup getJumping() const; //jump
+	Powerup getFly() const; //fly
+	Powerup getExplo_Bullets() const; //explosive bullets
 
 	//set Powerups
 	void setGun(string g); //gun

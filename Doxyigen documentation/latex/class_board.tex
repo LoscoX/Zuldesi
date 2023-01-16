@@ -1,0 +1,134 @@
+\hypertarget{class_board}{}\doxysection{Board Class Reference}
+\label{class_board}\index{Board@{Board}}
+
+
+{\ttfamily \#include $<$Board.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_board_a9ee491d4fea680cf69b033374a9fdfcb}{Board}} ()
+\item 
+\mbox{\hyperlink{class_board_a1291ca893864123e2a144ce5e4d8beb3}{Board}} (int \mbox{\hyperlink{class_board_aa0cb8de0254520dc08dab5796643c8e5}{height}}, int width)
+\item 
+void \mbox{\hyperlink{class_board_aced6d6a9aa6f0002cb61f5f37c69d591}{add\+Border}} (int x, int y)
+\item 
+void \mbox{\hyperlink{class_board_af74f0d4b43e5aa3faea16d7c6407b05e}{clear}} ()
+\item 
+void \mbox{\hyperlink{class_board_ae114504b2f855269b21bc5022724318d}{refresh}} ()
+\item 
+void \mbox{\hyperlink{class_board_a875233fc7af6309516b951cb005fdab3}{initialize}} (int x, int y)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_board_acfe8e3a185cd8b422993bd5d4b3f9918}\label{class_board_acfe8e3a185cd8b422993bd5d4b3f9918}} 
+WINDOW $\ast$ {\bfseries board\+\_\+win}
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_board_aa09930b4e5083672424e7e93c6965705}{construct}} (int \mbox{\hyperlink{class_board_aa0cb8de0254520dc08dab5796643c8e5}{height}}, int width)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{class_board_aa0cb8de0254520dc08dab5796643c8e5}{height}}
+\item 
+\mbox{\Hypertarget{class_board_a90a8efaa4736af25511ac948bdd27d6c}\label{class_board_a90a8efaa4736af25511ac948bdd27d6c}} 
+int {\bfseries width}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Manage game borders. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_board_a9ee491d4fea680cf69b033374a9fdfcb}\label{class_board_a9ee491d4fea680cf69b033374a9fdfcb}} 
+\index{Board@{Board}!Board@{Board}}
+\index{Board@{Board}!Board@{Board}}
+\doxysubsubsection{\texorpdfstring{Board()}{Board()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Board\+::\+Board (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Default constructor. \mbox{\Hypertarget{class_board_a1291ca893864123e2a144ce5e4d8beb3}\label{class_board_a1291ca893864123e2a144ce5e4d8beb3}} 
+\index{Board@{Board}!Board@{Board}}
+\index{Board@{Board}!Board@{Board}}
+\doxysubsubsection{\texorpdfstring{Board()}{Board()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Board\+::\+Board (\begin{DoxyParamCaption}\item[{int}]{height,  }\item[{int}]{width }\end{DoxyParamCaption})}
+
+Constructor with size parameters. 
+\begin{DoxyParams}{Parameters}
+{\em height} & \\
+\hline
+{\em width} & \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_board_aced6d6a9aa6f0002cb61f5f37c69d591}\label{class_board_aced6d6a9aa6f0002cb61f5f37c69d591}} 
+\index{Board@{Board}!addBorder@{addBorder}}
+\index{addBorder@{addBorder}!Board@{Board}}
+\doxysubsubsection{\texorpdfstring{addBorder()}{addBorder()}}
+{\footnotesize\ttfamily void Board\+::add\+Border (\begin{DoxyParamCaption}\item[{int}]{x,  }\item[{int}]{y }\end{DoxyParamCaption})}
+
+create a border in the input coordinate. 
+\begin{DoxyParams}{Parameters}
+{\em x} & \\
+\hline
+{\em y} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_board_af74f0d4b43e5aa3faea16d7c6407b05e}\label{class_board_af74f0d4b43e5aa3faea16d7c6407b05e}} 
+\index{Board@{Board}!clear@{clear}}
+\index{clear@{clear}!Board@{Board}}
+\doxysubsubsection{\texorpdfstring{clear()}{clear()}}
+{\footnotesize\ttfamily void Board\+::clear (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Clear the borders window. \mbox{\Hypertarget{class_board_aa09930b4e5083672424e7e93c6965705}\label{class_board_aa09930b4e5083672424e7e93c6965705}} 
+\index{Board@{Board}!construct@{construct}}
+\index{construct@{construct}!Board@{Board}}
+\doxysubsubsection{\texorpdfstring{construct()}{construct()}}
+{\footnotesize\ttfamily void Board\+::construct (\begin{DoxyParamCaption}\item[{int}]{height,  }\item[{int}]{width }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+Make the board with size parameters. 
+\begin{DoxyParams}{Parameters}
+{\em height} & \\
+\hline
+{\em width} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_board_a875233fc7af6309516b951cb005fdab3}\label{class_board_a875233fc7af6309516b951cb005fdab3}} 
+\index{Board@{Board}!initialize@{initialize}}
+\index{initialize@{initialize}!Board@{Board}}
+\doxysubsubsection{\texorpdfstring{initialize()}{initialize()}}
+{\footnotesize\ttfamily void Board\+::initialize (\begin{DoxyParamCaption}\item[{int}]{x,  }\item[{int}]{y }\end{DoxyParamCaption})}
+
+Initialize the window getting in inputs its width and high. 
+\begin{DoxyParams}{Parameters}
+{\em x} & Width of the window. \\
+\hline
+{\em y} & Height of the window. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_board_ae114504b2f855269b21bc5022724318d}\label{class_board_ae114504b2f855269b21bc5022724318d}} 
+\index{Board@{Board}!refresh@{refresh}}
+\index{refresh@{refresh}!Board@{Board}}
+\doxysubsubsection{\texorpdfstring{refresh()}{refresh()}}
+{\footnotesize\ttfamily void Board\+::refresh (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Refresh the borders window. 
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_board_aa0cb8de0254520dc08dab5796643c8e5}\label{class_board_aa0cb8de0254520dc08dab5796643c8e5}} 
+\index{Board@{Board}!height@{height}}
+\index{height@{height}!Board@{Board}}
+\doxysubsubsection{\texorpdfstring{height}{height}}
+{\footnotesize\ttfamily int Board\+::height\hspace{0.3cm}{\ttfamily [protected]}}
+
+Height and width of the board. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Board.\+hpp\item 
+Board.\+cpp\end{DoxyCompactItemize}

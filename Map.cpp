@@ -1,14 +1,16 @@
 #include <iostream>
 #include <cstring>
+#include <fstream>
 #include "Map.hpp"
 
 using namespace std;
+
 
 Map::Map(int difficulty){
 
     //procedural generation
 	int numSeg = 0;
-    Segment seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/Basic/segstart.txt");//fix before production
+    Segment seg = Segment("segments/Basic/segstart.txt");//fix before production
     segList = new segment_el;
     segList->id = numSeg++; //first segment (start)
     segList->next = NULL;
@@ -16,11 +18,11 @@ Map::Map(int difficulty){
 
     seg_list_ptr segtmp = segList;
 
-    for(int i=0; i<15+difficulty; i++){ //fixed number of segments
+    for(int i=0; i<5+difficulty; i++){ //fixed number of segments
         seg_list_ptr tmp = new segment_el; //add new segment
         tmp->id = numSeg++;
         int x = rand()%107;//generate a random number between 0 and num_max of segments
-        tmp->seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/Segment_pieces/seg"+to_string(x)+".txt"); //map segments
+        tmp->seg = Segment("segments/Segment_pieces/seg"+to_string(x)+".txt"); //map segments
         tmp->next = NULL;
         segtmp->next = tmp;
         segtmp = segtmp->next;
@@ -29,7 +31,7 @@ Map::Map(int difficulty){
 	for(int i=0; i<4; i++){
         seg_list_ptr tmp = new segment_el; //add new segment
         tmp->id = numSeg++;
-        tmp->seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/Basic/segempty.txt"); //empty segments
+        tmp->seg = Segment("segments/Basic/segempty.txt"); //empty segments
         tmp->next = NULL;
         segtmp->next = tmp;
         segtmp = segtmp->next;
@@ -38,7 +40,7 @@ Map::Map(int difficulty){
 	//wall at the end
 	seg_list_ptr tmp = new segment_el; //add new segment
 	tmp->id = numSeg++;
-	tmp->seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/Basic/segend.txt");
+	tmp->seg = Segment("segments/Basic/segend.txt");
 	tmp->next = NULL;
 	segtmp->next = tmp;
 	segtmp = segtmp->next;
@@ -47,7 +49,7 @@ Map::Map(int difficulty){
 	for (int i=0; i<4; i++){
 		seg_list_ptr tmp = new segment_el; //add new segment
 		tmp->id = numSeg++;
-		tmp->seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/Market/segmarket"+to_string(i)+".txt"); //market segments
+		tmp->seg = Segment("segments/Market/segmarket"+to_string(i)+".txt"); //market segments
 		tmp->next = NULL;
 		segtmp->next = tmp;
 		segtmp = segtmp->next;
@@ -56,7 +58,7 @@ Map::Map(int difficulty){
 	//wall at the end
 	tmp = new segment_el; //add new segment
 	tmp->id = numSeg++;
-	tmp->seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/Basic/segend.txt");
+	tmp->seg = Segment("segments/Basic/segend.txt");
 	tmp->next = NULL;
 	segtmp->next = tmp;
 	segtmp = segtmp->next;
@@ -64,7 +66,7 @@ Map::Map(int difficulty){
 	for(int i=0; i<4; i++){
         seg_list_ptr tmp = new segment_el; //add new segment
         tmp->id = numSeg++;
-        tmp->seg = Segment("C:/Users/david/eclipse-workspace/Project/src/segments/Basic/segempty.txt"); //empty segments
+        tmp->seg = Segment("segments/Basic/segempty.txt"); //empty segments
         tmp->next = NULL;
         segtmp->next = tmp;
         segtmp = segtmp->next;
@@ -110,14 +112,19 @@ Map::Map(int difficulty){
 	enemies3 = NULL; //initialize the list
 	enemies4 = NULL; //initialize the list
 	enemies5 = NULL; //initialize the list
-	enemies6 = NULL; //initialize the list
+	enemies6 = NULL; //initialize the list //shoot
 	enemies7 = NULL; //initialize the list
 	enemies8 = NULL; //initialize the list
 	enemies9 = NULL; //initialize the list
 
-	int k = difficulty; //handle the generation of enemies
+	int k = getPrime(difficulty); //handle the generation of enemies
+	int* enemies_quantity = thelast10prime(k); // generate array to define quantity of enemies by type
 
-	n0 = k; //number of enemies of type 0
+    for (int i = 0; i<9; i++){
+		if(enemies_quantity[i] != 0)
+        	enemies_quantity[i] = rand() % enemies_quantity[i];
+    }
+	n0 = enemies_quantity[0]; //number of enemies of type 0
 	for(int i=0;i<n0;i++){
 		//avoid enemy type0 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
@@ -125,7 +132,7 @@ Map::Map(int difficulty){
 		enemies0 = head_insert_enemy0(enemies0,e,i); //add the enemy into the list
 	}
 
-	n1 = rand()%(k+1); //number of enemies of type 1
+	n1 = enemies_quantity[1]; //number of enemies of type 1
 	for(int i=0;i<n1;i++){
 		//avoid enemy type1 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
@@ -133,10 +140,8 @@ Map::Map(int difficulty){
 		enemies1 = head_insert_enemy1(enemies1,e,i); //add the enemy into the list
 	}
 
-	if(k>1) //activate enemies type2 and type3
-		n2 = k-1; //number of enemies of type 2
-	else
-		n2 = 0;
+	n2 = enemies_quantity[2]; //number of enemies of type 2
+
 	for(int i=0;i<n2;i++){
 		//avoid enemy type2 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
@@ -144,7 +149,7 @@ Map::Map(int difficulty){
 		enemies2 = head_insert_enemy2(enemies2,e,i); //add the enemy into the list
 	}
 
-	n3 = rand()%(n2+1); //number of enemies of type 3
+	n3 = enemies_quantity[3]; //number of enemies of type 3
 	for(int i=0;i<n3;i++){
 		//avoid enemy type3 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
@@ -152,17 +157,15 @@ Map::Map(int difficulty){
 		enemies3 = head_insert_enemy3(enemies3,e,i); //add the enemy into the list
 	}
 
-	if(k>2) n4 = k-2; //number of enemies of type 4
-	else n4 = 0;
+	n4 = enemies_quantity[4]; //number of enemies of type 4
 	for(int i=0;i<n4;i++){
 		//avoid enemy type4 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
 		Enemy4 e = Enemy4(gen_y, gen_x,'4',7); //create one enemy
 		enemies4 = head_insert_enemy4(enemies4,e,i); //add the enemy into the list
 	}
-
-	if(k>3) n5 = k-3; //number of enemies of type 5
-	else n5 = 0;
+  
+	n5 = enemies_quantity[5]; //number of enemies of type 5
 	for(int i=0;i<n5;i++){
 		//avoid enemy type5 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
@@ -170,10 +173,7 @@ Map::Map(int difficulty){
 		enemies5 = head_insert_enemy5(enemies5,e,i); //add the enemy into the list
 	}
 
-	if(k>5) //activate enemies type6 and type7
-		n6 = k-5; //number of enemies of type 6
-	else
-		n6 = 0;
+	n6 = enemies_quantity[6]; //number of enemies of type 6
 
 	for(int i=0;i<n6;i++){
 		//avoid enemy type6 inside a structure
@@ -182,7 +182,8 @@ Map::Map(int difficulty){
 		enemies6 = head_insert_enemy6(enemies6,e,i); //add the enemy into the list
 	}
 
-	n7 = rand()%(n6+1); //number of enemies of type 7
+	n7 = enemies_quantity[7]; //number of enemies of type 7
+
 	for(int i=0;i<n7;i++){
 		//avoid enemy type7 inside a structure
 		generationRandom(iniz_x,iniz_y,fin_x,fin_y);
@@ -190,10 +191,7 @@ Map::Map(int difficulty){
 		enemies7 = head_insert_enemy7(enemies7,e,i); //add the enemy into the list
 	}
 
-	if(k>8) //activate enemies type8
-		n8 = k-8; //number of enemies of type 8
-	else
-		n8 = 0;
+	n8 = enemies_quantity[8]; //number of enemies of type 8
 
 	for(int i=0;i<n8;i++){
 		//avoid enemy type8 inside a structure
@@ -202,10 +200,7 @@ Map::Map(int difficulty){
 		enemies8 = head_insert_enemy8(enemies8,e,i); //add the enemy into the list
 	}
 
-	if(k>10) //activate the last enemy
-		n9 = k;
-	else
-		n9 = 0;
+	n9 = enemies_quantity[9]; //number of enemies of type 9
 
 	for(int i=0;i<n9;i++){
 		//avoid enemy type9 inside a structure
@@ -214,9 +209,10 @@ Map::Map(int difficulty){
 		enemies9 = head_insert_enemy9(enemies9,e,i); //add the enemy into the list
 	}
 
+    delete[] enemies_quantity; // delete array to clear dynamic memory
 }
 
-Map::Map(){} //deafult constructor
+Map::Map(){} //default constructor
 
 int Map::get_trigger_start(){
 	return trigger_start;
@@ -400,8 +396,10 @@ mony Map::FallCoins(mony h){ //avoid coins in the air
 	return h;
 }
 
+
 mony Map::getCoins(){
 	return coins;
+
 }
 
 //list of function for enemies
@@ -825,7 +823,7 @@ listenm8 Map::obj_remove_enemy8(listenm8 h,int cod,bool head){ //remove the enem
 listenm9 Map::obj_remove_enemy9(listenm9 h,int cod,bool head){ //remove the enemy type7 with this cod
 	if (h==NULL) return h;
 	else if(h->val == cod){ //if the enemy is in the top of the list
-		if(head == true){ //we need because we have a problem if we delete the list and use again the element pointed by the list
+		if(head){ //we need because we have a problem if we delete the list and use again the element pointed by the list
 			listenm9 tmp = h;
 			h = h->next;  //ok also if h has one element
 			delete tmp;
@@ -912,3 +910,9 @@ string* Map::initializeEnemies(string* mat){
 }
 
 
+
+
+
+void map_difficulty(){
+
+}
